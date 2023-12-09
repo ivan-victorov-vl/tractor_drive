@@ -16,8 +16,8 @@
 //          if using DSP-BIOS or another realtime OS.
 //
 //###########################################################################
-// $TI Release: DSP2833x Header Files V1.01 $
-// $Release Date: September 26, 2007 $
+// $TI Release: DSP2833x/DSP2823x C/C++ Header Files V1.31 $
+// $Release Date: August 4, 2009 $
 //###########################################################################
 
 #ifndef DSP2833x_CPU_TIMERS_H
@@ -106,30 +106,18 @@ struct CPUTIMER_REGS {
 };
 
 //---------------------------------------------------------------------------
-// CPU Timer Support Variables:
-//
-struct CPUTIMER_VARS {
-   volatile struct  CPUTIMER_REGS  *RegsAddr;
-   Uint32    InterruptCount;
-   float   CPUFreqInMHz;
-   float   PeriodInUSec;
-};
 
 //---------------------------------------------------------------------------
 // Function prototypes and external definitions:
 //
 void InitCpuTimers(void);
-void ConfigCpuTimer(struct CPUTIMER_VARS *Timer, float Freq, float Period);
+void ConfigCpuTimer(volatile struct CPUTIMER_REGS *TimerRegs, Uint32 Period, Uint16 inten);
 
 extern volatile struct CPUTIMER_REGS CpuTimer0Regs;
-extern struct CPUTIMER_VARS CpuTimer0;
 
 // CpuTimer 1 and CpuTimer2 are reserved for DSP BIOS & other RTOS. Comment out CpuTimer1 and CpuTimer2 if using DSP BIOS or other RTOS
 extern volatile struct CPUTIMER_REGS CpuTimer1Regs;
 extern volatile struct CPUTIMER_REGS CpuTimer2Regs;
-
-extern struct CPUTIMER_VARS CpuTimer1;
-extern struct CPUTIMER_VARS CpuTimer2;
 
 //---------------------------------------------------------------------------
 // Usefull Timer Operations:

@@ -1,0 +1,1572 @@
+//----------------------------------------------------------------------------------
+//	FILE:			MainCPU-Main.C
+//----------------------------------------------------------------------------------
+
+
+#include "PeripheralHeaderIncludes.h"
+#include "MainCPU-Main.h"					
+#include "Smpl_table.h"
+
+#define	LED1_inv_clear 		GpioDataRegs.GPBCLEAR.bit.GPIO48 = 1;						// включение светодиода 	LED 1
+#define	LED1_inv_set   		GpioDataRegs.GPBSET.bit.GPIO48   = 1;						// выключение светодиода 	LED 1
+#define	LED2_inv_clear	 	GpioDataRegs.GPBCLEAR.bit.GPIO49 = 1;						// включение светодиода 	LED 2
+#define	LED2_inv_set   		GpioDataRegs.GPBSET.bit.GPIO49   = 1; 						// выключение светодиода 	LED 2
+
+#define	LED1_inv_status		GpioDataRegs.GPBDAT.bit.GPIO48								// состояние светодиода 	LED 1
+#define	LED2_inv_status		GpioDataRegs.GPBDAT.bit.GPIO49								// состояние светодиода 	LED 2
+
+#define	mark1_toggle	GpioDataRegs.GPBTOGGLE.bit.GPIO39
+#define	mark1_dat		GpioDataRegs.GPBDAT.bit.GPIO39
+#define	mark2_toggle	GpioDataRegs.GPCTOGGLE.bit.GPIO84
+#define	mark2_dat		GpioDataRegs.GPCDAT.bit.GPIO84
+#define	mark3_toggle	GpioDataRegs.GPBTOGGLE.bit.GPIO46
+
+//объявления функций--------------------------------------
+interrupt void epwm4_timer_isr(void);
+interrupt void epwm6_timer_isr(void);
+interrupt void cpu_int13_isr(void);
+
+//--- объявление функций используемых в программе
+void basic_cycle(void);			
+void (*Alpha_State_Ptr)(void);
+void Init_Data();
+void InitFlash();
+void InitEPwm_4_6Timers(int16 prd, int16 sync_lnth, int16 start_lnth);
+void InitSCIA(void);
+void InitSCIB(void);
+void InitSCIC(void);
+void InitSPIA(void);
+void InitSysCtrl(void);
+void InitPieCtrl(void);
+void InitPieVectTable(void);
+
+void PwmLowDrive(void);
+void AdcInitPrivod(void);
+void FuncStop(void); 
+void InitAdc(void);
+void FuncZadIntensivnosti(void);
+void FuncZakonKostenko(void);
+void FuncZadBeginParametrov(void);
+void PultUpravlenia(void);
+//void PultUpravlenia_Rechange(void); 
+void ZadSkorosti(void);
+void FuncZakonKostenkoPuskStop(void);
+void FilterTokaZad(void); 
+void FilterToka_Iu_Iw(void);
+void Filter_Uu_Uv_Uw (void);
+void FuncBeginCustomize(void);
+//void TimeFiltered(void);
+void FuncMaxIProtected (void);
+void Time_I_Protected (void);
+void InitSPIA(void);
+void Compensation_voltage_power_grid (void);
+void DO_PIL_ON (void);
+
+void InitMAX7301(Uint16 device);
+void InitAD7732(Uint16 device);
+
+void Cells_Check();
+void Exch_data_SPI(Uint16 device, Uint16* message);
+void Stup_SPI_exch(Uint16 dev_sel);
+
+//===================================================================
+void main(void)
+{
+//-------------------------------------------------------------------------------------
+//	Инициализация контроллера
+	
+	InitSysCtrl();
+//	Отключение прерываний 
+	DINT;
+	InitPieCtrl();
+//	Отключение прерываний и сброс флагов
+	IER = 0x0000;
+	IFR = 0x0000;
+	InitPieVectTable();
+   	
+	InitFlash();	
+		 
+//	Переименование функций обработки прерываний
+	EALLOW;  // This is needed to write to EALLOW protected registers
+	PieVectTable.XINT13 = &cpu_int13_isr;		//прерывание от int13
+	PieVectTable.EPWM4_INT = &epwm4_timer_isr;	//прерывание от pwm4
+	PieVectTable.EPWM6_INT = &epwm6_timer_isr;	//прерывание от pwm5
+	EDIS;    // This is needed to disable write to EALLOW protected registers
+
+//	Инициализация модулей
+	InitCpuTimers();							// инициализировать Таймеры CPU
+
+	InitSCIA();									//инициализировать SCIA	
+	InitSCIB();									//инициализировать SCIB	
+	InitSCIC();									//инициализировать SCIC
+	InitSPIA();									//инициализировать SPIA
+
+	P33V_ON();			//включить питание логики
+		{//задержка после подачи питания____________
+		Uint16 a;
+		for(a = 0; a < 0xFFFF; a++) {};					
+		}//_________________________________________
+
+	InitMAX7301(EXP1_dev_SEL);
+	InitMAX7301(EXP2_dev_SEL);
+	InitAD7732(ADC1_dev_SEL);
+	InitAD7732(ADC2_dev_SEL);
+
+		//запуск обмена с SPI...............................
+		spi_store.spi_dev = 0;
+		Stup_SPI_exch(ADC1_dev_SEL);
+		GpioDataRegs.GPACLEAR.all = spi_store.spi_dev;	//активировать выбранное устройство
+		//выгрузить для передачи
+		SpiaRegs.SPITXBUF = spi_store.data[spi_store.nmb_byte - spi_store.remn_nmb_byte];					
+		spi_store.remn_nmb_byte--;							//уменьшить счетчик на 1
+		//..................................................
+
+//настройка модулей EPWM1 и EPWM2 для установки синхроимпульса запуска процесса передачи
+	InitEPwm_4_6Timers(trans_per, trans_sync_lenth, trans_start);
+
+	Init_Data();
+	AdcInitPrivod();
+// Configure CPU-Timers:
+	ConfigCpuTimer(&CpuTimer1Regs, Prd1, 0);		//настроить таймер1 выключить прерывание
+	ConfigCpuTimer(&CpuTimer2Regs, Prd2, 0);		//настроить таймер1 выключить прерывание
+
+// Enable CPU interrupts:
+//	IER |= M_INT1;		//CPU int1 is connected to CPU-Timer 0
+	IER |= M_INT3;		//CPU int3 is connected to epwm
+	IER	|= M_INT8;		//CPU int8 is connected to SCIC
+	IER	|= M_INT9;		//CPU int9 is connected to SCIA/B
+	IER |= M_INT13;		//CPU int13 
+//	IER |= M_INT14;		//CPU int14 is connected to CPU-Timer 2
+
+//	CpuTimer0Regs.TCR.all = 0x4001;			// запустить таймер 0 (TSS bit = 0)
+	CpuTimer1Regs.TCR.all = 0x4001;			// запустить таймер 1
+	CpuTimer2Regs.TCR.all = 0x4001;			// запустить таймер 2
+
+// Enable PIE
+//	PieCtrlRegs.PIEIER1.bit.INTx7 = 1;	//timer0
+	PieCtrlRegs.PIEIER3.bit.INTx4 = 1;	//pwm4
+	PieCtrlRegs.PIEIER3.bit.INTx6 = 1;	//
+//	PieCtrlRegs.PIEIER9.bit.INTx1 = 1;	//SCIA_RX
+//	PieCtrlRegs.PIEIER9.bit.INTx3 = 1;	//SCIB_RX
+//	PieCtrlRegs.PIEIER8.bit.INTx5 = 1;	//SCIC_RX
+
+// Enable global Interrupts and higher priority real-time debug events:
+	EINT;   // Enable Global interrupt INTM
+	ERTM;   // Enable Global realtime interrupt DBGM
+//-------------------------------------------------------
+//проверка проведенной начальной инициализации
+
+	FuncZadBeginParametrov();
+	Cells_Check(); 
+
+
+//*****************************************************************************************************
+// Step 6. основной цикл:
+	for(;;)
+		{//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+			{//обмен данными с SPI устройствами  ++++++++++++++++++++++++++++++++++++++++++++++++
+			static Uint16 a = 0;
+			static Uint16 b = 0;
+			static Uint16 c = 0;
+
+			if(SpiaRegs.SPISTS.bit.INT_FLAG)	//если флаг завершения передачи установлен
+				{//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+				Deact_SPI_dev();			//отключить все устройства SPI
+
+				{Uint16 i;
+				for(i=0;i<5;i++) {};}		//задержка 
+
+				//сохранить принятое сообщение		
+				spi_store.data[spi_store.nmb_byte - (spi_store.remn_nmb_byte + 1)] = SpiaRegs.SPIRXBUF;
+
+				if(!spi_store.remn_nmb_byte)			//если передан последний байт, то
+					{//------------------------------------------------
+					if(c & CpuTimer1Regs.TCR.bit.TIF)  		//проверить разрешение чрения ADC
+				 		{
+				  		if(a) {Stup_SPI_exch(ADC1_dev_SEL);}
+						else  {Stup_SPI_exch(ADC2_dev_SEL);}
+						a ^=1;										//инвертировать флаг очередности чтения ADC
+						c ^=1;
+				 		CpuTimer1Regs.TCR.bit.TIF = 1;      		//сбросить флаг
+						}
+					else
+						{
+						if(b) {Stup_SPI_exch(EXP1_dev_SEL);}
+						else  {Stup_SPI_exch(EXP2_dev_SEL);}
+						b ^=1;										//инвертировать флаг очередности чтения EXP
+						c ^=1;
+						}
+					}//------------------------------------------------
+
+				GpioDataRegs.GPACLEAR.all = spi_store.spi_dev;	//активировать выбранное устройство
+				//выгрузить для передачи
+				SpiaRegs.SPITXBUF = spi_store.data[spi_store.nmb_byte - spi_store.remn_nmb_byte];					
+				spi_store.remn_nmb_byte--;							//уменьшить счетчик на 1
+
+				}//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+			}//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+	//проверка задания двойной работы------------------------------------------
+			if((DIN7_Exp2 == OPEN) & (DIN8_Exp2 == OPEN))
+				{//включен режим одиночной работы^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+				if(MSmode != sngl_mode)			//если смена режима, то
+				{//-----------------------------------------
+				SciaRegs.SCICTL1.bit.RXENA	= 0;	//выключить приемник  RS485_2  (а)
+				ScicRegs.SCICTL1.bit.RXENA	= 0;	//выключить приемник  RS485_1  (c)
+
+				DINT;
+				XIntruptRegs.XNMICR.bit.ENABLE = 0;	//отключить прерывание порта
+				EPwm4Regs.ETSEL.bit.INTEN 	= 1;				// Enable INT
+				EINT;
+
+				MSmode = sngl_mode;
+				}//-----------------------------------------
+			}//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+		else //if S_D_MODE == DOUBLE_MODE
+			{//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^  
+			SciaRegs.SCICTL1.bit.RXENA	= 0;	//выключить приемник  SCIа  (а)
+			ScicRegs.SCICTL1.bit.RXENA	= 1;	//включить приемник  SCIc  (c)
+
+			DE1_RS485_dsbl();					//выключить передатчик RS485_1
+			DE2_RS485_dsbl();					//выключить передатчик RS485_2
+
+			if	(DIN8_Exp2 == CLOSE)
+					{//режим парной работы, ведущий>>>>>>>>>>>>>>>>>>>		  */
+				if(MSmode != master_mode) //если смена режима, то
+					{//-----------------------------------------
+					DINT;
+					EALLOW;  // This is needed to write to EALLOW protected registers
+						GpioCtrlRegs.GPBMUX1.bit.GPIO35  = 	0; 	// 0=GPIO,  1=SCIA-TX,  2=Resv,  3=Resv
+						XIntruptRegs.XNMICR.bit.ENABLE = 0;					//
+						EPwm4Regs.ETSEL.bit.INTEN 	= 1;				// Enable INT
+					EDIS;    // This is needed to disable write to EALLOW protected registers
+					MSmode = master_mode;
+					EINT;
+					}//-----------------------------------------
+				}//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+				if	(DIN7_Exp2 == CLOSE)	
+				{//режим парной работы, ведомый>>>>>>>>>>>>>>>>>>>
+				if(MSmode != slave_mode)  //если смена режима, то
+					{//-----------------------------------------
+					DINT;					
+					EALLOW;  // This is needed to write to EALLOW protected registers
+						GpioCtrlRegs.GPBMUX1.bit.GPIO35  = 	1; 	// 0=GPIO,  1=SCIA-TX,  2=Resv,  3=Resv
+						XIntruptRegs.XNMICR.bit.ENABLE = 1;		//разрешить прерывание от порта
+						EPwm4Regs.ETSEL.bit.INTEN 	= 0;				// disable INT
+					EDIS;    // This is needed to disable write to EALLOW protected registers
+
+					MSmode = slave_mode;
+					EINT;
+					}//-----------------------------------------
+				}//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+			}//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+			IHV_CTL=0;																		// включение светодиода HV_OK
+			if(ON_OFF) {
+						Prmt_Work = off;										// запретить работу
+			    		FuncZadBeginParametrov();								// функция задания начальных параметров
+				   	   }
+			else 	   {
+						basic_cycle(); 
+						Prmt_Work = on;			//разрешить работу
+				   		}
+			Cells_Check();
+
+		}//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+//*****************************************************************************************************
+} 	
+//========================================================================
+//--- функция основного цикла
+ void basic_cycle(void)							
+ {  
+  AdcRegs.ADCTRL2.bit.SOC_SEQ1 = 1;												// обновление задания скорости
+   Driving_drive.Inst_speed.Zad_speed_int=AD7732_1.adc1*0.1059;						// значения АЦП задатчика скорости
+   if (Driving_drive.Inst_speed.Zad_speed_int<=10)
+   {Driving_drive.Inst_speed.Zad_speed_int=10;}						// значения АЦП задатчика скорости
+   
+   Driving_drive.Inst_speed.Zad_speed_fl=Driving_drive.Inst_speed.Zad_speed_int;	// перевод значения в тип float для задатчика скорости  
+   Sensorless_drive.Iu_int=AdcRegs.ADCRESULT0>>4;									// смещения битов для извлечения значения АЦП Iu
+   Sensorless_drive.Iw_int=AdcRegs.ADCRESULT8>>4;									// смещения битов для извлечения значения АЦП Iw
+   Sensorless_drive.Uu_int=AdcRegs.ADCRESULT1>>4;									// смещения битов для извлечения значения АЦП Uu
+   Sensorless_drive.Uv_int=AdcRegs.ADCRESULT2>>4;									// смещения битов для извлечения значения АЦП Uv
+   Sensorless_drive.Uw_int=AdcRegs.ADCRESULT9>>4;									// смещения битов для извлечения значения АЦП Uw
+   Sensorless_drive.I_zero=AdcRegs.ADCRESULT15>>4;   								// смещения битов для извлечения значения АЦП нулевого значения 
+   IRD_CTL = (LED1_inv_status==1) 	  ? 1 : 0;										// если включена индикация ГОТОВНОСТЬ на плате, то и включена индикация ГОТОВНОСТЬ на панели 
+   IOP_CTL = (Flags_drive.DI_Pusk==1) ? 0 : 1;										// если установлен ПУСК то включена индикация РАБОТА	 	
+   if (LED2_inv_status==1)															// условие индикации АВАРИЯ если на плата включена
+   	 	 {IFT_CTL=1;}																// то включается индикация и на пульте управления
+   else  {   
+   		 // FuncZadBeginParametrov();
+   		  IFT_CTL=0;																// иначе находится в отключенном состоянии
+		 }																			// и задаются  начальные параметры функции
+   FilterToka_Iu_Iw ();																// фильтрация тока Iu и Iw
+   Filter_Uu_Uv_Uw ();																// фильтриция выходного напряжения
+   Sensorless_drive.Iu=((Sensorless_drive.Iu_int)-1720);     							// Iu  (приведение к синусойде)                                   						
+   Sensorless_drive.Iw=(Sensorless_drive.Iw_int-1720);                				// Iw  (приведение к синусойде)                     	  						                                       
+   Sensorless_drive.Iv=((-Sensorless_drive.Iu)-(Sensorless_drive.Iw)); 				// Iv  (приведение к синусойде) 										
+   Sensorless_drive.Uu=Sensorless_drive.Uu_int;										// перевод значения в тип float для Uu
+   Sensorless_drive.Uv=Sensorless_drive.Uv_int;										// перевод значения в тип float для Uv
+   Sensorless_drive.Uw=Sensorless_drive.Uw_int;										// перевод значения в тип float для Uw
+   				                                	  					
+   Sensorless_drive.Iu=-Sensorless_drive.Iu;											// преобразование с абсолютного значения тока синусойды в относительную (центр в нуле) фазы w
+   Driving_I.IuRezultatChisla=Sensorless_drive.Iu;   //(-(Sensorless_drive.Iu));																				   	//*
+   Driving_I.IwRezultatChisla=(Sensorless_drive.Iw);																					   	//*
+   Driving_I.IORezultatChisla=((Driving_I.IuRezultatChisla)*(Driving_I.IwRezultatChisla));	//*
+   Driving_I.IuRezultatChisla=((Driving_I.IuRezultatChisla)*(Driving_I.IuRezultatChisla));	//* 
+   Driving_I.IwRezultatChisla=((Driving_I.IwRezultatChisla)*(Driving_I.IwRezultatChisla));	//*	функция вычисления постоянной составляющей перменного токового сигнала
+   Driving_I.IRezultatChisla=((Driving_I.IuRezultatChisla)+(Driving_I.IwRezultatChisla)+(Driving_I.IORezultatChisla));			//*	
+   Driving_I.IRezultatSQRT=(Driving_I.IRezultatChisla)*0.0000772618403770378; 										//* коэфициент расчитан для приведения тока к табличному виду
+   Driving_I.SQRTI=(SQRT400[Driving_I.IRezultatSQRT]*375);						   									//* вычисление корня
+ 
+  {
+  
+   if (!ON_OFF)																	// если преключатель в положение включено
+	  {    
+	  		LED1_inv_clear;															// зажигается зелёный светодиод, предназначенный индикации во включенном состоянии
+	  	 	Flags_drive.DI_On_off=1;													// разрешение включения
+	  }
+   else 							// если переключатель в положении выключено
+ 	 {
+ 	 	 Flags_drive.DI_On_off=0;														// разрешение выключения
+		 LED1_inv_set;																// зажигается зелёный светодиод, предназначенный индикации в выключенном состоянии
+ 	 }
+
+   if (!START)											// если сработала кнопка пуска
+	 {
+	  Flags_drive.DI_Pusk=1;														// установка разрешения пуска
+	  Flags_drive.DI_StartPusk=1;													// установка флага начала пуска
+	 }	
+
+   if (!STOP)																	// если сработала кнопка стопа
+	 {	 
+	 	  Flags_drive.DI_Stop=1;													// установка разрешения стопа																			
+	 }	
+  }
+	{
+   if (Flags_drive.DI_On_off)														// если установлен флаг включения 
+	{ 
+	 if (Flags_drive.DI_Stop)														// если установлен флаг стопа
+		{
+		FuncStop();																	// функция стопа
+		}																
+	 if (Flags_drive.DI_Pusk)													// если установлен флаг пуска
+   	    { 										
+	    if (Sensorless_drive.Iu>Protect_current.I_Protect_1_part||Sensorless_drive.Iw>Protect_current.I_Protect_1_part								// порог срабатывания сигнала аварии на положительный фронт
+	    ||Sensorless_drive.Iu<Protect_current.I_Protect_1_part_minus||Sensorless_drive.Iw<Protect_current.I_Protect_1_part_minus)					// порог срабатывания сигнала аварии на отрицательный фронт
+	     {
+	     Flags_drive.DO_PIL_ON=1;														// установка флага сигнализации
+  	     if (Sensorless_drive.Iu>Protect_current.I_Protect_3_part||Sensorless_drive.Iw>Protect_current.I_Protect_3_part								// порог срабатывания МТЗ на положительный фронт
+   	     ||Sensorless_drive.Iu<Protect_current.I_Protect_3_part_minus||Sensorless_drive.Iw<Protect_current.I_Protect_3_part_minus)					// порог срабатывания на отрицательный фронт
+   		   {
+		    FuncZadBeginParametrov();
+		    LED2_inv_clear;																// включение индикации АВАРИЯ
+		   }
+	     }
+	 else {Flags_drive.DO_PIL_ON=0;													// сброс сигнализации
+	   }																				
+	if(CpuTimer2Regs.TCR.bit.TIF == 1)
+  {
+	Driving_I.Iaktivn=1+(Driving_I.I_kompensation_plus)*0.000244140625*(Driving_I.Raktivn);			// вычисление активного тока							
+	Driving_I.IRkomponsacia=1+(Driving_I.I_kompensation_plus)*0.000244140625*(Driving_I.KoeficentR);	// вычисление IR компенсации фазы А 
+	if (Driving_I.SQRTI>= Protect_current.I_Protect_1_part_I)																					// если токовая составляющая больше значения	
+    { 	
+	  Driving_drive.Schet_Alarm++;											// увеличение счётчика сигнализации  
+	  PIL_CTL = (Driving_drive.Schet_Alarm>7000) ? 1:0;						// условие переключения сигнализации
+  	  Driving_drive.Schet_Alarm=(Driving_drive.Schet_Alarm>14000)?0:Driving_drive.Schet_Alarm; // условие обнуление сигнализации
+	
+	FuncMaxIProtected ();															// функция токовой отсечки  
+    }																				// установка флага останова
+	Time_I_Protected ();														// функция время токовой защиты
+	PultUpravlenia();															// функция пульта управления
+	FuncZakonKostenko();															// выполнение закона Костенко для нормального режима
+	Driving_drive.Basic.ThetaDPI=(Driving_drive.Basic.ThetaD)*(Driving_drive.Basic.KoefUmnozhf);												// вычисление коэфициента приращения
+	Driving_drive.Basic.Theta+=Driving_drive.Basic.ThetaDPI;																								// приращение угла
+	CpuTimer2Regs.TCR.bit.TIF = 1;												//сбросить флаг
+
+	Driving_drive.Basic.Theta_diskr=(Driving_drive.Basic.Theta);																							// вычисление угла задания с условием переменных составляющих
+	
+	if (Driving_drive.Basic.Theta>=Driving_drive.Basic.OborotGradusov)																					// условие обнуления на целый период
+	{
+	Driving_drive.Basic.Theta=0;										// обнуление угла
+	Driving_drive.Basic.Theta_diskr=0;								// обнуление дискретной составляющей
+	}																				
+	Driving_drive.Basic.Sin=Tabl_sin_360[Driving_drive.Basic.Theta_diskr];
+	Driving_drive.Basic.Theta_diskr=Driving_drive.Basic.Theta_diskr+90;
+	if (Driving_drive.Basic.Theta_diskr>360)
+	Driving_drive.Basic.Theta_diskr=Driving_drive.Basic.Theta_diskr-360;
+
+	Driving_drive.Basic.Cos=Tabl_sin_360[Driving_drive.Basic.Theta_diskr];
+    
+    Driving_drive.Basic.Ua=(Driving_drive.Basic.Cos);															// Вычисление фазы А
+    Driving_drive.Basic.Ub=(((-0.5)*Driving_drive.Basic.Cos)+(0.86602540378443864676372317075294*Driving_drive.Basic.Sin));	// Вычисление фазы B
+    Driving_drive.Basic.Uc=(((-0.5)*Driving_drive.Basic.Cos)-(0.86602540378443864676372317075294*Driving_drive.Basic.Sin));	// Вычисление фазы C
+			
+
+//******************ВЫЧИСЛЕНИЕ*ТРЕТЬЕЙ*ГАРМОНИКА**********************************************
+/*
+		Driving_drive.Third_harm.Theta_diskr_third_harmonics=(Driving_drive.Basic.Theta_diskr*3);															// вычисление угла задания с условием переменных составляющих для третьей гармоники
+	
+	 while (Driving_drive.Third_harm.Theta_diskr_third_harmonics>=Driving_drive.Basic.OborotGradusov)
+		{ 	
+		Driving_drive.Third_harm.Theta_diskr_third_harmonics=(Driving_drive.Third_harm.Theta_diskr_third_harmonics)-(Driving_drive.Basic.OborotGradusov);																																							// вычисление третьей гармоники 	
+		}*/
+   }
+
+//************************ТРЕТЬЯ*ГАРМОНИКА*****************************************
+/*if (Driving_drive.Basic.KoefUmnozhU>0.86602554)						// условие прибавления третьей гармоники
+{   
+	Driving_drive.Third_harm.KoefThirdHarmPlus=(((Driving_drive.Basic.KoefUmnozhU-0.86602554)*1.244016935856292431175815447155)*(Driving_drive.THIRD_HARM_STRUCT.Sinus_Upr_third_harmonics));													// вычисление прибавляющей третьей гармоники
+	Driving_drive.Basic.Ua=(Driving_drive.Basic.Ua + (Driving_drive.Third_harm.KoefThirdHarmPlus));											// вычисление фазы А с третьей гармоникой
+	Driving_drive.Basic.Ub=(Driving_drive.Basic.Ub + (Driving_drive.Third_harm.KoefThirdHarmPlus));											// вычисление фазы B с третьей гармоникой
+	Driving_drive.Basic.Uc=(Driving_drive.Basic.Uc + (Driving_drive.Third_harm.KoefThirdHarmPlus));											// вычисление фазы C с третьей гармоникой
+}*/
+//*********************************************************************************
+	
+	Driving_drive.Basic.Ua*=Flags_drive.DI_Pusk;//*(CORRECTION_POWER_GRID_STRUCT.KOEF_UA));																					// обнуление фазы А и её коррекция
+	Driving_drive.Basic.Ub*=Flags_drive.DI_Pusk;//*(CORRECTION_POWER_GRID_STRUCT.KOEF_UB));																					// обнуление фазы В
+	Driving_drive.Basic.Uc*=Flags_drive.DI_Pusk;//*(CORRECTION_POWER_GRID_STRUCT.KOEF_UC));																					// обнуление фазы С 
+  }
+
+	Smpl_F[0]=((Driving_drive.Basic.PWM_PERIOD_D2)+((Driving_drive.Basic.Ua)*(Driving_drive.Basic.PWM_PERIOD_D2))*(Driving_drive.Basic.KoefUmnozhU)*0.7);// задание на передачу фазы А
+	Smpl_F[1]=((Driving_drive.Basic.PWM_PERIOD_D2)+((Driving_drive.Basic.Ub)*(Driving_drive.Basic.PWM_PERIOD_D2))*(Driving_drive.Basic.KoefUmnozhU)*0.7);// задание на передачу фазы B
+	Smpl_F[2]=((Driving_drive.Basic.PWM_PERIOD_D2)+((Driving_drive.Basic.Uc)*(Driving_drive.Basic.PWM_PERIOD_D2))*(Driving_drive.Basic.KoefUmnozhU)*0.7);// задание на передачу фазы С
+	
+	
+  	}
+  }
+ }
+//-------------------------------------------------------------------------------------/
+
+//-------------------------------------------------------------------------------------/
+//-------------------------------------------------------------------------------------/
+	//эта функция обрабатывает внешнее прерывание 1 по сбросу лог уровня на выводе sync_in--
+	interrupt void cpu_int13_isr(void)
+		{ //SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
+		EPwm4Regs.TBCTL.bit.SWFSYNC = 1;
+		sync_ok = 1;
+
+
+		//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+		if(MSmode == slave_mode)
+			{//--------------------------------------------------------------------------
+			//ОБРАБОТКА ПРИЕМА ПО ЛИНИИ SCIC~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+			retr_mstr_cell[9]=0;				//сбросить счетчик ретранслируемых байтов
+			if(ScicRegs.SCIRXST.bit.RXERROR)				//если ошибка, то:
+				{//-----------------------------------------------------------------------
+				ScicRegs.SCICTL1.bit.RXENA	=	0;			//выключить приемник
+
+				ScicRegs.SCICTL1.bit.SWRESET = 0;			//сбросить флаги
+				ScicRegs.SCICTL1.bit.SWRESET = 1;
+				ScicRegs.SCIFFRX.bit.RXFIFORESET = 0;		//сбросить указатель FIFO RX	
+				ScicRegs.SCIFFRX.bit.RXFIFORESET = 1;
+
+				}//----------------------------------------------------------------------
+
+			//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+			else //если ошибок нет, то:
+				{//====================================================================
+
+				for(;ScicRegs.SCIFFRX.bit.RXFFST;)
+					{//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+					retr_mstr_cell[retr_mstr_cell[9]] = ScicRegs.SCIRXBUF.all & 0xFF;		//сохранить байт сообщения
+					retr_mstr_cell[9]++;
+
+					}//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+				}//====================================================================
+
+			ScicRegs.SCICTL1.bit.RXENA	=	1;			//включить приемник
+			//Конец ОБРАБОТКи ПРИЕМА ПО ЛИНИИ SCIC~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+			//ОБРАБОТКА ПРИЕМА ПО ЛИНИИ SCIB~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+			retr_cell_mstr[9]=0;				//сбросить счетчик ретранслируемых байтов
+			if(ScibRegs.SCIRXST.bit.RXERROR)				//если ошибка, то:
+				{//-----------------------------------------------------------------------
+				ScibRegs.SCICTL1.bit.RXENA	=	0;			//выключить приемник
+
+				ScibRegs.SCICTL1.bit.SWRESET = 0;			//сбросить флаги
+				ScibRegs.SCICTL1.bit.SWRESET = 1;
+				ScibRegs.SCIFFRX.bit.RXFIFORESET = 0;		//сбросить указатель FIFO RX	
+				ScibRegs.SCIFFRX.bit.RXFIFORESET = 1;
+
+				}//----------------------------------------------------------------------
+
+			//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+			else //если ошибок нет, то:
+				{//====================================================================
+				for(;ScibRegs.SCIFFRX.bit.RXFFST;)
+					{//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+					retr_cell_mstr[retr_cell_mstr[9]] = ScibRegs.SCIRXBUF.all & 0xFF;		//сохранить байт сообщения
+					retr_cell_mstr[9]++;		
+					}//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+				}//====================================================================
+			ScibRegs.SCICTL1.bit.RXENA	=	1;			//включить приемник
+	 		//Конец ОБРАБОТКи ПРИЕМА ПО ЛИНИИ SCIB~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+			}//-------------------------------------------------------------------------- 
+		//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+		EPwm4Regs.ETCLR.bit.INT = 1;				//очистить флаг
+		}//SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
+
+//-------------------------------------------------------------------------------------/
+//-------------------------------------------------------------------------------------/
+
+//---------------------------------------------------------------------------
+//---------------------------------------------------------------------------
+	//функция по прерыванию от таймера PWM4-----------------------------------
+	//проверка приема SCI, проверка целостности принятого фрейма
+	interrupt void epwm4_timer_isr(void) 
+		{ //SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
+//		EPwm4Regs.ETSEL.bit.INTEN 	= 0;				// disable INT
+
+		if(MSmode == master_mode)
+			{//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+			Drp_sync_4slv(); //сбросить сигнал синхронизации для ведомого
+
+			//ОБРАБОТКА ПРИЕМА ПО ЛИНИИ SCIC+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+			if(ScicRegs.SCIRXST.bit.RXERROR)				//если ошибка, то:
+				{//-----------------------------------------------------------------------
+				ScicRegs.SCICTL1.bit.RXENA	=	0;			//выключить приемник
+
+				ScicRegs.SCICTL1.bit.SWRESET = 0;			//сбросить флаги
+				ScicRegs.SCICTL1.bit.SWRESET = 1;
+				ScicRegs.SCIFFRX.bit.RXFIFORESET = 0;		//сбросить указатель FIFO RX	
+				ScicRegs.SCIFFRX.bit.RXFIFORESET = 1;
+
+				numb_frames_slv = 0;						//обнулить счетчик сообщений
+
+				tx_4slv.serv.bit.mode = INIT_MODE;				//установить режим инициализации
+				//установить признак ошибки связи с ячейкой				
+				slv_cell[store_slv_indx[3]->data[1] * NUMB_OF_CELLS + store_slv_indx[3]->data[0]].word.sgnl_err = 1;
+				}//----------------------------------------------------------------------
+
+			//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+			else //если ошибок нет, то:
+				{//====================================================================
+				for(;ScicRegs.SCIFFRX.bit.RXFFST;)
+					{//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+					new_datain_slv[numb_frames_slv] = ScicRegs.SCIRXBUF.all & 0xFF;		//сохранить байт сообщения
+					numb_frames_slv++;		
+					}//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+				if(store_slv_indx[3]->serv.bit.mode)				//если был установлен рабочий режим, то
+					{//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+					if(numb_frames_slv == 9)//если количество принятых байтов верно, то:
+						{//"""""""""""""""""""""""""""""""""""""""""""""""""
+						Uint16	n, i;
+
+						for(i=0;i<3;i++)
+							{//определить номер ячейки в преобразователе
+							n = ((new_datain_slv[i*3] & 0x30) / 0x10) * NUMB_OF_CELLS + (new_datain_slv[i*3] & 0xF);
+
+							slv_cell[n].word.An_Val.named.UDC = new_datain_slv[i*3+1];				//сохранить значение выпрямленного напряжения
+							slv_cell[n].word.W1flags.bit.C_ready = new_datain_slv[i*3] / 0x80;			//сохранить флаг готовности к работе
+							slv_cell[n].word.W1flags.bit.protect_C = new_datain_slv[i*3+2] / 0x80;		//сохранить флаг срабатывания защиты
+							slv_cell[n].word.W1flags.bit.pre_protect_C = (new_datain_slv[i*3+2] & 0x40) / 0x40; //сохранить флаг предупреждения
+							}
+						}//"""""""""""""""""""""""""""""""""""""""""""""""""
+
+					else //если количество принятых байтов не верно, то:
+						{//"""""""""""""""""""""""""""""""""""""""""""""""""
+						err_frames++;						//увеличить счетчик ошибок
+						tx_4slv.serv.bit.mode = INIT_MODE;		//установить режим инициализации
+						//установить признак ошибки связи с ячейкой				
+						slv_cell[store_slv_indx[3]->data[1] * NUMB_OF_CELLS + store_slv_indx[3]->data[0]].word.sgnl_err = 1;
+						}//"""""""""""""""""""""""""""""""""""""""""""""""""			
+					}//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+			//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+				else //если установлен режим инициализации
+					{//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+					if(numb_frames_slv == 5)		//если количество принятых байтов верно, то:
+						{//""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+						if(new_datain_slv[0] & 0x80)		//если бит кода операции установлен 
+							{							//(пришел ответ о сохранении ячейкой параметра), то
+							//пока не реализован
+							}
+
+						else							//если пришел ответ на запрос параметра, то
+							{//------------------------------------------------------------------------------
+							static	Uint16	slv_p_cnt = 0;		//счетчик  параметров						
+									Uint16	slv_Nc_resp, slv_Np_resp, slv_Nc_req, slv_Np_req;
+
+							slv_Nc_resp	=	new_datain_slv[4] * NUMB_OF_CELLS + new_datain_slv[3]; 		//определить номер ячейки из сообщения
+							slv_Nc_req	=	store_slv_indx[3]->data[1] * NUMB_OF_CELLS + store_slv_indx[3]->data[0];	//определить № ячейки из архива
+							slv_Np_resp	=	new_datain_slv[0] & 0x3F;								//определить № параметра из сообщения																	//запроса 
+							slv_Np_req	=	store_slv_indx[3]->data[2];								//определить № параметра из архива
+
+							//если номер ячейки или номер параметра в запросе не совпадает с принятым, то
+							//обнулить счетчик параметров:
+							if((slv_Nc_resp != slv_Nc_req)||(slv_Np_resp != slv_Np_req))
+								{
+								slv_p_cnt = 0;		
+								slv_cell[slv_Nc_req].word.sgnl_err = 1;   //установить признак ошибки связи с ячейкой
+								}	 
+
+							else	//если адресные данные запроса и ответа совпадают, то
+								{//сохранить значение принятой переменной
+								slv_cell[slv_Nc_resp].all[slv_Np_resp] = new_datain_slv[2] * 0x100 + new_datain_slv[1]; 
+								slv_p_cnt++;
+								if(slv_Np_resp == nmb_of_askprm - 1) // если номер переменной последний
+									{
+									//если счетчик параметров равен максимальному значению, сбросить признак ошибки										
+									if(slv_p_cnt == nmb_of_askprm)	   
+										{
+									 	slv_cell[slv_Nc_req].word.sgnl_err = 0;	 //сбросить признак ошибки связи с ячейкой
+										}
+									slv_p_cnt = 0;				   				//сбросить счетчик параметров
+								}	}	
+							}//------------------------------------------------------------------------------------
+						}//"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+					else ////если количество принятых байтов не верно, то:
+						{//"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+						err_frames++;						//увеличить счетчик ошибок		
+						tx_4slv.serv.bit.mode = INIT_MODE;		//установить режим инициализации
+
+						//установить признак ошибки связи с ячейкой				
+						slv_cell[store_slv_indx[3]->data[1] * NUMB_OF_CELLS + store_slv_indx[3]->data[0]].word.sgnl_err = 1;
+						}//"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""					
+					}//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+				}//====================================================================
+			numb_frames_slv = 0;							//обнулить счетчик сообщений
+
+			Set_sync_4slv();		//установить сигнал синхронизации для ведомого
+			ScicRegs.SCICTL1.bit.RXENA	= 1;	//включить приемник  SCIc 
+			ScicRegs.SCICTL1.bit.SWRESET = 0;			//сбросить флаги
+			ScicRegs.SCICTL1.bit.SWRESET = 1;
+			ScicRegs.SCIFFRX.bit.RXFIFORESET = 0;		//сбросить указатель FIFO RX	
+			ScicRegs.SCIFFRX.bit.RXFIFORESET = 1;
+			}//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+
+
+
+		if(MSmode != slave_mode)		
+			{//ОБРАБОТКА ПРИЕМА ПО ЛИНИИ SCIB+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+			if(ScibRegs.SCIRXST.bit.RXERROR)				//если ошибка, то:
+				{//-----------------------------------------------------------------------
+				ScibRegs.SCICTL1.bit.RXENA	=	0;			//выключить приемник
+
+				ScibRegs.SCICTL1.bit.SWRESET = 0;			//сбросить флаги
+				ScibRegs.SCICTL1.bit.SWRESET = 1;
+				ScibRegs.SCIFFRX.bit.RXFIFORESET = 0;		//сбросить указатель FIFO RX	
+				ScibRegs.SCIFFRX.bit.RXFIFORESET = 1;
+
+				numb_frames = 0;							//обнулить счетчик сообщений
+
+				tx.serv.bit.mode = INIT_MODE;		//установить режим инициализации
+				//установить признак ошибки связи с запрошенной ячейкой				
+				cell[store_indx[1]->data[1] * NUMB_OF_CELLS + store_indx[1]->data[0]].word.sgnl_err = 1;
+				}//----------------------------------------------------------------------
+
+			//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+			else //если ошибок нет, то:
+				{//====================================================================
+				for(;ScibRegs.SCIFFRX.bit.RXFFST;)
+					{//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+					new_datain[numb_frames] = ScibRegs.SCIRXBUF.all & 0xFF;		//сохранить байт сообщения
+					numb_frames++;		
+					}//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+				if(store_indx[1]->serv.bit.mode)				//если был установлен рабочий режим, то
+					{//****************************************************************
+					if(numb_frames == 9)//если количество принятых байтов верно, то:
+						{//"""""""""""""""""""""""""""""""""""""""""""""""""
+						Uint16	n, i;
+
+						for(i=0;i<3;i++)
+							{//определить номер ячейки в преобразователе
+							n = ((new_datain[i*3] & 0x30) / 0x10) * NUMB_OF_CELLS + (new_datain[i*3] & 0xF);
+
+							cell[n].word.An_Val.named.UDC = new_datain[i*3+1];				//сохранить значение выпрямленного напряжения
+							cell[n].word.W1flags.bit.C_ready = new_datain[i*3] / 0x80;			//сохранить флаг готовности к работе
+							cell[n].word.W1flags.bit.protect_C = new_datain[i*3+2] / 0x80;		//сохранить флаг срабатывания защиты
+							cell[n].word.W1flags.bit.pre_protect_C = (new_datain[i*3+2] & 0x40) / 0x40; //сохранить флаг предупреждения
+							}
+						}//"""""""""""""""""""""""""""""""""""""""""""""""""
+
+					else //если количество принятых байтов не верно, то:
+						{//"""""""""""""""""""""""""""""""""""""""""""""""""
+						err_frames++;						//увеличить счетчик ошибок
+						tx.serv.bit.mode = INIT_MODE;		//установить режим инициализации
+						//установить признак ошибки связи с запрошенной ячейкой				
+						cell[store_indx[1]->data[1] * NUMB_OF_CELLS + store_indx[1]->data[0]].word.sgnl_err = 1;
+						}//"""""""""""""""""""""""""""""""""""""""""""""""""			
+					}//*****************************************************************
+			//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+				else //если установлен режим инициализации
+					{//*****************************************************************
+					if(numb_frames == 5)		//если количество принятых байтов верно, то:
+						{//""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+						if(new_datain[0] & 0x80)		//если бит кода операции установлен 
+							{							//(пришел ответ о сохранении ячейкой параметра), то
+							//пока не реализован
+							}
+
+						else							//если пришел ответ на запрос параметра, то
+							{//------------------------------------------------
+							static	Uint16	p_cnt = 0;		//счетчик  параметров						
+									Uint16	Nc_resp, Np_resp, Nc_req, Np_req;
+
+							Nc_resp =  new_datain[4] * NUMB_OF_CELLS + new_datain[3]; 		//определить номер ячейки из сообщения
+							Nc_req = store_indx[1]->data[1] * NUMB_OF_CELLS + store_indx[1]->data[0];	//определить № ячейки из архива
+							Np_resp =  new_datain[0] & 0x3F;								//определить № параметра из сообщения																	//запроса 
+							Np_req = store_indx[1]->data[2];								//определить № параметра из архива
+
+							if((Nc_resp != Nc_req)||(Np_resp != Np_req))	//если номер ячейки или номер параметра в запросе 
+								{											//не совпадает с принятым, то
+								p_cnt = 0;
+								cell[Nc_req].word.sgnl_err = 1;	 //установить признак ошибки связи с ячейкой
+								}								 
+							else	//если адресные данные запроса и ответа совпадают, то
+								{//сохранить значение принятой переменной
+								cell[Nc_resp].all[Np_resp] = new_datain[2] * 0x100 + new_datain[1]; 
+								p_cnt++;
+								if(Np_resp == nmb_of_askprm - 1) // если номер переменной последний
+									{
+									//если счетчик параметров равен максимальному значению, сбросить признак ошибки										
+									if(p_cnt == nmb_of_askprm)	   
+										{
+									 	cell[Nc_req].word.sgnl_err = 0;	 //сбросить признак ошибки связи с ячейкой
+										}
+									p_cnt = 0;				   				//сбросить счетчик параметров
+								}	}	
+							}//----------------------------------------------------	
+						}//"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+					else ////если количество принятых байтов не верно, то:
+						{//"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+						err_frames++;						//увеличить счетчик ошибок	
+						tx.serv.bit.mode = INIT_MODE;		//установить режим инициализации
+
+						//установить признак ошибки связи с ячейкой				
+						cell[store_indx[1]->data[1] * NUMB_OF_CELLS + store_indx[1]->data[0]].word.sgnl_err = 1;
+						}//"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""					
+					}//*****************************************************************
+				}//====================================================================
+			//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+			numb_frames = 0;							//обнулить счетчик сообщений
+			ScibRegs.SCICTL1.bit.RXENA	=	1;			//включить приемник
+			//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+			
+			//определение отсчета функции синуса
+		}//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+						 
+		EPwm4Regs.ETCLR.bit.INT = 1;				//очистить флаг
+		PieCtrlRegs.PIEACK.all = PIEACK_GROUP3;
+		}//SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
+//---------------------------------------------------------------------------
+//---------------------------------------------------------------------------
+
+//---------------------------------------------------------------------------
+//---------------------------------------------------------------------------
+	//функция по прерыванию от таймера PWM6-----------------------------------
+	//запускает передачу данных	каждые 55,52 мкс
+	interrupt void epwm6_timer_isr(void)
+		{//SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
+		static	Uint16 frame_cnt = 0;		//переменная для счета посылок
+		
+		//---------------------------------------------------------------------------
+			frame_cnt++;							//инкрементировать счетчик сообщений
+			if(frame_cnt == 30)						//если счет достиг нужного значения,
+				{tx.serv.bit.saw_sync = 1;			//установить бит синхронизации базовой пилы
+				 frame_cnt = 0;}						//обнулить счетчик
+			else 
+				{tx.serv.bit.saw_sync = 0;}			//сбросить бит синхронизации базовой пилы
+			if(frame_cnt == 29)						//если счет достиг нужного значения,
+				{tx_4slv.serv.bit.saw_sync = 1;}			//установить бит синхронизации базовой пилы
+			else 
+				{tx_4slv.serv.bit.saw_sync = 0;}
+		//---------------------------------------------------------------------------
+
+
+			if(MSmode != slave_mode)	
+				{//===========================================================================================================
+				//формирование передачи для рабочего режима------------------------------
+				if(tx.serv.bit.mode)		//если установлен рабочий режим, то
+					{//""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+					
+					if (MSmode == sngl_mode)
+					{
+					tx.Smpl_F[0].all = Smpl_F[0];
+					tx.Smpl_F[1].all = Smpl_F[1];
+					tx.Smpl_F[2].all = Smpl_F[2];
+					}
+							
+					if (MSmode == master_mode)
+					{
+						tx.Smpl_F[0].all = store_Smpl_F[0];
+						tx.Smpl_F[1].all = store_Smpl_F[1];
+						tx.Smpl_F[2].all = store_Smpl_F[2];
+					}
+
+					//сформировать посылку для рабочего режима:
+					tx_frame[0] = tx.serv.all;
+					tx_frame[1] = tx.Smpl_F[0].byte.low;	//записать младшее полуслово
+					tx_frame[2] = tx.Smpl_F[0].byte.high;	//записать старшее полуслово
+					tx_frame[3] = tx.Smpl_F[1].byte.low;	//записать младшее полуслово
+					tx_frame[4] = tx.Smpl_F[1].byte.high;	//записать старшее полуслово
+					tx_frame[5] = tx.Smpl_F[2].byte.low;	//записать младшее полуслово
+					tx_frame[6] = tx.Smpl_F[2].byte.high;	//записать старшее полуслово
+					tx_frame[7] = tx.CRC;
+					
+					tx.serv.bit.cell_indx++;
+					if(tx.serv.bit.cell_indx >= NUMB_OF_CELLS) tx.serv.bit.cell_indx = 0;
+
+					}//""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+				//формирование передачи для режима инициализации------------------------------
+				else
+					{//""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+					static	Uint16	param_cnt = 0;		//ввести вспомогательную переменную для счета параметров
+					static	Uint16	i_cell_cnt = 0;		//переменная для счета ячеек						
+									
+					//сформировать посылку для режима инициализации:						
+					tx_frame[0] = tx.serv.all;
+					tx_frame[1] = cell[i_cell_cnt].word.cell_indx;	//записать номер ячейки в фазе
+					tx_frame[2] = cell[i_cell_cnt].word.phase_indx;	//записать номер фазы
+					tx_frame[3] = param_cnt;						//записать номер параметра
+					tx_frame[4] = 0;								//записать 0
+					tx_frame[5] = 0;								//записать 0
+					tx_frame[6] = 0;								//записать 0
+					tx_frame[7] = tx.CRC;
+
+					param_cnt++;
+					if(param_cnt >= nmb_of_askprm)
+						{//--------------------------
+						param_cnt = 0;
+						i_cell_cnt++;
+						if(i_cell_cnt >= NUMB_OF_CELLS * 3)	{i_cell_cnt = 0;}														
+						}//--------------------------	
+					}//""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+				//-----------------------------------------------------------------------
+				
+					{//запустить передачу -----------------------------
+					Uint16 i;
+					ScibRegs.SCIFFTX.bit.TXFIFOXRESET = 0;	//сбросить указатель FIFO TX
+					ScibRegs.SCIFFTX.bit.TXFIFOXRESET = 1;
+
+					for(i=0;i < numb_mes;i++) 
+						ScibRegs.SCITXBUF = tx_frame[i] & 0xFF;//записать в буфер отбросив старшее полуслово
+					}//------------------------------------------------
+					
+					{//сохранить посылку на место более старого банка--
+					Uint16 a;
+					struct	STORE_DATA  *b;
+
+					store_indx[1]->serv.all = tx_frame[0];
+					for(a=0;a < 6;a++)	 store_indx[1]->data[a] = tx_frame[a+1];
+					//сдвиг индексов	
+					b = store_indx[0];
+					store_indx[0] = store_indx[1];
+					store_indx[1] =  b;
+					}//------------------------------------------------
+				}//===========================================================================================================
+
+
+				if(MSmode == master_mode)
+					{//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+					//формирование передачи для рабочего режима------------------------------
+					if(tx_4slv.serv.bit.mode)		//если установлен рабочий режим, то
+						{//""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+								store_Smpl_F[0] = tx_4slv.Smpl_F[0].all = Smpl_F[0];
+								store_Smpl_F[1] = tx_4slv.Smpl_F[1].all = Smpl_F[1];
+								store_Smpl_F[2] = tx_4slv.Smpl_F[2].all = Smpl_F[2];
+
+
+						//сформировать посылку для рабочего режима:
+						tx_frame[0] = tx_4slv.serv.all;
+						tx_frame[1] = tx_4slv.Smpl_F[0].byte.low;	//записать младшее полуслово
+						tx_frame[2] = tx_4slv.Smpl_F[0].byte.high;	//записать старшее полуслово
+						tx_frame[3] = tx_4slv.Smpl_F[1].byte.low;	//записать младшее полуслово
+						tx_frame[4] = tx_4slv.Smpl_F[1].byte.high;	//записать старшее полуслово
+						tx_frame[5] = tx_4slv.Smpl_F[2].byte.low;	//записать младшее полуслово
+						tx_frame[6] = tx_4slv.Smpl_F[2].byte.high;	//записать старшее полуслово
+						tx_frame[7] = tx_4slv.CRC;
+						
+						tx_4slv.serv.bit.cell_indx++;
+						if(tx_4slv.serv.bit.cell_indx >= NUMB_OF_CELLS) tx_4slv.serv.bit.cell_indx = 0;
+
+						}//""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+					//-----------------------------------------------------------------------
+
+					//формирование передачи для режима инициализации------------------------------
+					else
+						{//""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+						static	Uint16	param_cnt_slv = 0;		//ввести вспомогательную переменную для счета параметров
+						static	Uint16	i_cell_cnt_slv = 0;		//переменная для счета ячеек						
+
+						//сформировать посылку для режима инициализации:						
+						tx_frame[0] = tx_4slv.serv.all;
+						tx_frame[1] = slv_cell[i_cell_cnt_slv].word.cell_indx;	//записать номер ячейки в фазе
+						tx_frame[2] = slv_cell[i_cell_cnt_slv].word.phase_indx;	//записать номер фазы
+						tx_frame[3] = param_cnt_slv;						//записать номер параметра
+						tx_frame[4] = 0;								//записать 0
+						tx_frame[5] = 0;								//записать 0
+						tx_frame[6] = 0;								//записать 0
+						tx_frame[7] = tx_4slv.CRC;
+
+						param_cnt_slv++;
+						if(param_cnt_slv == nmb_of_askprm)
+							{//---------------------------
+							param_cnt_slv = 0;
+							i_cell_cnt_slv++;
+							if(i_cell_cnt_slv == NUMB_OF_CELLS * 3)	 {i_cell_cnt_slv = 0;}
+							}//---------------------------	
+						}//""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+					//-----------------------------------------------------------------------
+					
+						{//запустить передачу для подчиненного ------------------
+						Uint16 i;
+						ScicRegs.SCIFFTX.bit.TXFIFOXRESET = 0;	//сбросить указатель FIFO TX
+						ScicRegs.SCIFFTX.bit.TXFIFOXRESET = 1;
+
+						for(i=0;i < numb_mes;i++) 
+							ScicRegs.SCITXBUF = tx_frame[i] & 0xFF;//записать в буфер отбросив старшее полуслово
+						}//------------------------------------------------------
+					
+						{//сохранить посылку на место более старого банка
+						Uint16 a;
+						struct	STORE_DATA  *b;
+
+						store_slv_indx[3]->serv.all = tx_frame[0];
+						for(a=0;a < 6;a++)	 store_slv_indx[3]->data[a] = tx_frame[a+1];
+						//сдвиг индексов	
+						b = store_slv_indx[0];
+						store_slv_indx[0] =  store_slv_indx[3];
+						store_slv_indx[3] =  store_slv_indx[2];
+						store_slv_indx[2] =  store_slv_indx[1];
+						store_slv_indx[1] =  b;
+						}
+
+					}//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+
+			if((sync_ok) & (MSmode == slave_mode))
+				{//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+				Uint16 i;
+				ScicRegs.SCIFFTX.bit.TXFIFOXRESET = 0;	//сбросить указатель FIFO TX
+				ScicRegs.SCIFFTX.bit.TXFIFOXRESET = 1;
+
+				for(i=0;i < retr_cell_mstr[9];i++) 
+				{
+				 ScicRegs.SCITXBUF = retr_cell_mstr[i] & 0xFF;//записать в буфер отбросив старшее полуслово
+				 retr_cell_mstr[i] = 0;	
+				}//------------------------
+				ScibRegs.SCIFFTX.bit.TXFIFOXRESET = 0;	//сбросить указатель FIFO TX
+				ScibRegs.SCIFFTX.bit.TXFIFOXRESET = 1;
+
+				for(i=0;i < retr_mstr_cell[9];i++) 
+					{
+					ScibRegs.SCITXBUF = retr_mstr_cell[i] & 0xFF;//записать в буфер отбросив старшее полуслово
+					retr_mstr_cell[i] = 0;	
+					}
+			sync_ok = 0;
+				}//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+//			EPwm4Regs.ETSEL.bit.INTEN 	= 1;				// Enable INT
+			EPwm6Regs.ETCLR.bit.INT = 1;					//очистить флаг
+			PieCtrlRegs.PIEACK.all = PIEACK_GROUP3;
+		} //SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
+//---------------------------------------------------------------------------
+//---------------------------------------------------------------------------
+
+//---------------------------------------------------------------------------
+//---------------------------------------------------------------------------
+//функция проверки завершения инициализации-------------------------------
+void Cells_Check()
+	{
+	Uint16	tot_err = 0;
+	Uint16	tot_slv_err = 0;
+
+	if(MSmode != slave_mode)
+		{//====================================================================
+			{//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+			Uint16 i;
+			tot_cell_ready = 1;
+			tot_sgnl_err = 0;
+
+			for(i=0;i < NUMB_OF_CELLS * 3;i++)	//проверить признаки инициализации всех ячеек
+				{//----------------------------------
+				tot_cell_ready &= cell[i].word.W1flags.bit.C_ready;	//установить общий признак готовности ячеек, если все гот
+				tot_sgnl_err |= cell[i].word.sgnl_err;
+				}//----------------------------------
+
+			if(tot_cell_ready & (!tot_sgnl_err)) {tot_err = 0;}
+			else 								 {tot_err = 1;} 									
+			}//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+		if(MSmode == master_mode)
+			{//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+		  		{//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+				Uint16 i;
+				tot_cell_ready_slv = 1;
+				tot_sgnl_err_slv = 0;
+
+				for(i=0;i < NUMB_OF_CELLS * 3;i++)	//проверить признаки инициализации всех ячеек
+					{//----------------------------------
+					tot_cell_ready_slv &= slv_cell[i].word.W1flags.bit.C_ready;	//установить общий признак готовности ячеек, если все гот
+					tot_sgnl_err_slv |= slv_cell[i].word.sgnl_err;
+					}//----------------------------------
+
+				if(tot_cell_ready_slv & (!tot_sgnl_err_slv))	{tot_slv_err = 0;}
+				else											{tot_slv_err = 1;}
+				}//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+			}//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  	  //====================================================================
+		if(tot_err)
+			{//----------------------------------
+			R_LED_on();
+			G_LED_off();
+
+				tx.serv.bit.mode = INIT_MODE; 
+				tx_4slv.serv.bit.mode = INIT_MODE;
+			}//----------------------------------
+		else
+			{//----------------------------------
+			if((tot_slv_err) & (MSmode == master_mode))
+				{//--------------------
+				R_LED_on();
+
+				if(Prmt_Work == on)	{G_LED_on();}
+				else  				{G_LED_off();}
+
+				tx.serv.bit.mode = INIT_MODE; 
+				tx_4slv.serv.bit.mode = INIT_MODE;
+				}//--------------------
+			else
+				{//--------------------
+				R_LED_off();
+
+				if(Prmt_Work == on)
+					{
+					tx.serv.bit.mode = tx_4slv.serv.bit.mode = WORK_MODE;
+					G_LED_on(); 
+					}
+				else 
+					{
+					tx.serv.bit.mode = tx_4slv.serv.bit.mode = INIT_MODE;
+					G_LED_off(); 					
+					}
+				}//-------------------- 
+			}//----------------------------------
+
+		}//====================================================================
+	else
+		{//====================================================================
+		R_LED_off();
+		G_LED_off(); 
+		}//====================================================================	
+	}
+//------------------------------------------------------------------------
+//---------------------------------------------------------------------------
+
+//---------------------------------------------------------------------------
+//---------------------------------------------------------------------------
+//функция инициализации данных ячеек и передачи------------------------------
+void Init_Data()
+{
+Uint16	i, a;
+Uint16	n = &cell[0].word.cell_indx - &cell[0].all[0];	//определить количество параметров для обнуления
+
+	for(a = 0;a < 3;a++)		//счет фаз
+		{
+		for(i=0;i < NUMB_OF_CELLS;i++)		//счет ячеек
+			{
+			Uint16	j, k = NUMB_OF_CELLS * a + i;
+
+			for(j=0;j < n;j++) cell[k].all[j] = 0;		//обнуление данных кроме номеров
+			cell[k].word.cell_indx	= i;				//определить номер ячейки в фазе
+			cell[k].word.phase_indx = a;				//определить номер фазы
+			cell[k].word.init_done = 0;					//обнулить признак ошибки инициализации ячейки
+			cell[k].word.sgnl_err = 0;					//сбросить признак ошибки связи с ячейкой
+			}
+		}
+	for(a = 0;a < 3;a++)		//счет фаз
+		{
+		for(i=0;i < NUMB_OF_CELLS;i++)		//счет ячеек
+			{
+			Uint16	j, k = NUMB_OF_CELLS * a + i;
+
+			for(j=0;j < n;j++) slv_cell[k].all[j] = 0;		//обнуление данных кроме номеров
+			slv_cell[k].word.cell_indx	= i;				//определить номер ячейки в фазе
+			slv_cell[k].word.phase_indx = a;				//определить номер фазы
+			slv_cell[k].word.init_done = 0;					//обнулить признак ошибки инициализации ячейки
+			slv_cell[k].word.sgnl_err = 0;					//сбросить признак ошибки связи с ячейкой
+			}
+		}
+	//формирование полного списка передаваемых параметров для стартовой инициализации
+	nmb_of_askprm =	tot_nmb_of_askprm;
+	for(i=0;i<nmb_of_askprm;i++) par_nmb_list[i] = i;
+//	reset_init_on = 1;				//установить признак начальной инициализации
+
+	//инициализация данных для передачи-----------
+	{		//очистка данных для передачи
+	Uint16* p = &tx.serv.all;
+	Uint16 i;
+	for(i=0;i<8;i++) *(p + i) = 0;
+	
+	p = &tx_4slv.serv.all;
+	for(i=0;i<8;i++) *(p + i) = 0;
+	}//-------------------------------------------
+
+	tx.serv.bit.mode = INIT_MODE;					//установить режим
+	tx.serv.bit.cell_indx = 0;							//установить операцию чтения ячеек
+	tx.Smpl_F[0].all = tx.Smpl_F[1].all = tx.Smpl_F[2].all = mid_lvl; //выставить нулевой уровень функции
+
+	tx_4slv.serv.bit.mode = INIT_MODE;					//установить режим
+	tx_4slv.serv.bit.cell_indx = 0;							//установить операцию чтения ячеек
+	tx_4slv.Smpl_F[0].all = tx_4slv.Smpl_F[1].all = tx_4slv.Smpl_F[2].all = mid_lvl; //выставить нулевой уровень функции
+
+	//инициализация архива---------------------------
+	{		//очистка архива
+	Uint16* p = &store[0].serv.all;
+	Uint16 i;
+	for(i=0;i<8*3;i++) *(p + i) = 0;
+	p = &store_slv[0].serv.all;
+	for(i=0;i<8*4;i++) *(p + i) = 0;
+	}//-----------------------------------------------
+
+	EALLOW;  // This is needed to write to EALLOW protected registers
+		GpioIntRegs.GPIOXNMISEL.bit.GPIOSEL = 28;			//связать вход 28 с внешним прерыванием
+		XIntruptRegs.XNMICR.bit.POLARITY = 0;				//внешнее прерывание NMINT по падающему фронту сигнала
+		XIntruptRegs.XNMICR.bit.ENABLE = 0;					//
+		XIntruptRegs.XNMICR.bit.SELECT = 1;					//выбрать прерывание int13
+	EDIS;    // This is needed to disable write to EALLOW protected registers
+
+	SciaRegs.SCICTL1.bit.RXENA	= 0;	//выключить приемник  RS485_2  (а)
+	ScicRegs.SCICTL1.bit.RXENA	= 0;	//выключить приемник  RS485_1  (c)
+	XIntruptRegs.XNMICR.bit.ENABLE = 0;	//отключить прерывание порта
+	MSmode = sngl_mode;
+
+	Exp1_regs.GPout.all = 0xFFFFFFFF;
+	Exp2_regs.GPout.all = 0xFFFFFFFF;
+
+}
+//---------------------------------------------------------------------------
+//---------------------------------------------------------------------------
+
+//---------------------------------------------------------------------------
+//---------------------------------------------------------------------------
+//функция настройки spi передачи
+void Stup_SPI_exch(Uint16 dev_sel)
+	{
+	//сохранение результата 
+	if(spi_store.spi_dev == ADC1_dev_SEL) {AD7732_1.adc1 = (spi_store.data[2] & 0xFF) + (spi_store.data[1] * 0x100);}
+
+	if(spi_store.spi_dev == ADC2_dev_SEL) {AD7732_2.adc1 = (spi_store.data[2] & 0xFF) + (spi_store.data[1] * 0x100);}
+
+	if(spi_store.spi_dev == EXP1_dev_SEL) {Exp1_regs.GPin.byte.GP4_11 = spi_store.data[1] & 0xFF;
+										   Exp1_regs.GPin.byte.GP12_19 = spi_store.data[2] & 0xFF;}
+										   
+	if(spi_store.spi_dev == EXP2_dev_SEL) {Exp2_regs.GPin.byte.GP4_11 = spi_store.data[1] & 0xFF;
+										   Exp2_regs.GPin.byte.GP12_19 = spi_store.data[2] & 0xFF;}
+	//настройка SPI
+	if((dev_sel == ADC1_dev_SEL) || (dev_sel == ADC2_dev_SEL))
+		{
+		SpiaRegs.SPICCR.bit.SPICHAR = 0x7;			//передача слова из 8 бит
+		SpiaRegs.SPICCR.bit.CLKPOLARITY = 1;		//подача данных на выход по спадающему фронту
+		SpiaRegs.SPICTL.bit.CLK_PHASE = 0;			//выключить задержку сигнала clk
+		SpiaRegs.SPIBRR = 74;						//установить частоту LSPCLK/(74+1) (1 МГц) 
+
+		spi_store.spi_dev = dev_sel;
+		spi_store.remn_nmb_byte = 3;
+		spi_store.nmb_byte = 3;
+		spi_store.data[0] = (R_ad7732 + Ch1_Data_adr) * 0x100;
+		spi_store.data[1] = 0;
+		spi_store.data[2] = 0;
+		}
+	if((dev_sel == EXP1_dev_SEL) || (dev_sel == EXP2_dev_SEL))
+		{ 
+		SpiaRegs.SPICCR.bit.SPICHAR = 0xF;			//передача слова из 16 бит
+		SpiaRegs.SPICCR.bit.CLKPOLARITY = 0;		//подача данных на выход по нарастающему фронту
+		SpiaRegs.SPICTL.bit.CLK_PHASE = 1;			//включить задержку сигнала clk
+		SpiaRegs.SPIBRR = 9;						//установить частоту LSPCLK/(9+1) (7.5 МГц) 
+
+		spi_store.spi_dev = dev_sel;
+		spi_store.remn_nmb_byte = 4;
+		spi_store.nmb_byte = 4;
+		spi_store.data[0] = MX7301_R_code + adr_GP4_11;
+		spi_store.data[1] = MX7301_R_code + adr_GP12_19;
+		spi_store.data[2] = MX7301_W_code + adr_GP12_19 + Exp1_regs.GPout.byte.GP12_19;
+		spi_store.data[3] = MX7301_W_code + adr_GP20_27 + Exp1_regs.GPout.byte.GP20_27;
+		}
+		{Uint16 i;
+		for(i=0;i<50;i++) {};}
+	}
+
+	//--- функция закона Костенко
+
+void FuncZakonKostenko(void)															// функция закона Костенко
+
+	{ Driving_drive.Basic.KoefUmnozhf=((Driving_drive.Basic.ZadIntensivnostiTheta)*(Driving_I.Iaktivn));							// задание напряжения
+  	  Driving_drive.Basic.KoefUmnozhU=((Driving_drive.Basic.ZadIntensivnosti)*(Driving_I.IRkomponsacia));							// + пропорционально частоте
+	
+		if (Driving_drive.Basic.KoefUmnozhU>=Driving_drive.Basic.KoefMaxVoltage)															// если задание напряжения больше 380 В
+  		Driving_drive.Basic.KoefUmnozhU=Driving_drive.Basic.KoefMaxVoltage;																// не увеличивать напряжение
+
+		if (Driving_drive.Basic.KoefUmnozhf>=1)							// если частота больше 50 Гц
+  			Driving_drive.Basic.KoefUmnozhf=1;							// оставить заданную частоту					
+	}
+
+//--- функция задания начальных параметров
+void FuncZadBeginParametrov(void)  												
+		{   
+ 		LED2_inv_set;																// выключение светодиода 2
+		IRD_CTL=1;
+ 		Driving_drive.Third_harm.Theta_diskr_third_harmonics=0;		// угол задания в дискретах третьей гармоники
+		Driving_drive.Basic.KoefUmnozhU=0;							// коэффициент умножения напряжения
+		Driving_drive.Basic.ZadIntensivnosti=0;						// значение задатчика интенсивности напряжения
+		Flags_drive.DO_PIL_ON=0;													// флаг сигнализации аварии
+		Driving_drive.Basic.ZadIntensivnostiTheta=0;					// значение задатчика интенсивности напряжения
+		Driving_drive.Basic.KoefUmnozhf=0;							// коэфициент умножения частоты общий
+		Driving_drive.Basic.Ua=0;										// значение напряжения фазы А
+		Driving_drive.Basic.Ub=0;										// значение напряжения фазы В
+		Driving_drive.Basic.Uc=0;										// значение напряжения фазы С
+		Flags_drive.ZamedlObr=0;													// флаг замедления обратного вращения (Используется в функции проверки вращения привода
+		Flags_drive.ZamedlVper=0;		    										// флаг замедления вращения (Используется в функции проверки вращения привода
+		Flags_drive.DI_Pusk=0;														// установка флага пуска
+		Flags_drive.DI_Stop=0;
+		Flags_drive.DI_StartPusk=0;													// сброс флага начала пуска
+			
+		Driving_I.IuRezultat=0;							// значение тока 1 в относительных единицах
+		Driving_I.IwRezultat=0;							// значение тока 2 в относительных единица
+		Driving_I.IRkomponsacia=0;						// коэффициент IR компенсаци
+		Driving_I.KoeficentR=0.05;						// коэфициент R IR компенсации
+		Driving_I.Iaktivn=0;							// значение активного тока
+		Driving_I.Raktivn=0;							// значение коэфициента R активного тока
+		Driving_I.IuRezultat=0;							// значение тока 1 в относительных единицах
+		Driving_I.IwRezultat=0;							// значение тока 2 в относительных единицах
+		Driving_I.IuRezultatChisla=0;					// значения u для вычисления постоянной составляющей
+		Driving_I.IwRezultatChisla=0;					// значения w для вычисления постоянной составляющей
+		Driving_I.IORezultatChisla=0;					// значения 0 для вычисления постоянной составляющей
+		Driving_I.IRezultatChisla=0;						// значение результирующее для вычисления постоянной составляющей
+		Driving_I.IRezultatSQRT=0;						// значение тока для вычисления корня
+		Driving_I.SQRTI=0;								// значение корня текущего значения
+		Driving_I.I_kompensation_plus=0;					// прибавляющаяся часть компенсации
+		Driving_I.I_alpha=0;								// токовый сигнал алфа
+   		Driving_I.I_beta=0;								// токовый сигнал бета
+  		Driving_I.I_a=0;									// преобразование активного тока
+
+		Filter_I_and_U.schet_U=0;										// счётчик значений единиц напряжения
+		Filter_I_and_U.schet_I=0;										// счётчик значений единиц тока
+		Filter_I_and_U.schet=0;										// счётчик значений единиц
+		Filter_I_and_U.schetS=0;
+		Filter_I_and_U.schetTen=0;										// счётчик значений десятков
+		Filter_I_and_U.schetHundred=0;									// счётчик значений сотен
+		Filter_I_and_U.schetThousand=0;								// счётчик значений тысяч
+		Filter_I_and_U.schet_10_Thousand=0;							// счётчик значений 10 тысяч
+		Filter_I_and_U.schet_100_Thousand=0;							// счётчик значений 100 тысяч
+		Filter_I_and_U.schet_1000_Thousand=0;							// счётчик значений 1000 тысяч
+		Filter_I_and_U.schet_10000_Thousand=0;							// счётчик значений 10000 тысяч
+		Filter_I_and_U.Ideistv_1=0;									// значение суммарного тока 1 умноженнного на коэфициент (фильтр)
+		Filter_I_and_U.Ideistv_2=0;									// значение суммарного тока 2 умноженнного на коэфициент (фильтр)
+		Filter_I_and_U.schetchik=0;									// временный счётчик
+		Filter_I_and_U.FilterTokaSQRTlong=0;							// временная составляющая
+		Filter_I_and_U.FilterTokaSQRTlongTen=0;						// временная составляющая десятки
+		Filter_I_and_U.FilterTokaSQRTlongHundred=0;					// временная составляющая сотни
+		Filter_I_and_U.FilterTokaSQRTlongThousand=0;					// временная составляющая тысяч
+		Filter_I_and_U.FilterTokaSQRTlong_10_Thousand=0;				// временная составляющая 10 тысяч
+		Filter_I_and_U.FilterTokaSQRTlong_100_Thousand=0;				// временная составляющая 100 тысяч
+		Filter_I_and_U.FilterTokaSQRTlong_1000_Thousand=0;				// временная составляющая 1000 тысяч
+		Filter_I_and_U.FilterTokaSQRTlong_10000_Thousand=0;			// временная составляющая 10000 тысяч
+
+		Sensorless_drive.I_zero=0;											// значение тока нулевого значения
+		Sensorless_drive.Iu=0;												// значение тока u типа 
+		Sensorless_drive.Iw=0;												// значение тока w типа 
+		Sensorless_drive.Uu=0;												// значение напряжения фазы u типа int 16
+		Sensorless_drive.Uv=0;												// значение напряжения фазы v типа int 16
+		Sensorless_drive.Uw=0;												// значение напряжения фазы w типа int 16
+		Sensorless_drive.Iuf=0;												// значение тока u
+		Sensorless_drive.Iwf=0;												// значение тока w
+		Sensorless_drive.Uuf=0;												// значение напряжения фазы u
+		Sensorless_drive.Uvf=0;												// значение напряжения фазы v
+		Sensorless_drive.Uwf=0;												// значение напряжения фазы w
+		Sensorless_drive.Iu_int=0;											// значение тока u типа Uint
+		Sensorless_drive.Iw_int=0;											// значение тока w типа Uint
+		Sensorless_drive.Uu_int=0;											// значение напряжения фазы u типа Uint
+		Sensorless_drive.Uv_int=0;											// значение напряжения фазы v типа Uint
+		Sensorless_drive.Uw_int=0;				
+
+/*Protect_current.I_Protect_3_part- поменять на 1600
+Protect_current.I_Protect_3_part_minus- поменять на -1600
+Protect_current.I_Protect_1_part_I-поменять на 3000
+Protect_current.I_Protect_2_part_I-поменять на 3600
+Protect_current.I_Protect_Time_Current- поменять на 2900*/	
+
+		Protect_current.I_Protect_1_part = 700;							// значение ограничения первой зоны 
+		Protect_current.I_Protect_3_part = 1600;						// значение ограничение третьей зоны 
+		Protect_current.I_Protect_1_part_minus = -700;					// значение ограничение первой зоны 
+		Protect_current.I_Protect_3_part_minus = -1600;					// значение ограничение третьей зоны 
+		Protect_current.I_Protect_1_part_I = 3000;						// значение ограничения начала уменьшения зоны 1
+		Protect_current.I_Protect_2_part_I = 3600;						// значение ограничения начала уменьшения зоны 2
+		Protect_current.I_Protect_Time_Current = 2900;					// значение ограничения время токовой защиты
+
+		Protect_current.Koef_protect = 0;								// значение коэфициента защиты												
+		Protect_current.U_Protect = 4000;								// значение коэфициента срабатывания защиты по напряжению 
+		Protect_current.Koef_protect_lowing = 2;						// значение коэфициента уменьшение 
+		Protect_current.Time_current_protect_plus = 0.0000001;			// значение прибавляющей части время-токовой защиты 
+		Protect_current.Time_current_protect_minus = 0.0000001;			// значение вычитающей части время-токовой защиты
+		Protect_current.Time_current_protect = 1;						// значение срабатывания защиты
+		Protect_current.Time_current_protect_base = 0;					// действующие значение защиты
+		
+		Driving_drive.Inst_speed.Zad_speed_int=0;						// задатчик скорости значение АЦП
+	    Driving_drive.Inst_speed.Zad_speed_fl=0;							// задатчик скорости
+		Driving_drive.Inst_speed.Zad_speed_fl_deistv=0;						// значение суммарного задатчика скорости умноженнного на коэфициент (фильтр)
+		Driving_drive.Inst_speed.Zad_speed_fl_form=0;							// задатчик скорости (коэффициент формирования)
+		Driving_drive.Inst_speed.Zad_intens_fl_begin=0;				// начальное задание интенсивности (В программе принимает первоначальное значение ZadIntensivnosti)
+		
+		Driving_drive.Third_harm.KoefThirdHarmPlus=0;					// значение коэфициента третьей гармоники
+		Driving_drive.Third_harm.Sinus_Upr_third_harmonics=0;			// значение синуса для третьей гармоники
+		Driving_drive.Third_harm.Theta_diskr_third_harmonics=0;	 	// значение угла для третьей гармоники
+	
+		Driving_drive.Basic.Theta=0;									// угол задания
+		Driving_drive.Basic.ThetaD=1;									// угол добавки к текущему значения
+		Driving_drive.Basic.ThetaDPI=0;								// угол добавки к текущему значения
+		Driving_drive.Basic.ThetaPlus=0;								// угол добавки к текущему значению (различный изменяеммые переменные значения)
+		Driving_drive.Basic.OborotGradusov=360;						// количество дискрет на полный оборот
+		Driving_drive.Basic.Theta_diskr=0;							// угол задания в дискретах
+		Driving_drive.Basic.PuskCount=0;								// счётчик пуска (применяется в фильтре)
+		Driving_drive.Basic.StopCount=0;								// счётчик стопа (применяется в фильтре)
+		Driving_drive.Basic.PWM_PERIOD_D2=20820;					// шим задания
+		Driving_drive.Basic.KoefZadatchikaIntensivnostiUmenshen=0;	// коэфициент задатчика интенсивности уменшения
+		Driving_drive.Basic.KoefUmnozhU=0;							// коэффициент умножения напряжения
+		Driving_drive.Basic.ZadIntensivnostiPlus=	      0.000001;		// прибавляющая часть задатчика интенсивности напряжения
+		Driving_drive.Basic.ZadIntensivnostiPlusTheta=  0.000001;		// прибавляющая часть задатчика интенсивности напряжения
+		Driving_drive.Basic.ZadIntensivnosti=0;						// значение задатчика интенсивности напряжения
+		Driving_drive.Basic.ZadIntensivnostiTheta=0;					// значение задатчика интенсивности напряжения
+		Driving_drive.Basic.KoefUmnozhf=0;							// коэфициент умножения частоты общий
+		Driving_drive.Basic.KoefUmnozhf_L_F=0;						// коэфициент умножения частоты низкие частоты
+		Driving_drive.Basic.KoefUmnozhf_L_F_K=0;						// коэфициент умножения частоты низкие частоты приведения к единице
+		Driving_drive.Basic.Ua=0;										// значение напряжения фазы А
+		Driving_drive.Basic.Ub=0;										// значение напряжения фазы В
+		Driving_drive.Basic.Uc=0;										// значение напряжения фазы С
+		Driving_drive.Basic.KoefMaxVoltage=0.99;						// значение коэфициента максимального напряжения
+		Driving_drive.Basic.KoefMinVoltage=0.05;						// значение коэфициента минимального напряжения при регулировании
+		Driving_drive.Basic.Schetchikpochasovoi=0;					// счётчик вращения по часовой
+		Driving_drive.Basic.Schetchikprotivchasovoi=0;				// счётчик вращения против часовой
+		Driving_drive.Basic.DO_PIL_ON_Max_Count=30000;				// максимальное значение счётчика сигнализации "авария"
+		Driving_drive.Basic.DO_PIL_ON_PWM_MAX_Count=100;				// максимальное значение PWM счётчика сигнализации "авария"
+		Driving_drive.Basic.DO_PIL_ON_Count_Div=(Driving_drive.Basic.DO_PIL_ON_Max_Count/Driving_drive.Basic.DO_PIL_ON_PWM_MAX_Count); // делитель счётчика сигнализации "авария"
+		CORRECTION_POWER_GRID_STRUCT.DELTA_KOEF_UDC=0.000001;						// интегрирующая часть адаптации подстройки к сети
+		CORRECTION_POWER_GRID_STRUCT.KOEF_UA=0.83;									// коррекция напряжения сети для фазы А
+		CORRECTION_POWER_GRID_STRUCT.KOEF_UB=0.83;									// коррекция напряжения сети для фазы В
+		CORRECTION_POWER_GRID_STRUCT.KOEF_UC=0.83;									// коррекция напряжения сети для фазы С
+		PIL_CTL=1;																	// выключение сигнализации
+		Flags_drive.Rechange_drive=0;												// 	
+		}
+
+//--- функция срабатывания кнопки стоп
+void FuncStop(void)  			
+{
+ 	if (Driving_drive.Basic.ZadIntensivnostiTheta>=Driving_drive.Basic.ZadIntensivnostiPlusTheta)																// если скорость больше 0.05 от номинального значения
+		{
+		Driving_drive.Basic.ZadIntensivnosti=(Driving_drive.Basic.ZadIntensivnosti)-2*(Driving_drive.Basic.ZadIntensivnostiPlus);					// уменьшение напряжения
+		Driving_drive.Basic.ZadIntensivnostiTheta=(Driving_drive.Basic.ZadIntensivnostiTheta)-2*(Driving_drive.Basic.ZadIntensivnostiPlusTheta);	// уменьшение частоты
+		}				
+	else
+		{
+		FuncZadBeginParametrov();
+		LED1_inv_set;
+		}
+	}
+
+//--- функция пульта управления
+void PultUpravlenia(void) 
+{  
+	Driving_drive.Inst_speed.Zad_speed_fl_form=(Driving_drive.Inst_speed.Zad_speed_fl*0.000244140625); 
+	 if (Driving_drive.Basic.ZadIntensivnostiTheta>=Driving_drive.Inst_speed.Zad_speed_fl_form)
+   		   {
+   			 Driving_drive.Basic.ZadIntensivnosti=(Driving_drive.Basic.ZadIntensivnosti)-(Driving_drive.Basic.ZadIntensivnostiPlus);
+    		 Driving_drive.Basic.ZadIntensivnostiTheta=(Driving_drive.Basic.ZadIntensivnostiTheta)-(Driving_drive.Basic.ZadIntensivnostiPlusTheta);
+
+	if (Driving_drive.Basic.ZadIntensivnostiTheta<=Driving_drive.Basic.ZadIntensivnostiPlusTheta)
+				
+			Driving_drive.Basic.ZadIntensivnostiTheta=Driving_drive.Basic.ZadIntensivnostiPlusTheta;}
+	   			
+  	if (Driving_drive.Basic.ZadIntensivnostiTheta<Driving_drive.Inst_speed.Zad_speed_fl_form)
+   			{
+   			Driving_drive.Basic.ZadIntensivnosti=(Driving_drive.Basic.ZadIntensivnosti)+(Driving_drive.Basic.ZadIntensivnostiPlus);
+    		Driving_drive.Basic.ZadIntensivnostiTheta=(Driving_drive.Basic.ZadIntensivnostiTheta)+(Driving_drive.Basic.ZadIntensivnostiPlusTheta);
+			} 
+} 
+
+
+//--- функция вычисления начальных параметров
+
+ void FuncBeginCustomize(void)
+{
+Driving_drive.Basic.KoefUmnozhf_L_F_K=1/(Driving_drive.Basic.KoefMinVoltage); 																																	// коэфициент умножения частоты низкие частоты приведения к единице
+}
+
+void FuncMaxIProtected (void)
+{ 
+Protect_current.Koef_protect = ((Protect_current.Koef_protect_lowing)/((Protect_current.I_Protect_2_part_I)-(Protect_current.I_Protect_1_part_I)));														// вычисление коэфициента защиты
+
+Driving_drive.Basic.KoefZadatchikaIntensivnostiUmenshen=((Driving_I.SQRTI)-(Protect_current.I_Protect_1_part_I))*(Protect_current.Koef_protect);
+Driving_drive.Basic.ZadIntensivnosti=((Driving_drive.Basic.ZadIntensivnosti)-(Driving_drive.Basic.ZadIntensivnostiPlus)-
+((Driving_drive.Basic.KoefZadatchikaIntensivnostiUmenshen)*(Driving_drive.Basic.ZadIntensivnostiPlus)));																								// уменьшения составляющей напряжения
+ Driving_drive.Basic.ZadIntensivnostiTheta=((Driving_drive.Basic.ZadIntensivnostiTheta)-(Driving_drive.Basic.ZadIntensivnostiPlusTheta)-
+((Driving_drive.Basic.KoefZadatchikaIntensivnostiUmenshen)*(Driving_drive.Basic.ZadIntensivnostiPlusTheta)));																							// уменьшение частотной составляющей
+}
+
+void Time_I_Protected (void)
+{
+if (Driving_I.SQRTI>(Protect_current.I_Protect_Time_Current))
+	{
+	Protect_current.Time_current_protect_base+=Protect_current.Time_current_protect_plus;
+	if (Protect_current.Time_current_protect_base>1)
+		{
+		Flags_drive.DI_Stop=1;
+		}
+	}
+	else 
+	{
+	Protect_current.Time_current_protect_base-=Protect_current.Time_current_protect_minus;
+	if (Protect_current.Time_current_protect_base<0.01)																												// если происходит вычитание превышение вычитания 								
+    	{
+    	Protect_current.Time_current_protect_base=0.01;																												// присваивание 
+    	}
+  	}
+}
+
+ //--- функция фильтрации тока u и w
+ void FilterToka_Iu_Iw (void) 
+{	
+	FilterTokaMatrix[0][Filter_I_and_U.schet_I]=Sensorless_drive.Iu;																							// заполнение таблицей фильтра Iu
+ 	Sensorless_drive.Iuf		=	  (( FilterTokaMatrix[0][0]
+ 					+FilterTokaMatrix[0][1]
+ 					+FilterTokaMatrix[0][2]
+ 					+FilterTokaMatrix[0][3]
+ 					+FilterTokaMatrix[0][4]
+ 					+FilterTokaMatrix[0][5]
+ 					+FilterTokaMatrix[0][6]
+ 					+FilterTokaMatrix[0][7]
+ 					+FilterTokaMatrix[0][8]
+ 					+FilterTokaMatrix[0][9])*0.15);
+
+	if (FilterTokaMatrix[0][Filter_I_and_U.schet_I]>Sensorless_drive.Iuf)																						// если произошёл скачок принять действующим предидущее значение	
+		{
+		Sensorless_drive.Iu=FilterTokaMatrix[0][(Filter_I_and_U.schet_I)-1];
+		}	
+	FilterTokaMatrix[1][Filter_I_and_U.schet_I]=Sensorless_drive.Iw;
+ 	Sensorless_drive.Iwf=		  (( FilterTokaMatrix[1][0]
+ 					+FilterTokaMatrix[1][1]
+ 					+FilterTokaMatrix[1][2]
+ 					+FilterTokaMatrix[1][3]
+ 					+FilterTokaMatrix[1][4]
+ 					+FilterTokaMatrix[1][5]
+ 					+FilterTokaMatrix[1][6]
+ 					+FilterTokaMatrix[1][7]
+ 					+FilterTokaMatrix[1][8]
+ 					+FilterTokaMatrix[1][9])*0.15);
+
+	if (FilterTokaMatrix[1][Filter_I_and_U.schet_I]>Sensorless_drive.Iwf)																						// если произошёл скачок принять действующим предидущее значение				
+		{
+		Sensorless_drive.Iw=FilterTokaMatrix[1][(Filter_I_and_U.schet_I)-1];
+		}		
+	Filter_I_and_U.schet_I++;
+	if ((Filter_I_and_U.schet_I)>9)																																	// обнуление счётчика
+		{
+		(Filter_I_and_U.schet_I)=0;
+		}
+}
+
+//--- функция фильтрации напряжения u,v,w
+ void Filter_Uu_Uv_Uw (void) 
+{
+	FilterUMatrix[0][Filter_I_and_U.schet_U]=Sensorless_drive.Uu;
+ 	Sensorless_drive.Uuf		=	  (( FilterUMatrix[0][0]
+ 					+FilterUMatrix[0][1]
+ 					+FilterUMatrix[0][2]
+ 					+FilterUMatrix[0][3]
+ 					+FilterUMatrix[0][4]
+ 					+FilterUMatrix[0][5]
+ 					+FilterUMatrix[0][6]
+ 					+FilterUMatrix[0][7]
+ 					+FilterUMatrix[0][8]
+ 					+FilterUMatrix[0][9])*0.15);
+
+	if (FilterUMatrix[0][Filter_I_and_U.schet_U]>Sensorless_drive.Uuf)								
+		{
+		Sensorless_drive.Uu=FilterUMatrix[0][Filter_I_and_U.schet_U-1];
+		}	
+		FilterUMatrix[0][Filter_I_and_U.schet_U]=Sensorless_drive.Uv;
+ 		Sensorless_drive.Uvf		=	  (( FilterUMatrix[0][0]
+ 					+FilterUMatrix[0][1]
+ 					+FilterUMatrix[0][2]
+ 					+FilterUMatrix[0][3]
+ 					+FilterUMatrix[0][4]
+ 					+FilterUMatrix[0][5]
+ 					+FilterUMatrix[0][6]
+ 					+FilterUMatrix[0][7]
+ 					+FilterUMatrix[0][8]
+ 					+FilterUMatrix[0][9])*0.15);
+	if (FilterUMatrix[1][Filter_I_and_U.schet_U]>Sensorless_drive.Uvf)																							// если произошёл скачок принять действующим предидущее значение
+		{
+		Sensorless_drive.Uv=FilterUMatrix[1][(Filter_I_and_U.schet_U)-1];
+		}	
+		FilterUMatrix[2][Filter_I_and_U.schet_U]=Sensorless_drive.Uw;
+ 		Sensorless_drive.Uwf		=	((	 FilterUMatrix[2][0]
+ 					+FilterUMatrix[2][1]
+ 					+FilterUMatrix[2][2]
+ 					+FilterUMatrix[2][3]
+ 					+FilterUMatrix[2][4]
+ 					+FilterUMatrix[2][5]
+ 					+FilterUMatrix[2][6]
+ 					+FilterUMatrix[2][7]
+ 					+FilterUMatrix[2][8]
+ 					+FilterUMatrix[2][9])*0.15);
+
+	if (FilterUMatrix[2][Filter_I_and_U.schet_U]>Sensorless_drive.Uwf)																							// если произошёл скачок принять действующим предидущее значение
+		{
+		Sensorless_drive.Uw=FilterUMatrix[2][(Filter_I_and_U.schet_U)-1];
+		}
+	(Filter_I_and_U.schet_U)++;
+	if (Filter_I_and_U.schet_U>9)																																		// обнуление счётчика
+		{
+		Filter_I_and_U.schet_U=0;
+		}
+}
+
+
+  
+void DO_PIL_ON (void)																																								// функция сигнализации "авария"
+{
+    Driving_drive.Basic.DO_PIL_ON_PWM_Count++;																														// инкрементирование для шим сигнализации
+
+    if (Driving_drive.Basic.DO_PIL_ON_PWM_Count>Driving_drive.Basic.DO_PIL_ON_PWM_MAX_Count)															// вычисление значения для шим
+     {
+     Driving_drive.Basic.DO_PIL_ON_Count++;
+     Driving_drive.Basic.DO_PIL_ON_PWM_Count_Now=(Driving_drive.Basic.DO_PIL_ON_Count)-(Driving_drive.Basic.DO_PIL_ON_Count_Back);
+     Driving_drive.Basic.DO_PIL_ON_PWM_Count=0;
+     }
+	
+    if (Driving_drive.Basic.DO_PIL_ON_Count%Driving_drive.Basic.DO_PIL_ON_Count_Div==0)																	// вычисление значения для пилы
+     {
+     Driving_drive.Basic.DO_PIL_ON_PWM_Count_Now++;
+     Driving_drive.Basic.DO_PIL_ON_PWM_Count_Now=(Driving_drive.Basic.DO_PIL_ON_PWM_Count_Now)-(Driving_drive.Basic.DO_PIL_ON_Count_Back);
+     }
+
+    if (Driving_drive.Basic.DO_PIL_ON_Count>=Driving_drive.Basic.DO_PIL_ON_Max_Count)
+     {
+     Driving_drive.Basic.DO_PIL_ON_Count_Back=2;
+     }
+	  
+    if (Driving_drive.Basic.DO_PIL_ON_Count<3)
+     {
+     Driving_drive.Basic.DO_PIL_ON_Count_Back=0;
+     }
+		
+    if (Driving_drive.Basic.DO_PIL_ON_PWM_Count_Now<=Driving_drive.Basic.DO_PIL_ON_PWM_Count)																// установка шим сигнала
+     {
+     //PIL_CTL_set=1;
+     }
+    else 
+     {
+     //PIL_CTL_clear=1;
+     }
+}
+
+

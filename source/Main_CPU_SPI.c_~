@@ -1,0 +1,88 @@
+ 
+//###########################################################################
+//
+// FILE:    Main_CPU_SPI.c
+//
+// TITLE:   SPI Initialization & Support Functions.
+//
+// NOTES:   
+//
+//###########################################################################
+// 
+// $Release Date:
+//###########################################################################
+
+
+#include "PeripheralHeaderIncludes.h"
+#include "Main_CPU_SPI.h"
+
+extern 	Uint16 spistore[30];
+
+//эта функция инициализирует модуль SPI 
+//----------------------------------------------------------------------
+void InitSPIA(void)
+{
+	EALLOW;
+/* Enable internal pull-up for the selected pins */
+	GpioCtrlRegs.GPAPUD.bit.GPIO16 = 1;   		// Enable pull-up on GPIO16 (SPISIMOA)
+	GpioCtrlRegs.GPAPUD.bit.GPIO17 = 0;   		// Enable pull-up on GPIO17 (SPISOMIA)
+	GpioCtrlRegs.GPAPUD.bit.GPIO18 = 1;   		// Enable pull-up on GPIO18 (SPICLKA)
+
+/* Set qualification for selected pins to asynch only */
+    GpioCtrlRegs.GPAQSEL2.bit.GPIO17 = 3; 		// Asynch input GPIO17 (SPISOMIA)
+//	GpioDataRegs.GPASET.bit.GPIO18 = 1;			//установить порт на линии SPICLKA
+    
+/* Configure SPI-A pins using GPIO regs*/
+    GpioCtrlRegs.GPAMUX2.bit.GPIO16 = 1; 		// Configure GPIO16 as SPISIMOA
+    GpioCtrlRegs.GPAMUX2.bit.GPIO17 = 1; 		// Configure GPIO17 as SPISOMIA
+    GpioCtrlRegs.GPAMUX2.bit.GPIO18 = 1; 		// Configure GPIO18 as SPICLKA
+    EDIS;
+        
+	SpiaRegs.SPICCR.bit.SPISWRESET = 0;			//активация состояния сброса модуля SPI  
+	SpiaRegs.SPICCR.bit.SPICHAR = 0xF;			//передача слова из 16 бит
+	SpiaRegs.SPICCR.bit.CLKPOLARITY = 0;		//подача данных на выход по нарастающему фронту
+	SpiaRegs.SPICCR.bit.SPILBK = 0;				//выключение функции замыкания
+
+	SpiaRegs.SPICTL.bit.SPIINTENA = 0;			//отключение прерывания
+	SpiaRegs.SPICTL.bit.TALK = 1;				//разрешение передачи
+	SpiaRegs.SPICTL.bit.MASTER_SLAVE = 1;		//включить режим Мастер
+	SpiaRegs.SPICTL.bit.CLK_PHASE = 1;			//включить задержку сигнала clk
+	SpiaRegs.SPICTL.bit.OVERRUNINTENA = 0;		//запретить прерывание по перезагрузке приемника 
+
+	SpiaRegs.SPIBRR = 4;						//установить частоту LSPCLK/(4+1) (15 МГц) 
+										
+	SpiaRegs.SPICCR.bit.SPISWRESET = 1;			//дизактивация состояния сброса модуля SPI    
+    SpiaRegs.SPIPRI.bit.FREE = 1;               // Set so breakpoints don't disturb xmission
+
+// Initialize SPI FIFO registers
+//    SpiaRegs.SPIFFTX.all=0xE040;
+//    SpiaRegs.SPIFFRX.all=0x204f;
+//    SpiaRegs.SPIFFCT.all=0x0;
+
+}
+//-------------------------------------------------------------------------
+
+//----------------------------------------------------------------------------------------
+//функция обмена данными с SPI устройством (вызов вида Exch_data_SPI(a, &b) )
+void Exch_data_SPI(Uint16 device, Uint16* message)			//
+	{
+	GpioDataRegs.GPACLEAR.all = device;				//активировать выбранное устройство
+	SpiaRegs.SPITXBUF = (*message);					//выгрузить для передачи
+	for(;!SpiaRegs.SPISTS.bit.INT_FLAG;) ;			//пока не закончилась передача, ждать	
+
+	{Uint16 i;
+	for(i=0;i<5;i++) {};
+	}
+	GpioDataRegs.GPASET.all =  (FRAM_dev_SEL +
+								FLM_dev_SEL +
+								EXP2_dev_SEL +
+								EXP1_dev_SEL +
+								ADC2_dev_SEL +
+								ADC1_dev_SEL);		//выключить все устройства
+
+	*message = SpiaRegs.SPIRXBUF;					//сохранить принятое сообщение
+	}
+	
+	
+//--------------------------------------------------------------------------------------		
+

@@ -1,5 +1,5 @@
-// TI File $Revision: /main/10 $
-// Checkin $Date: May 1, 2007   11:48:59 $
+// TI File $Revision: /main/11 $
+// Checkin $Date: June 23, 2008   11:34:15 $
 //###########################################################################
 //
 // FILE:   DSP2833x_DMA.h
@@ -7,8 +7,8 @@
 // TITLE:  DSP2833x DMA Module Register Bit Definitions.
 //
 //###########################################################################
-// $TI Release: DSP2833x Header Files V1.01 $
-// $Release Date: September 26, 2007 $
+// $TI Release: DSP2833x/DSP2823x C/C++ Header Files V1.31 $
+// $Release Date: August 4, 2009 $
 //###########################################################################
 
 #ifndef DSP2833x_DMA_H
@@ -41,7 +41,19 @@ struct MODE_BITS {           // bits   description
 							 //        15    MREVTA & MRSYNCA
 							 //        16    MXEVTB & MXSYNCB
 							 //        17    MREVTB & MRSYNCB
-							 //        18:23 no interrupt
+	                         //        18    ePWM1SOCA
+	                         //        19    ePWM1SOCB
+	                         //        20    ePWM2SOCA
+	                         //        21    ePWM2SOCB
+	                         //        22    ePWM3SOCA
+	                         //        23    ePWM3SOCB
+	                         //        24    ePWM4SOCA
+	                         //        25    ePWM4SOCB
+	                         //        26    ePWM5SOCA
+	                         //        27    ePWM5SOCB
+	                         //        28    ePWM6SOCA
+	                         //        29    ePWM6SOCB
+	                         //        30:31 no interrupt
    Uint16 rsvd1:2;           // 6:5    (R=0:0)
    Uint16 OVRINTE:1;         // 7      Overflow Interrupt Enable (R/W):
                              //        0     overflow interrupt disabled

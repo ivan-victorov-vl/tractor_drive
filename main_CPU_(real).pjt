@@ -1,0 +1,119 @@
+; Code Composer Project File, Version 2.0 (do not modify or remove this line)
+
+[Project Settings]
+ProjectDir="C:\Documents and Settings\XPMUser.VIRTUALXP-86854\Рабочий стол\Drive gidromash\MAIN_CPU_(real)_U_F\"
+ProjectType=Executable
+CPUFamily=TMS320C28XX
+Tool="Compiler"
+Tool="CustomBuilder"
+Tool="DspBiosBuilder"
+Tool="Linker"
+Config="F28335_flash"
+Config="F28335_ram"
+Config="F28335_ram_temp"
+
+[Source Files]
+Source="lib\rts2800_fpu32.lib"
+Source="MainCPU-Main(1).c"
+Source="source\DSP2833x_ADC_cal.asm"
+Source="source\DSP2833x_CodeStartBranch.asm"
+Source="source\DSP2833x_DefaultIsr.c"
+Source="source\DSP2833x_GlobalVariableDefs.c"
+Source="source\DSP2833x_PieCtrl.c"
+Source="source\DSP2833x_PieVect.c"
+Source="source\DSP2833x_SysCtrl.c"
+Source="source\DSP28xxx_CodeStartBranch_for_flash.asm"
+Source="source\DSP28xxx_SectionCopy_nonBIOS.asm"
+Source="source\BaseDrive.c"
+Source="source\FuncDrive.c"
+Source="source\LedIndicat.c"
+Source="source\Main_CPU_CpuTimers.c"
+Source="source\Main_CPU_EPWM.c"
+Source="source\Main_CPU_SCI.c"
+Source="source\Main_CPU_SPI.c"
+Source="source\MainCustom.c"
+Source="28335_RAM_lnk.cmd"
+Source="DSP2833x_Headers_nonBIOS.cmd"
+Source="F2833x_nonBIOS_flash.cmd"
+
+["F28335_flash" Settings]
+FinalBuildCmd=rem -------------------- Begin Custom Post Build Steps -------------
+FinalBuildCmd=del *.lkf
+FinalBuildCmd=rem -------------------- End Custom Post Build Steps ---------------
+
+["F28335_ram" Settings]
+FinalBuildCmd=rem -------------------- Begin Custom Post Build Steps -------------
+FinalBuildCmd=del *.lkf
+FinalBuildCmd=rem -------------------- End Custom Post Build Steps ---------------
+
+["F28335_ram_temp" Settings]
+FinalBuildCmd=rem -------------------- Begin Custom Post Build Steps -------------
+FinalBuildCmd=del *.lkf
+FinalBuildCmd=rem -------------------- End Custom Post Build Steps ---------------
+
+["Compiler" Settings: "F28335_flash"]
+Options=-g -pdsw225 -o0 -fr"$(Proj_dir)\FLASH" -i"$(Proj_dir)\include" -d"_DEBUG" -d"LARGE_MODEL" -ml -mn -v28 --float_support=fpu32 --cla_support=cla0 --fp_reassoc=on --sat_reassoc=on -mf5 -mf
+
+["Compiler" Settings: "F28335_ram"]
+Options=-g -pdsw225 -as -o0 -fr"$(Proj_dir)\RAM" -i"$(Proj_dir)\include" -d"_DEBUG" -d"LARGE_MODEL" -ml -mt -v28 --float_support=fpu32 --cla_support=cla0 -mf5 -mf
+
+["Compiler" Settings: "F28335_ram_temp"]
+Options=-g -pdsw225 -as -o0 -fr"$(Proj_dir)\F28335_ram_temp" -i"$(Proj_dir)\include" -d"_DEBUG" -d"LARGE_MODEL" -ml -mt -v28 --float_support=fpu32 --cla_support=cla0 -mf5 -mf
+
+["Linker" Settings: "F28335_flash"]
+Options=-c -m".\FLASH\MainCPU.map" -o".\FLASH\MainCPU.out" -stack0x380 -w -x
+
+["Linker" Settings: "F28335_ram"]
+Options=-a -c -m".\RAM\MainCPU.map" -o".\RAM\MainCPU.out" -stack0x380 -w
+
+["Linker" Settings: "F28335_ram_temp"]
+Options=-a -c -m".\F28335_ram_temp\main_CPU_(real).map" -o".\F28335_ram_temp\main_CPU_(real).out" -stack0x380 -w
+
+["MainCPU-Main(1).c" Settings: "F28335_ram_temp"]
+ExcludeFromBuild=true
+
+["source\DSP2833x_CodeStartBranch.asm" Settings: "F28335_flash"]
+ExcludeFromBuild=true
+
+["source\DSP28xxx_CodeStartBranch_for_flash.asm" Settings: "F28335_ram"]
+ExcludeFromBuild=true
+
+["source\DSP28xxx_CodeStartBranch_for_flash.asm" Settings: "F28335_ram_temp"]
+ExcludeFromBuild=true
+
+["source\DSP28xxx_SectionCopy_nonBIOS.asm" Settings: "F28335_ram"]
+ExcludeFromBuild=true
+
+["source\DSP28xxx_SectionCopy_nonBIOS.asm" Settings: "F28335_ram_temp"]
+ExcludeFromBuild=true
+
+["28335_RAM_lnk.cmd" Settings: "F28335_flash"]
+ExcludeFromBuild=true
+LinkOrder=1
+
+["28335_RAM_lnk.cmd" Settings: "F28335_ram"]
+LinkOrder=1
+
+["28335_RAM_lnk.cmd" Settings: "F28335_ram_temp"]
+LinkOrder=1
+
+["DSP2833x_Headers_nonBIOS.cmd" Settings: "F28335_flash"]
+LinkOrder=1
+
+["DSP2833x_Headers_nonBIOS.cmd" Settings: "F28335_ram"]
+LinkOrder=2
+
+["DSP2833x_Headers_nonBIOS.cmd" Settings: "F28335_ram_temp"]
+LinkOrder=2
+
+["F2833x_nonBIOS_flash.cmd" Settings: "F28335_flash"]
+LinkOrder=2
+
+["F2833x_nonBIOS_flash.cmd" Settings: "F28335_ram"]
+ExcludeFromBuild=true
+LinkOrder=3
+
+["F2833x_nonBIOS_flash.cmd" Settings: "F28335_ram_temp"]
+ExcludeFromBuild=true
+LinkOrder=3
+

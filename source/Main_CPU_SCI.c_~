@@ -1,0 +1,231 @@
+// 
+// Checkin $Date: november, 2011  
+//###########################################################################
+//
+// FILE:    DSP280x_SCI.c
+//
+// TITLE:   SCI Initialization & Support Functions.
+//
+// NOTES:   
+//
+//###########################################################################
+// 
+// $Release Date:
+//###########################################################################
+
+#include "PeripheralHeaderIncludes.h"
+
+//эта функция инициализирует модуль SCIB 
+//----------------------------------------------------------------------
+void InitSCIB(void)
+{
+	ScibRegs.SCICTL1.bit.SWRESET = 0;		//сбросить флаги модуля
+	ScibRegs.SCICTL1.bit.SWRESET = 1;
+
+	ScibRegs.SCICCR.bit.SCICHAR	=	0x7	;	//длина данных 8 бит
+	ScibRegs.SCICCR.bit.PARITY	=	1	;	//паритет четный
+	ScibRegs.SCICCR.bit.PARITYENA =	1	;	//включить паритет
+
+	ScibRegs.SCIHBAUD	=	0	;			//коэффициент деления по 24
+	ScibRegs.SCILBAUD	=	2	;			//частота SCI 75МГц/24 = 3.125 МГц
+
+//	ScibRegs.SCIPRI.bit.FREE	=	1	;	//работа без отладочных остановок
+
+	ScibRegs.SCICTL1.bit.TXENA	=	1	;	//включить передатчик
+	ScibRegs.SCICTL1.bit.RXENA	=	1	;	//включить приемник
+
+	ScibRegs.SCICTL2.bit.RXBKINTENA = 1	;	//разрешить прерывание по приему нового фрейма
+											//либо по потере принимаемого сигнала
+	ScibRegs.SCICTL1.bit.RXERRINTENA = 1;	//разрешить прерывание по ошибкам приема
+
+//	ScibRegs.SCICCR.bit.LOOPBKENA =1; 		// Enable loop back  
+
+	ScibRegs.SCIFFTX.bit.SCIRST	= 1	;		//
+	ScibRegs.SCIFFTX.bit.SCIFFENA = 1	;	//включить FIFO
+	ScibRegs.SCIFFTX.bit.TXFIFOXRESET = 0;	//сбросить указатель FIFO TX
+	ScibRegs.SCIFFTX.bit.TXFIFOXRESET = 1;
+
+	ScibRegs.SCIFFRX.bit.RXFFIL = 0x1;		//установить границу буфера RX на 1 фрейм
+	ScibRegs.SCIFFRX.bit.RXFFIENA = 1;		//разрешить прерывание по заполнению буфера FIFO RX
+
+	ScibRegs.SCIFFRX.bit.RXFIFORESET = 0;	//сбросить указатель FIFO RX	
+	ScibRegs.SCIFFRX.bit.RXFIFORESET = 1;
+
+}
+//-------------------------------------------------------------------------
+
+//эта функция инициализирует модуль SCIB 
+//----------------------------------------------------------------------
+void InitSCIC(void)
+{
+	ScicRegs.SCICTL1.bit.SWRESET = 0;		//сбросить флаги модуля
+	ScicRegs.SCICTL1.bit.SWRESET = 1;
+
+	ScicRegs.SCICCR.bit.SCICHAR	=	0x7	;	//длина данных 8 бит
+	ScicRegs.SCICCR.bit.PARITY	=	1	;	//паритет четный
+	ScicRegs.SCICCR.bit.PARITYENA =	1	;	//включить паритет
+
+	ScicRegs.SCIHBAUD	=	0	;			//коэффициент деления по 24
+	ScicRegs.SCILBAUD	=	2	;			//частота SCI 75МГц/24 = 3.125 МГц
+
+	ScicRegs.SCICTL1.bit.TXENA	=	1	;	//включить передатчик
+	ScicRegs.SCICTL1.bit.RXENA	=	1	;	//включить приемник
+
+	ScicRegs.SCICTL2.bit.RXBKINTENA = 1	;	//разрешить прерывание по приему нового фрейма
+											//либо по потере принимаемого сигнала
+	ScicRegs.SCICTL1.bit.RXERRINTENA = 1;	//разрешить прерывание по ошибкам приема
+
+	ScicRegs.SCIFFTX.bit.SCIRST	= 1	;		//
+	ScicRegs.SCIFFTX.bit.SCIFFENA = 1	;	//включить FIFO
+	ScicRegs.SCIFFTX.bit.TXFIFOXRESET = 0;	//сбросить указатель FIFO TX
+	ScicRegs.SCIFFTX.bit.TXFIFOXRESET = 1;
+
+	ScicRegs.SCIFFRX.bit.RXFFIL = 0x1;		//установить границу буфера RX на 1 фрейм
+	ScicRegs.SCIFFRX.bit.RXFFIENA = 1;		//разрешить прерывание по заполнению буфера FIFO RX
+
+	ScicRegs.SCIFFRX.bit.RXFIFORESET = 0;	//сбросить указатель FIFO RX	
+	ScicRegs.SCIFFRX.bit.RXFIFORESET = 1;
+
+}
+//-------------------------------------------------------------------------
+//эта функция передает фрейм-----------------------------------------------
+void TransfData(Uint16 Data_out[], Uint16 numb_mes)
+{
+	int16 i;
+	if(ScibRegs.SCIFFTX.bit.TXFFST)		//если буфер передатчика не пуст, то выполнить:
+		{
+		ScibRegs.SCIFFTX.bit.TXFIFOXRESET = 0;	//сбросить указатель FIFO TX
+		ScibRegs.SCIFFTX.bit.TXFIFOXRESET = 1;
+		}	
+	for(i=0;i < numb_mes;i++)
+		{
+		ScibRegs.SCITXBUF = Data_out[i] & 0xFF;		//записать в буфер отбросив старшее полуслово
+		}
+//	ScibRegs.SCIFFTX.bit.TXFFINTCLR = 1; //очистить флаг FIFO TX
+}
+//-------------------------------------------------------------------------
+
+//эта функция проверяет и переписывает полученные данные из RX FIFO -------
+void TakeRXFifoData(int16 data[], Uint16 mes_cnt)
+{
+static	int16 tempdata[3] = {0,0,0};
+		int16  i;
+
+		if(mes_cnt & 1)	tempdata[mes_cnt/2] += (ScibRegs.SCIRXBUF.all * 0x100);	//извлечь старшее полуслово
+		else tempdata[mes_cnt/2] = ScibRegs.SCIRXBUF.all;						//извлечь младшее полуслово
+		
+		if(mes_cnt == 5) for (i=0;i <= (mes_cnt/2);i++) data[i] = tempdata[i];	//копирование всех данных 
+
+}
+//-------------------------------------------------------------------------
+
+
+/*
+//Эта функция принимает фрейм по прерыванию, либо обнаруживает------------ 
+//низкий уровень сигнала на линии
+interrupt void scib_rx_isr(void)
+{
+
+
+	if(ScibRegs.SCIRXST.bit.RXERROR)				//если ошибка, то:
+		{//---------------------------------------------------
+		ScibRegs.SCICTL1.bit.RXENA	=	0	;		//выключить приемник
+
+		ScibRegs.SCICTL1.bit.SWRESET = 0;			//сбросить флаги
+		ScibRegs.SCICTL1.bit.SWRESET = 1;
+		ScibRegs.SCIFFRX.bit.RXFIFORESET = 0;		//сбросить указатель FIFO RX	
+		ScibRegs.SCIFFRX.bit.RXFIFORESET = 1;
+
+		numb_frames = 0;							//обнулить счетчик сообщений
+		goto	out;
+		}//---------------------------------------------------
+
+
+	if(ScibRegs.SCIFFRX.bit.RXFFINT)				//если в буфере сообщение, тогда:
+		{//---------------------------------------------------
+		for(;ScibRegs.SCIFFRX.bit.RXFFST;)
+			{
+			new_datain[numb_frames] = ScibRegs.SCIRXBUF.all & 0xFF;		//сохранить байт сообщения
+			numb_frames++;		
+			}
+
+		if(store_indx[1]->serv.bit.mode)				//если был установлен рабочий режим, то
+			{//*******************************************************
+			if(numb_frames == 9)		//если количество принятых байтов правильно, то:
+				{
+				Uint16	n, i;
+
+				for(i=0;i<3;i++)
+					{//определить номер ячейки в преобразователе
+					n = ((new_datain[i*3] & 0x30) / 0x10) * numb_of_cells + (new_datain[i*3] & 0xF);
+
+					cell[n].word.An_Val.named.UDC = new_datain[i*3+1];				//сохранить значение выпрямленного напряжения
+					cell[n].word.W1flags.bit.C_ready = new_datain[i*3] / 0x80;			//сохранить флаг готовности к работе
+					cell[n].word.W1flags.bit.protect_C = new_datain[i*3+2] / 0x80;		//сохранить флаг срабатывания защиты
+					cell[n].word.W1flags.bit.pre_protect_C = (new_datain[i*3+2] & 0x40) / 0x40; //сохранить флаг предупреждения
+					}
+				}			
+			}//*******************************************************
+
+
+		else	//если установлен режим инициализации
+			{//*******************************************************
+
+			if(numb_frames == 5)		//если количество принятых байтов правильно, то:
+				{
+				if(new_datain[0] & 0x80)		//если бит кода операции установлен 
+					{							//(пришел ответ о сохранении ячейкой параметра), то
+					//пока не реализован
+					}
+				else							//если пришел ответ на запрос параметра, то
+					{//------------------------------------------------
+					static	Uint16	p_cnt = 0;		//счетчик  параметров						
+							Uint16	Nc_resp, Np_resp, Nc_req, Np_req;
+
+					Nc_resp =  new_datain[4] * numb_of_cells + new_datain[3]; 		//определить номер ячейки из сообщения
+					Nc_req = store_indx[1]->data[1] * numb_of_cells + store_indx[1]->data[0];	//определить № ячейки из архива
+					Np_resp =  new_datain[0] & 0x3F;								//определить № параметра из сообщения																	//запроса 
+					Np_req = store_indx[1]->data[2];								//определить № параметра из архива
+
+					if((Nc_resp != Nc_req)|(Np_resp != Np_req))	//если номер ячейки или номер параметра в запросе 
+						{										//не совпадает с принятым, то 
+						p_cnt = 0;
+						}
+					else	//если адресные данные запроса и ответа совпадают, то
+						{
+
+						//сохранить значение принятой переменной
+						cell[Nc_resp].all[Np_resp] = new_datain[2] * 0x100 + new_datain[1]; 
+						p_cnt++;
+						if(Np_resp == nmb_of_askprm - 1) // если номер переменной последний
+							{
+							//если счетчик параметров равен максимальному значению, сбросить признак ошибки инициализации ячейки										
+							if(p_cnt == nmb_of_askprm)	   
+								{
+								cell[Nc_req].word.init_done = 1; //установить признак инициализации ячейки
+							 	cell[Nc_req].word.sgnl_err = 0;	 //сбросить признак ошибки связи с ячейкой
+
+								if(store_indx[1]->all_init)  all_init_id = RX_init_done;
+							 	
+//mark3_toggle = 1;//++++++++++++++++++++++++++++++++
+								}
+							//иначе сбросить признак инициализации ячейки
+							else {cell[Nc_req].word.init_done = 0;}	
+							p_cnt = 0;				   				//сбросить счетчик параметров
+						}	}	
+					}//----------------------------------------------------		
+				}
+			}//*******************************************************
+
+		}//---------------------------------------------------
+	//------------------------------------
+
+out:
+	ScibRegs.SCIFFRX.bit.RXFFINTCLR = 1;					//сбросить флаг прерывания RXFIFO
+	PieCtrlRegs.PIEACK.all = PIEACK_GROUP9;
+
+}
+//-------------------------------------------------------------------------------------/
+
+*/
+
