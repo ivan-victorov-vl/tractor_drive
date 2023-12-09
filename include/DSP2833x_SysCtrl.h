@@ -1,5 +1,5 @@
-// TI File $Revision: /main/3 $
-// Checkin $Date: July 2, 2007   09:28:26 $
+// TI File $Revision: /main/5 $
+// Checkin $Date: May 12, 2008   09:34:58 $
 //###########################################################################
 //
 // FILE:   DSP2833x_SysCtrl.h
@@ -7,8 +7,8 @@
 // TITLE:  DSP2833x Device System Control Register Definitions.
 //
 //###########################################################################
-// $TI Release: DSP2833x Header Files V1.01 $
-// $Release Date: September 26, 2007 $
+// $TI Release: DSP2833x/DSP2823x C/C++ Header Files V1.31 $
+// $Release Date: August 4, 2009 $
 //###########################################################################
 
 #ifndef DSP2833x_SYS_CTRL_H
@@ -156,19 +156,30 @@ union LPMCR0_REG {
    struct LPMCR0_BITS  bit;
 };
 
+// Dual-mapping configuration register bit definitions:
+struct MAPCNF_BITS {     // bits  description
+    Uint16 MAPEPWM:1;    // 0     EPWM dual-map enable
+    Uint16 rsvd1:15;     // 15:1  reserved
+};
+
+union MAPCNF_REG {
+	Uint16             all;
+	struct MAPCNF_BITS bit;
+};
+
 //---------------------------------------------------------------------------
 // System Control Register File:
 //
 struct SYS_CTRL_REGS {
-   Uint16              rsvd7;     // 0
+   Uint16              rsvd1;     // 0
    union   PLLSTS_REG  PLLSTS;    // 1
-   Uint16              rsvd1[8];  // 2-9
+   Uint16              rsvd2[8];  // 2-9
    union   HISPCP_REG  HISPCP;    // 10: High-speed peripheral clock pre-scaler
    union   LOSPCP_REG  LOSPCP;    // 11: Low-speed peripheral clock pre-scaler
    union   PCLKCR0_REG PCLKCR0;   // 12: Peripheral clock control register
    union   PCLKCR1_REG PCLKCR1;   // 13: Peripheral clock control register
    union   LPMCR0_REG  LPMCR0;    // 14: Low-power mode control register 0
-   Uint16              rsvd2;     // 15: reserved
+   Uint16              rsvd3;     // 15: reserved
    union   PCLKCR3_REG PCLKCR3;   // 16: Peripheral clock control register
    union   PLLCR_REG   PLLCR;     // 17: PLL control register
    // No bit definitions are defined for SCSR because
@@ -182,7 +193,9 @@ struct SYS_CTRL_REGS {
    // the proper value must be written to the WDCHK field
    // whenever writing to this register.
    Uint16              WDCR;      // 25: WD timer control register
-   Uint16              rsvd6[6];  // 26-31
+   Uint16              rsvd6[4];  // 26-29
+   union   MAPCNF_REG  MAPCNF;    // 30: Dual-mapping configuration register
+   Uint16              rsvd7[1];  // 31
 };
 
 

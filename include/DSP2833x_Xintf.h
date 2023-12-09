@@ -1,5 +1,5 @@
-// TI File $Revision: /main/3 $
-// Checkin $Date: March 20, 2007   16:34:08 $
+// TI File $Revision: /main/4 $
+// Checkin $Date: July 27, 2009   13:57:25 $
 //###########################################################################
 //
 // FILE:   DSP2833x_Xintf.h
@@ -7,8 +7,8 @@
 // TITLE:  DSP2833x Device External Interface Register Definitions.
 //
 //###########################################################################
-// $TI Release: DSP2833x Header Files V1.01 $
-// $Release Date: September 26, 2007 $
+// $TI Release: DSP2833x/DSP2823x C/C++ Header Files V1.31 $
+// $Release Date: August 4, 2009 $
 //###########################################################################
 
 #ifndef DSP2833x_XINTF_H
@@ -81,7 +81,7 @@ struct XRESET_BITS {
 
 union XRESET_REG {
     Uint16            all;
-    struct XBANK_BITS bit;
+    struct XRESET_BITS bit;
 };
 
 

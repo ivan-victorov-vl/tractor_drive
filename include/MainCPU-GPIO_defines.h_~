@@ -1,0 +1,89 @@
+//###########################################################################
+//
+// FILE:   MainCPU-GPIO_defines.h
+//
+// TITLE:  MainCPU-Main.c header.
+//
+//###########################################################################
+
+
+#ifndef MAINCPU_GPIO_DEFINES_H
+#define MAINCPU_GPIO_DEFINES_H
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+//defines for Ports-----
+#define	setPWMmux	1
+
+#define	CS_FRAM_set			GpioDataRegs.GPASET.bit.GPIO0		
+#define	CS_FRAM_clear		GpioDataRegs.GPACLEAR.bit.GPIO0		
+#define	CS_FLM_set				GpioDataRegs.GPASET.bit.GPIO1		
+#define	CS_FLM_clear			GpioDataRegs.GPACLEAR.bit.GPIO1		
+#define	CS_EXP2_set			GpioDataRegs.GPASET.bit.GPIO2		
+#define	CS_EXP2_clear		GpioDataRegs.GPACLEAR.bit.GPIO2		
+#define	CS_EXP1_set				GpioDataRegs.GPASET.bit.GPIO3		
+#define	CS_EXP1_clear			GpioDataRegs.GPACLEAR.bit.GPIO3		
+#define	CS_ADC2_set			GpioDataRegs.GPASET.bit.GPIO4		
+#define	CS_ADC2_clear		GpioDataRegs.GPACLEAR.bit.GPIO4		
+#define	CS_ADC1_set			GpioDataRegs.GPASET.bit.GPIO5		
+#define	CS_ADC1_clear		GpioDataRegs.GPACLEAR.bit.GPIO5		
+#define	PCIF_SYNCOUT_set		GpioDataRegs.GPASET.bit.GPIO6		
+#define	PCIF_SYNCOUT_clear		GpioDataRegs.GPACLEAR.bit.GPIO6		
+#define	PCIF_SYNCOUT_muxbits	GpioCtrlRegs.GPAMUX1.bit.GPIO6
+#define	SYNC_RST_set		GpioDataRegs.GPASET.bit.GPIO7		
+#define	SYNC_RST_clear		GpioDataRegs.GPACLEAR.bit.GPIO7
+#define	SYNC_RST_muxbits	GpioCtrlRegs.GPAMUX1.bit.GPIO7
+#define	P33V_OFF()				GpioDataRegs.GPASET.bit.GPIO8		
+#define	P33V_ON()				GpioDataRegs.GPACLEAR.bit.GPIO8		
+#define	PCIFDO_SW_set		GpioDataRegs.GPASET.bit.GPIO10		
+#define	PCIFDO_SW_clear		GpioDataRegs.GPACLEAR.bit.GPIO10
+#define	PCIFDO_SW_muxbits	GpioCtrlRegs.GPAMUX1.bit.GPIO10
+#define	FAN_OFF()				GpioDataRegs.GPASET.bit.GPIO12		
+#define	FAN_ON()				GpioDataRegs.GPACLEAR.bit.GPIO12	
+#define	INT_ETH1			GpioDataRegs.GPADAT.bit.GPIO19		
+#define	INT_ETH2			GpioDataRegs.GPADAT.bit.GPIO21		
+#define	CS_RTS_set				GpioDataRegs.GPASET.bit.GPIO29		
+#define	CS_RTS_clear			GpioDataRegs.GPACLEAR.bit.GPIO29	
+#define	CS_ETH2_set				GpioDataRegs.GPBSET.bit.GPIO32		
+#define	CS_ETH2_clear			GpioDataRegs.GPBCLEAR.bit.GPIO32	
+#define	Set_sync_4slv()		GpioDataRegs.GPBSET.bit.GPIO35 = 1
+#define	Drp_sync_4slv()		GpioDataRegs.GPBCLEAR.bit.GPIO35 = 1
+#define	DE2_RS485_enbl()		GpioDataRegs.GPBSET.bit.GPIO37	= 1	
+#define	DE2_RS485_dsbl()		GpioDataRegs.GPBCLEAR.bit.GPIO37 = 1	
+#define	LIN1					GpioDataRegs.GPBDAT.bit.GPIO40		
+#define	LIN2					GpioDataRegs.GPBDAT.bit.GPIO41		
+#define	LIN3					GpioDataRegs.GPBDAT.bit.GPIO42		
+#define	CAN_PG				GpioDataRegs.GPBDAT.bit.GPIO43		
+#define	CAN_PON()			GpioDataRegs.GPBSET.bit.GPIO44		
+#define	CAN_POFF()			GpioDataRegs.GPBCLEAR.bit.GPIO44	
+#define	LED2_set				GpioDataRegs.GPBSET.bit.GPIO48		
+#define	LED2_clear				GpioDataRegs.GPBCLEAR.bit.GPIO48
+#define	LED2_toggle				GpioDataRegs.GPBTOGGLE.bit.GPIO48
+#define	LED2_dat				GpioDataRegs.GPBDAT.bit.GPIO48	
+#define	LED1_set			GpioDataRegs.GPBSET.bit.GPIO49		
+#define	LED1_clear			GpioDataRegs.GPBCLEAR.bit.GPIO49
+#define	LED1_toggle			GpioDataRegs.GPBTOGGLE.bit.GPIO49
+#define	LED1_dat			GpioDataRegs.GPBDAT.bit.GPIO49	
+#define	DE1_RS485_enbl()			GpioDataRegs.GPCSET.bit.GPIO64 = 1		
+#define	DE1_RS485_dsbl()			GpioDataRegs.GPCCLEAR.bit.GPIO64 = 1	
+#define	RS485_PON()			GpioDataRegs.GPCSET.bit.GPIO65	= 1	
+#define	RS485_POFF()		GpioDataRegs.GPCCLEAR.bit.GPIO65 = 1	
+#define	RS485_PG			GpioDataRegs.GPCDAT.bit.GPIO66		
+
+#define	R_LED_on()	LED1_clear = 1
+#define	R_LED_off()	LED1_set = 1
+#define	G_LED_on()	LED2_clear = 1
+#define	G_LED_off()	LED2_set = 1
+
+
+#ifdef __cplusplus
+}
+#endif /* extern "C" */
+
+#endif  // end of MAINCPU_GPIO_DEFINES_H definition
+
+//===========================================================================
+// End of file.
+//===========================================================================

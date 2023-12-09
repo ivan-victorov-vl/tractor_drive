@@ -1,0 +1,404 @@
+//###########################################################################
+//
+// FILE:   MainCPU-Main.h
+//
+// TITLE:  MainCPU-Main.c header.
+//
+//###########################################################################
+
+
+#ifndef MAINCPU_MAIN_H
+#define MAINCPU_MAIN_H
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
+
+//постоянные----------------------------
+//const Uint32 Prd0 = 150000000;			//период заполнения (1Гц)
+const Uint32 Prd1 =	52500;					//период заполнения в тактах проц. (350 мкс)
+const Uint32 Prd2 = 8325;//150000000/(fs * 360);	//частота декрементирования таймера 2 150МГц,	
+											//частота синусоиды fs, 360 отсчетов
+const Uint16 numb_mes = 8;					//количество передаваемых байт	
+//const Uint16 trans_sync_lenth= 700;		//длительность синхроимпульса 8 мкс	
+
+//переменные -----------------------------
+Uint16	CurNum_Smpl[3] = {0,120,240};		//текушее значение номера отсчета
+int32	Theta_diskr_Z[3] = {0,0,0};
+
+
+
+
+///////////////////////////////////////////////////////////////////////////
+//--- структуры данных для управления приводом
+///////////////////////////////////////////////////////////////////////////
+
+/*struct SENSOR_DRIVE {
+Uint16 Iu_int;
+Uint16 Iw_int; };
+*/
+//--- структура токовой защиты
+struct  Protect_current_struct
+ { 
+   float32  	Koef_protect;																	// значение коэфициента защиты
+   float32  	U_Protect;																		// значение коэфициента срабатывания защиты по напряжению 
+   float32		Koef_protect_lowing;															// значение коэфициента уменьшение 
+   float32		Time_current_protect_plus;														// значение прибавляющей части время-токовой защиты 
+   float32		Time_current_protect_minus;														// значение вычитающей части время-токовой защиты
+   float32		Time_current_protect;															// значение срабатывания защиты
+   float32  	Time_current_protect_base;														// действующие значение защиты
+   int16		I_Protect_1_part;																// значение  ограничения первой зоны 
+   int16		I_Protect_3_part;																// значение 2-ой ограничение третьей зоны 
+   int16		I_Protect_1_part_minus;															// значение 1-ой ограничение первой зоны 
+   int16		I_Protect_3_part_minus;															// значение 2-ой ограничение третьей зоны 
+   int16    	I_Protect_1_part_I;																// значение ограничения начала уменьшения зоны 1
+   int16    	I_Protect_2_part_I;																// значение ограничения начала уменьшения зоны 2
+   int16		I_Protect_Time_Current;															// значение время-токовой защиты
+ };
+
+struct Protect_current_struct Protect_current;
+
+//--- структура датчика
+struct Sensorless_drive_struct
+{
+	int16		I_zero;																			// значение тока нулевого значения
+	int16		Iu;																				// значение тока u типа 
+	int16		Iw;																				// значение тока w типа 
+	int16		Iv;																				// значение тока v типа 
+	int16		Uu;																				// значение напряжения фазы u типа int16
+	int16		Uv;																				// значение напряжения фазы v типа int16
+	int16		Uw;																				// значение напряжения фазы w типа int16
+	int16		Iuf;																			// значение тока u
+	int16		Iwf;																			// значение тока w
+	int16		Uuf;																			// значение напряжения фазы u
+	int16		Uvf;																			// значение напряжения фазы v
+	int16		Uwf;																			// значение напряжения фазы w
+	int16		Iu_int;																			// значение тока u типа int16
+	int16		Iw_int;																			// значение тока w типа int16
+	int16		Uu_int;																			// значение напряжения фазы u типа int16
+	int16		Uv_int;																			// значение напряжения фазы v типа int16
+	int16		Uw_int;																			// значение напряжения фазы w типа int16		
+
+};
+
+struct Sensorless_drive_struct Sensorless_drive;
+//--- структура фильтра тока и напряжения 
+
+struct Filter_I_and_U_struct
+{
+   int16 		schet_U;																		// счётчик значений единиц напряжения
+   int16 	    schet_I;																		// счётчик значений единиц тока
+   int16 	    schet;																			// счётчик значений единиц
+   int16 		schetS;
+   int16 	    schetTen;																		// счётчик значений десятков
+   int16 	    schetHundred;																	// счётчик значений сотен
+   int16   		schetThousand;
+   int16   		schet_10_Thousand;
+   int16   		schet_100_Thousand;
+   int16   		schet_1000_Thousand;
+   int16   		schet_10000_Thousand;
+   float32	    Ideistv_1;																		// значение суммарного тока 1 умноженнного на коэфициент (фильтр)
+   float32	    Ideistv_2;																		// значение суммарного тока 2 умноженнного на коэфициент (фильтр)
+   int16 	    schetchik;																		// временный счётчик
+   float32	    FilterTokaSQRTlong;																// временная составляющая
+   float32	    FilterTokaSQRTlongTen;															// временная составляющая десятки
+   float32	    FilterTokaSQRTlongHundred;														// временная составляющая сотни
+   float32	    FilterTokaSQRTlongThousand;														// временная составляющая тысячи
+   float32	    FilterTokaSQRTlong_10_Thousand;													// временная составляющая 10 тысяч
+   float32	    FilterTokaSQRTlong_100_Thousand;												// временная составляющая 100 тысяч
+   float32	    FilterTokaSQRTlong_1000_Thousand;												// временная составляющая 1000 тысяч
+   float32	    FilterTokaSQRTlong_10000_Thousand;												// временная составляющая 10000 тысяч
+
+ } ;
+
+struct Filter_I_and_U_struct Filter_I_and_U;
+
+struct Driving_I_struct
+{
+   float32		Iaktivn;																		// значение активного тока
+   float32		Raktivn;																		// значение коэфициента R активного тока
+   float32		IuRezultat;																		// значение тока 1 в относительных единицах
+   float32		IwRezultat;
+   float32 		IuRezultatChisla;																// значения u для вычисления постоянной составляющей
+   float32 		IwRezultatChisla;																// значения w для вычисления постоянной составляющей
+   float32 		IORezultatChisla;																// значения 0 для вычисления постоянной составляющей
+   float32 		IRezultatChisla;																// значение результирующее для вычисления постоянной составляющей
+   int32		IRezultatSQRT;																	// значение тока для вычисления корня
+   float32 		SQRTI;																			// значение корня текущего значения
+   float32 		IRkomponsacia;																	// коэффициент IR компенсации
+   float32 		KoeficentR;																		// коэфициент R IR компенсации
+   float32 		I_kompensation_plus;															// прибавляющая часть токовой компенсации
+   float32		I_alpha;																		// токовый сигнал алфа
+   float32 		I_beta;																			// токовый сигнал бета
+   float32		I_a;																			// преобразование активного тока
+} ;
+
+struct Driving_I_struct Driving_I;
+
+//--- структура напряжений электропривода
+struct  U_PHASE_STRUCT 
+{
+	Uint16 Uu;																					// значение напряжения фазы u
+	Uint16 Uv;																					// значение напряжения фазы v
+	Uint16 Uw;																					// значение напряжения фазы w
+};
+
+
+
+
+//--- структура задатчика скорости
+struct Inst_speed_struct
+{
+int16	Zad_speed_int;																			// задатчик скорости значение АЦП
+float32 Zad_speed_fl;																				// задатчик скорости
+float32 Zad_speed_fl_deistv;																			// значение суммарного задатчика скорости умноженнного на коэфициент (фильтр)
+float32 Zad_speed_fl_form;																				// задатчик скорости (коэффициент формирования)
+float32 Zad_intens_fl_begin;																	// начальное задание интенсивности (В программе принимает первоначальное значение ZadIntensivnosti)
+};
+
+//--- структура третьей гармоники
+struct Third_harm_struct
+{
+float32 KoefThirdHarmPlus;																		// значение коэфициента третьей гармоники добавки
+float32 Sinus_Upr_third_harmonics;																// значение косинуса третьей гармоники
+int32	Theta_diskr_third_harmonics;															// угол задания в дискретах третьей гармоники
+};
+
+//--- структура управления
+struct Basic_struct
+{
+float32 Theta;																					// угол задания
+float32 ThetaD;																					// угол добавки к текущему значения
+float32 ThetaDPI;																				// угол добавки к текущему значения
+float32 ThetaPlus;																				// угол добавки к текущему значению (различный изменяеммые переменные значения)
+int32  	OborotGradusov;																			// количество дискрет на полный оборот
+int32	Theta_diskr;																			// угол задания в дискретах
+Uint16	PuskCount;																				// счётчик пуска (применяется в фильтре)
+Uint16	StopCount;																				// счётчик стопа (применяется в фильтре)
+Uint32	DO_PIL_ON_Count;																		// счётчик сигнализации "авария"
+Uint32	DO_PIL_ON_Max_Count;																	// максимальное значение счётчика сигнализации "авария" 
+Uint16	DO_PIL_ON_PWM_Count;																	// значение PWM счётчика сигнализации "авария" 
+Uint16	DO_PIL_ON_PWM_MAX_Count;																// максимальное значение PWM счётчика сигнализации "авария"
+Uint16	DO_PIL_ON_PWM_Count_Now;																// действующее значение PWM счётчика сигнализации "авария" 	
+Uint16	DO_PIL_ON_Count_Div;																	// делитель счётчика сигнализации "авария"
+Uint16	DO_PIL_ON_Count_Back;																	// переменная пилы счётчика сигнализации "авария"
+
+Uint16  On_off_Count;																			// счётчик включения (применяется в фильтре)
+Uint16  On_off_Count_zero;																		// счётчик выключения
+int32   PWM_PERIOD_D2;																			// шим задания
+float32	KoefZadatchikaIntensivnostiUmenshen;													// коэфициент задатчика интенсивности уменшения
+float32 KoefUmnozhU;																			// коэффициент умножения напряжения
+float32 ZadIntensivnostiPlus;																	// прибавляющая часть задатчика интенсивности напряжения
+float32 ZadIntensivnostiPlusTheta;																// прибавляющая часть задатчика интенсивности напряжения
+float32 ZadIntensivnosti;																		// значение задатчика интенсивности напряжения
+float32 ZadIntensivnostiTheta;																	// значение задатчика интенсивности напряжения
+float32 KoefUmnozhf;																			// коэфициент умножения частоты общий
+float32 KoefUmnozhf_L_F;																		// коэфициент умножения частоты низкие частоты
+float32 KoefUmnozhf_L_F_K;																		// коэфициент умножения частоты низкие частоты приведения к единице
+float32 Ua;																						// значение напряжения фазы А
+float32 Ub;																						// значение напряжения фазы В
+float32 Uc;																						// значение напряжения фазы С
+float32 Sin;																						// значение напряжения фазы С
+float32 Cos;																						// значение напряжения фазы С
+float32 KoefMaxVoltage;																			// значение коэфициента максимального напряжения
+float32 KoefMinVoltage;																			// значение коэфициента минимального напряжения при регулировании
+Uint32 	Schetchikpochasovoi;																	// счётчик вращения по часовой
+Uint32 	Schetchikprotivchasovoi;																// счётчик вращения против часовой
+ };
+//--- структура управления приводом
+struct  Driving_drive_struct																	
+{
+struct 	Basic_struct Basic;
+struct Inst_speed_struct Inst_speed;
+struct Third_harm_struct Third_harm;
+Uint32  Schet_Alarm;
+};
+
+struct  Driving_drive_struct Driving_drive;
+
+//--- структура флагов электропривода
+struct
+{
+	Uint16  ZamedlObr:1;																		// флаг замедления обратного вращения (Используется в функции проверки вращения привода
+	Uint16 	ZamedlVper:1;			    														// флаг замедления вращения (Используется в функции проверки вращения привода
+	Uint16  ZadIntensivnosti:1;																	// флаг задатчика интенсивности напряжения
+	Uint16  ZadIntensivnostiTheta:1;															// флаг угла задатчика интенсивности
+//	Uint16  Alarm:1;																			// флаг сигнализации "сигнализации аварии"
+    Uint16 	DI_On_off:1;																		// флаг разрешения "включения/отключения"
+	Uint16	DI_Pusk:1;																			// флаг разрешения "пуска"
+	Uint16	DI_Stop:1;																			// флаг разрешения "стопа"
+	Uint16	DI_StartPusk:1;																		// флаг разрешения начала "пуска"
+    Uint16	DI_Rechange_drive:1;																// флаг изменения кнопки направления привода
+	Uint16	DI_E_STOP:1;																		// флаг "аварийный стоп"
+	Uint16	DO_IHV_CTL:1;																		// флаг индикации сигнала "питание платы управления" (нахождение в рабочем состоянии)
+	Uint16	DO_IRD_CTL:1;																		// флаг индикации сигнала "готовность"
+	Uint16	DO_IOP_CTL:1;																		// флаг индикации сигнала "работа"
+	Uint16	DO_FLT_CTL:1;																		// флаг индикации сигнала "авария"
+	Uint16	DO_PIL_ON:1;																		// флаг сигнализации "авария"
+ 	Uint16	Rechange_drive:1	;																// флаг изменения направления привода
+	
+} Flags_drive;
+
+//--- структура коррекции сети
+struct CORRECTION_POWER_GRID
+{ 
+int16	IDENTIFIER_N;																			 // указатель номера ячейки
+int16	IDENTIFIER_N_DIV_5;																		 // приведённый указатель к виду делённого на 5 (для использования в качестве идентификатора)
+int16	UDCA;																					 // постоянное напряжение на фазе A
+int16	UDCB;																					 // постоянное напряжение на фазе B
+int16	UDCC;																					 // постоянное напряжение на фазе C
+float32 KOEF_UA;																				 // коэфициент стабилизации фазы A
+float32 KOEF_UB;																				 // коэфициент стабилизации фазы B
+float32 KOEF_UC;																				 // коэфициент стабилизации фазы C
+float32 DELTA_KOEF_UDC;																			 // интегрирующая часть адаптации подстройки к сети
+
+};
+
+struct CORRECTION_POWER_GRID CORRECTION_POWER_GRID_STRUCT;
+
+
+
+
+
+
+enum {sngl_mode, master_mode, slave_mode} MSmode;	//переменная режима работы (одиночный, двойной ведущий, двойной подчиненный)
+enum {on, off} Prmt_Work;	//переменная разрешения работы 
+
+//структуры данных для передачи-----------------------------------
+
+struct	TX_FRAME	tx;
+struct	TX_FRAME	tx_4slv;
+
+//хранение данных о ячейках-------------------------------------------
+
+union ANALOG_VAL	An_Val;			//определить область для переменных АЦП
+
+//--------------------
+
+Uint16	par_nmb_list[12] = {0,1,2,3,4,5,6,7,8,9,10,11};	//список параметров для опроса при полной инициализации
+Uint16	nmb_of_askprm = 0;
+
+//-------------------------------------------
+
+union	CELL_DATA_UNION	cell[NUMB_OF_CELLS * 3];		//база данных о ячейках
+union	CELL_DATA_UNION	slv_cell[NUMB_OF_CELLS * 3];	//база данных о ведомых ячейках
+
+//запрос и ответ сдвинуты по времени, поэтому нужен 3-значный признак инициализации
+//enum {init_off, TX_init_done, RX_init_done} all_init_id;	//определить список значений
+//enum {init_off_slv, TX_init_done_slv, RX_init_done_slv} all_init_id_slv;	//определить список значений
+struct	SCIRX_DATA	RXd_mstr;		//куча данных ведущего
+struct	SCIRX_DATA	RXd_slv;		//куча данных ведомого
+
+Uint16	all_init_err = 0;						//общий признак ошибки инициализации
+Uint16	tot_sgnl_err = 0;						//общий признак ошибки передачи
+Uint16	tot_cell_ready = 0;						//общий признак готовности ячеек к работе
+
+Uint16	all_init_err_slv = 0;					//общий признак ошибки инициализации ведомых ячеек
+Uint16	tot_sgnl_err_slv = 0;					//общий признак ошибки передачи ведомых ячеек
+Uint16	tot_cell_ready_slv = 0;				//общий признак готовности ведомых ячеек к работе
+
+Uint16	sync_ok	= 0;
+//организация архива отправки------------------------------------------------
+
+struct	STORE_DATA 		store[4];
+struct	STORE_DATA 		*store_indx[4] = {&store[0], &store[1]};	//индексы архива
+struct	STORE_DATA 		store_slv[4];
+struct	STORE_DATA 		*store_slv_indx[4] = {&store_slv[0], &store_slv[1], &store_slv[2], &store_slv[3]};	//индексы архива
+
+Uint16	Smpl_F[3] = {0, 0, 0};
+Uint16	store_Smpl_F[3] = {0, 0, 0};
+//----------------------------------------------------
+Uint16	N_var = 0;							//номер переменной в ячейке
+Uint16	var_value = 0;						//значение переменной в ячейке
+Uint16	frame_cnt = 0;						//счетчик посылок
+Uint16	tx_frame[8] = {0,0,0,0,0,0,0,0};	//передаваемые слова сообщения 7x8бит
+
+Uint16	cell_ok = 0;						//флаг исправности ячеек
+
+Uint16	retr_cell_mstr[10] = {0,0,0,0,0,0,0,0,0,0};	//данные для ретрансляции ячейки-ведущий контр
+Uint16	retr_mstr_cell[10] = {0,0,0,0,0,0,0,0,0,0};	//данные для ретрансляции ведущий контр-ячейки
+//принимаемые данные----------------------------------------
+Uint16	new_datain[9] = {0,0,0,0,0,0,0,0,0};		//принимаемые новые данные 
+Uint16	numb_frames = 0;					//счетчик принятых фреймов
+Uint16	err_frames = 0;						//количество посылок с ошибками
+Uint16	err_line = 0;						//ошибки на линии
+
+Uint16	numb_frames_slv = 0;					//счетчик принятых фреймов
+Uint16	new_datain_slv[9] = {0,0,0,0,0,0,0,0,0};		//принимаемые новые данные 
+//для lcd---------------------------------------------------
+int16	ind_str[32];						//создать массив символов для верхней и нижней  
+											//строк 
+int16	*ind_1pos = &ind_str[0];			//адрес 1 цифры в индикаторе
+int16	*ind_2pos = &ind_str[10];			//адрес 2 цифры в индикаторе
+int16	*ind_3pos = &ind_str[16];			//адрес 3 цифры в индикаторе
+int16	*ind_4pos = &ind_str[26];			//адрес 4 цифры в индикаторе
+
+int16	ind_data_out[3] = {0,0,0};	//
+
+//описание устройств SPI--------------------------------------------
+Uint16	SPI_list[4] = {	ADC1_dev_SEL,
+						ADC2_dev_SEL,
+						EXP1_dev_SEL,
+						EXP2_dev_SEL};	//определить список устройств SPI
+Uint16	SPI_cur_dev = 0;				//номер текущего устройства
+
+struct  MX7301DAT_REGs Exp1_regs;		//определить регистры устройств SPI
+struct  MX7301DAT_REGs Exp2_regs;
+
+struct	AD7732_RES_REG AD7732_1;		//определить регистры результатов преобразований
+struct	AD7732_RES_REG AD7732_2;
+
+Uint16 spi_frame = 0;
+Uint16 spi_cnt = 0;
+
+struct	STORE_SPI spi_store;
+//переменнные программы
+float32	FuncSinSignal[3] = {0.5,0.5,0.5};																// текущее значение сигнала задания
+Uint16	Sin[3] = {0,600,1200};																			// текушее значение номера отсчета
+float32 Determinant_Sinus[4]={0,0,0,0};
+
+float32 FilterTokaMatrix [2][10] = {{1720,1720,1720,1720,1720,1720,1720,1720,1720,1720},				// массивы значений (0) фильтра тока 1
+    					            {1720,1720,1720,1720,1720,1720,1720,1720,1720,1720}};				// массивы значений (1) фильтра тока 2    					            
+
+float32 FilterUMatrix [3][10] =	   {{2048,2048,2048,2048,2048,2048,2048,2048,2048,2048},				// массивы значений фильтра напряжений u
+    					         	{2048,2048,2048,2048,2048,2048,2048,2048,2048,2048},				// массивы значений фильтра напряжений v
+    					         	{2048,2048,2048,2048,2048,2048,2048,2048,2048,2048}};				// массивы значений фильтра напряжений w
+    					           																  					            
+float32 FilterTokaMatrixSQRTlong [10] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};									// массивы значений фильтра
+float32 FilterTokaMatrixSQRTlongTen [10] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};								// массивы значений фильтра десятков
+float32 FilterTokaMatrixSQRTlongHundred [10] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};							// массивы значений фильтра сотен
+float32 FilterTokaMatrixSQRTlongThousand [10] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};							// массивы значений фильтра тысяч
+float32 FilterTokaMatrixSQRTlong_10_Thousand [10] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};						// массивы значений фильтра 10 тысяч
+float32 FilterTokaMatrixSQRTlong_100_Thousand [10] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};					// массивы значений фильтра 10 тысяч
+float32 FilterTokaMatrixSQRTlong_1000_Thousand [10] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};					// массивы значений фильтра 10 тысяч
+float32 FilterTokaMatrixSQRTlong_10000_Thousand [10] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};					// массивы значений фильтра 10 тысяч
+
+
+float32 FilterTokaMatrixZad [10] = 	{4096,4096,4096,4096,4096,4096,4096,4096,4096,4096};				// массивы значений  фильтра задания тока 1
+
+//float32 x=0;																							// временная переменная
+
+int16	On_off_Count=0;																					// счётчик включения (применяется в фильтре)
+int16	On_off_Count_zero=0;																			// счётчик выключения
+		
+
+int16	transbyte = 0;																					// временная переменная для передачи	
+int16	Datain = 0;																						// принятый фрейм по CSI
+int16	Datain_ER;																						// входные данные ошибка
+int16	trans_frame[8] = {0,0,0,0,0,0,0,0};																// передаваемые слова сообщения 7x8бит
+
+
+float32 KoefThirdGarmEXAMPLE=0;
+//------------------------------------------------------------------
+
+#ifdef __cplusplus
+}
+#endif /* extern "C" */
+
+#endif  // end of MAINCPU_MAIN_H definition
+
+//===========================================================================
+// End of file.
+//===========================================================================

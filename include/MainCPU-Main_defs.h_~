@@ -1,0 +1,320 @@
+//###########################################################################
+//
+// FILE:   MainCPU-Main.h
+//
+// TITLE:  MainCPU-Main.c header.
+//
+//###########################################################################
+
+
+#ifndef MAINCPU_MAIN_DEFS_H
+#define MAINCPU_MAIN_DEFS_H
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
+#define	fs 35								//определить частоту сигнала задания
+
+//коды символов индикатора
+#define empty_sym 0x20
+#define null_sym 0x30
+#define minus_sym 0x2D
+
+
+//макросы передачи\
+//#define	numb_mes 8
+
+#define	trans_per 5552 * 1.5								//период транзакций 55.52 мкс
+#define	trans_start 1200 * 1.5								//момент запуска транзакций 12 мкс
+#define	trans_sync_lenth 700 * 1.5							//длительность синхроимпульса 7 мкс
+
+#define	mid_lvl	41640/2
+#define high_quarter_lvl (41640/4)*3
+#define low_quarter_lvl (41640/4)
+
+#define syncout_set 	GpioDataRegs.GPASET.bit.GPIO29 = 1  	//установка синхроимпульса
+#define syncout_clear 	GpioDataRegs.GPACLEAR.bit.GPIO29 = 1 	//сброс синхроимпульса
+#define syncline_on 	GpioCtrlRegs.GPAMUX2.bit.GPIO29 = 0 	//переключение на линию SYNC
+#define transline_on 	GpioCtrlRegs.GPAMUX2.bit.GPIO29 = 1 	//переключение на линию транзакций
+
+#define	tot_numb_rxframes	9									//количество фреймов в принимаемом сообщении
+
+#define	Init_Mode 0
+#define	Work_Mode 1
+
+#define	RX_FROM_SLAVE 0
+#define	RX_FROM_CELLS 1
+
+//структуры данных для передачи-----------------------------------
+
+struct	TX_SERV_BITS {			//структура слова сервисных битов в рабочем режиме 
+	Uint16	cell_indx:4;		//0-3 >порядковый номер ячейки в фазе для запроса данных
+	Uint16	oper_code:1;		//4 >код опереции
+	Uint16	saw_sync:1;			//5 >бит запуска базовой пилы
+	Uint16	init_mode:1;		//6 > вид инициализации
+	Uint16	mode:1;				//7 >бит режима работы
+	Uint16	rsvd:8;				//8-15 
+	};
+
+struct	TX_DATA_BYTE {
+	Uint16	low:8;
+	Uint16	high:8;
+	};		
+
+union	TX_DATA_WORD {
+	Uint16						all;
+	struct	TX_DATA_BYTE 		byte;	
+	};
+
+union	TX_SERV_WORD {
+	Uint16						all;
+	struct TX_SERV_BITS			bit;
+	};
+
+struct	TX_FRAME {
+	union	TX_SERV_WORD		serv;	
+	union	TX_DATA_WORD		Ncell;
+	union	TX_DATA_WORD		Nvar;
+	union	TX_DATA_WORD		var_value;
+	union	TX_DATA_WORD		Smpl_F[3];
+	Uint16						CRC;
+	};
+
+//хранение данных о ячейках-------------------------------------------
+struct NAMED_ANALOG_VAL {				//ОБЪЯВЛЕНИЕ структуры данных АЦП
+	int16	REF125; 					//опорное напряжение 125
+	int16	Ta	;						//температура платы
+	int16	TZ	;						//температура модуля Z
+	int16	TY	;						//температура модуля Y
+	int16	UDC	;						//выпрямленное напряжение
+	int16	UT	;						//напряжение фазы T
+	int16	US	;						//напряжение фазы S
+	int16	UR	;						//напряжение фазы R
+	};
+
+union  ANALOG_VAL {
+	int16					AINA[8];	//результат преобразования АЦП как массив
+	struct	NAMED_ANALOG_VAL	named;	//результат преобразования АЦП как отдельные имена (по схеме)
+};
+
+//--------------------
+struct W1_FLAGS_BITS {
+	Uint16	C_ready:1;                //флаг готовности ячейки к работе
+	Uint16	protect_C:1;			//Общий флаг срабатывания защиты с отключением ячейки
+	Uint16	pre_protect_C:1;			//Общий флаг срабатывания защиты без отключения ячейки
+	Uint16	drv1_protect:1;			//Флаг интегральной защиты драйвера 1 силовых вентилей
+	Uint16	drv2_protect:1;			//Флаг интегральной защиты драйвера 2 силовых вентилей
+	Uint16	UDC_high:1;				//Флаг защиты от превышения выпрямленного напряжения 
+	Uint16	UDC_low:1;				//Флаг защиты от понижения выпрямленного напряжения
+	Uint16	rsvd:1;						//не используется
+};
+union W1_FLAGS_REG {
+	Uint16                all;
+	struct W1_FLAGS_BITS  bit;
+};
+
+//-----------------------
+struct W2_FLAGS_BITS {
+	Uint16	UT_off:1;                 //Флаг защиты от пропадания фазы T
+	Uint16	US_off:1;                 //Флаг защиты от пропадания фазы S
+	Uint16	UR_off:1;                 //Флаг защиты от пропадания фазы R
+	Uint16	OVT1_on:1;				//Флаг предупреждения перегрева (термостат OVT1)
+	Uint16	OVT2_on:1;				//Флаг перегрева (термостат OVT2)
+	Uint16	rsvd:3;						//не используется
+};
+union W2_FLAGS_REG {
+	Uint16                all;
+	struct W2_FLAGS_BITS  bit;
+};
+
+//-----------------------
+struct W3_FLAGS_BITS {
+	Uint16	TZ_warning:1;				//Флаг предупреждения перегрева (аналоговый датчик TZ)
+	Uint16	TZ_protect:1;				//Флаг перегрева (аналоговый датчик TZ)
+	Uint16	TY_warning:1;				//Флаг предупреждения перегрева (аналоговый датчик TY)
+	Uint16	TY_protect:1;				//Флаг перегрева (аналоговый датчик TY)
+	Uint16	rsvd:4;						//не используется
+};
+union W3_FLAGS_REG {
+	Uint16                all;
+	struct W3_FLAGS_BITS  bit;
+};
+
+struct	CELL_DATA {
+	union	W1_FLAGS_REG	W1flags;			//слово1 флагов					(1 слово)
+	union 	W2_FLAGS_REG	W2flags;			//слово2 флагов					(1 слово)
+	union 	W3_FLAGS_REG	W3flags;			//слово3 флагов 				(1 слово)
+	union 	ANALOG_VAL		An_Val;				//								(8 слов)
+	Uint16					long_indx;			//индивидуальный номер ячейки	(1 слово)
+	Uint16					cell_indx;			//номер ячейки в фазе			(1 слово)
+	Uint16					phase_indx;			//номер фазы					(1 слово)
+	Uint16					init_done;			//признак проведенной инициализации	(1 слово)
+	Uint16					sgnl_err;			//признак щшибки связи 			(1 слово)
+};
+
+union	CELL_DATA_UNION {
+	struct	CELL_DATA	word;
+	Uint16				all[16];
+};
+
+//база данных для приема SCI
+struct	SCIRX_DATA 
+	{
+	Uint16					new_datain[9];	
+	Uint16					numb_frames;
+	Uint16					p_cnt;
+	Uint16					Nc_resp;
+	Uint16					Np_resp;
+	Uint16					Nc_req;
+	Uint16					Np_req;
+	};
+
+//организация архива отправки------------------------------------------------
+
+struct	STORE_DATA {
+	union	TX_SERV_WORD		serv;
+	Uint16						data[6];
+	};
+
+//макросы номеров элементов базы данных ячеек
+#define	W1_FLAGS_REG_num	0
+#define	W2_FLAGS_REG_num	1	
+#define	W3_FLAGS_REG_num	2
+#define	REF125_REG_num		3
+#define	Ta_REG_num			4
+#define	TZ_REG_num			5
+#define	TY_REG_num			6
+#define	UDC_REG_num			7
+#define	UT_REG_num			8
+#define	US_REG_num			9
+#define	UR_REG_num			10
+#define	long_indx_REG_num	11
+
+#define	tot_nmb_of_askprm 12		//общее количество запрашиваемых параметров ячейки
+#define	comm_nmb_of_askprm 4		//обычное количество запрашиваемых параметров ячейки 
+
+//-------------------------------------------
+
+
+#define	NUMB_OF_CELLS	5		//количество ячеек в фазе
+
+
+//привязка к реальным выводам на схеме
+#define DIN1_Exp1	Exp1_regs.GPin.bit.GPIO4
+#define DIN2_Exp1	Exp1_regs.GPin.bit.GPIO5
+#define DIN3_Exp1	Exp1_regs.GPin.bit.GPIO6
+#define DIN4_Exp1	Exp1_regs.GPin.bit.GPIO7
+#define DIN5_Exp1	Exp1_regs.GPin.bit.GPIO8
+#define DIN6_Exp1	Exp1_regs.GPin.bit.GPIO12
+#define DIN7_Exp1	Exp1_regs.GPin.bit.GPIO9
+#define DIN8_Exp1	Exp1_regs.GPin.bit.GPIO13
+#define DIN9_Exp1	Exp1_regs.GPin.bit.GPIO10
+#define DIN10_Exp1	Exp1_regs.GPin.bit.GPIO14
+#define DIN11_Exp1	Exp1_regs.GPin.bit.GPIO11
+#define DIN12_Exp1	Exp1_regs.GPin.bit.GPIO15
+
+#define DOUT1_Exp1	Exp1_regs.GPout.bit.GPIO16
+#define DOUT2_Exp1	Exp1_regs.GPout.bit.GPIO17
+#define DOUT3_Exp1	Exp1_regs.GPout.bit.GPIO18
+#define DOUT4_Exp1	Exp1_regs.GPout.bit.GPIO19
+#define DOUT5_Exp1	Exp1_regs.GPout.bit.GPIO20
+#define DOUT6_Exp1	Exp1_regs.GPout.bit.GPIO21
+#define DOUT7_Exp1	Exp1_regs.GPout.bit.GPIO22
+#define DOUT8_Exp1	Exp1_regs.GPout.bit.GPIO23
+#define DOUT9_Exp1	Exp1_regs.GPout.bit.GPIO24
+#define DOUT10_Exp1	Exp1_regs.GPout.bit.GPIO25
+#define DOUT11_Exp1	Exp1_regs.GPout.bit.GPIO26
+#define DOUT12_Exp1	Exp1_regs.GPout.bit.GPIO27
+
+#define DIN1_Exp2	Exp2_regs.GPin.bit.GPIO4
+#define DIN2_Exp2	Exp2_regs.GPin.bit.GPIO5
+#define DIN3_Exp2	Exp2_regs.GPin.bit.GPIO6
+#define DIN4_Exp2	Exp2_regs.GPin.bit.GPIO7
+#define DIN5_Exp2	Exp2_regs.GPin.bit.GPIO8
+#define DIN6_Exp2	Exp2_regs.GPin.bit.GPIO12
+#define DIN7_Exp2	Exp2_regs.GPin.bit.GPIO9
+#define DIN8_Exp2	Exp2_regs.GPin.bit.GPIO13
+#define DIN9_Exp2	Exp2_regs.GPin.bit.GPIO10
+#define DIN10_Exp2	Exp2_regs.GPin.bit.GPIO14
+#define DIN11_Exp2	Exp2_regs.GPin.bit.GPIO11
+#define DIN12_Exp2	Exp2_regs.GPin.bit.GPIO15
+
+#define DOUT1_Exp2	Exp2_regs.GPout.bit.GPIO16
+#define DOUT2_Exp2	Exp2_regs.GPout.bit.GPIO17
+#define DOUT3_Exp2	Exp2_regs.GPout.bit.GPIO18
+#define DOUT4_Exp2	Exp2_regs.GPout.bit.GPIO19
+#define DOUT5_Exp2	Exp2_regs.GPout.bit.GPIO20
+#define DOUT6_Exp2	Exp2_regs.GPout.bit.GPIO21
+#define DOUT7_Exp2	Exp2_regs.GPout.bit.GPIO22
+#define DOUT8_Exp2	Exp2_regs.GPout.bit.GPIO23
+#define DOUT9_Exp2	Exp2_regs.GPout.bit.GPIO24
+#define DOUT10_Exp2	Exp2_regs.GPout.bit.GPIO25
+#define DOUT11_Exp2	Exp2_regs.GPout.bit.GPIO26
+#define DOUT12_Exp2	Exp2_regs.GPout.bit.GPIO27
+//-----------------------------
+#define ON_OFF		DIN1_Exp2
+#define STOP		DIN2_Exp2
+#define FORW_BACKW	DIN3_Exp2
+#define START		DIN4_Exp2
+#define PWR_OK		DIN5_Exp2
+#define BAT_OK		DIN6_Exp2
+#define	S_D_MODE	DIN7_Exp2
+#define	M_S_MODE	DIN8_Exp2
+
+//для режима single-double, master-slave
+#define	SINGLE_MODE 1
+#define	DOUBLE_MODE 0
+#define	MASTER_MODE 1
+#define	SLAVE_MODE 0
+
+//---------------------------------------------------------
+
+//описание устройств SPI--------------------------------------------
+#define	FRAM_dev_SEL	0x1
+#define	FLM_dev_SEL		0x2
+#define	EXP2_dev_SEL	0x4
+#define	EXP1_dev_SEL	0x8
+#define	ADC2_dev_SEL	0x10
+#define	ADC1_dev_SEL	0x20
+
+#define	Sel_SPI_dev(x)	GpioDataRegs.GPACLEAR.all = (x)			//активировать устройство SPI
+#define	Deact_SPI_dev()	GpioDataRegs.GPASET.all = (FRAM_dev_SEL + FLM_dev_SEL + EXP2_dev_SEL +	EXP1_dev_SEL + ADC2_dev_SEL + ADC1_dev_SEL)		//выключить все устройства;
+												
+struct	STORE_SPI {
+	Uint16	spi_dev;
+	Uint16	remn_nmb_byte;
+	Uint16	nmb_byte;
+	Uint16	data[5];
+	};
+
+struct	SPI_DEV_BASE {
+	Uint16	spi_conf[4];
+	Uint16	nmb_byte_tx;
+	Uint16	data_tx[4];
+	};
+/*
+struct	STORE_SPI spi_store;
+
+struct	SPI_DEV_BASE ADC1_dev_base;
+struct	SPI_DEV_BASE ADC2_dev_base;
+struct	SPI_DEV_BASE EXP1_dev_base;
+struct	SPI_DEV_BASE EXP2_dev_base;
+
+struct	SPI_DEV_BASE* 	SPI_list[4] = {&ADC1_dev_base,
+									   &ADC2_dev_base, 
+									   &EXP1_dev_base, 
+									   &EXP2_dev_base}
+*/
+//-------------------------------------
+
+#ifdef __cplusplus
+}
+#endif /* extern "C" */
+
+#endif  // end of MAINCPU_MAIN_H definition
+
+//===========================================================================
+// End of file.
+//===========================================================================

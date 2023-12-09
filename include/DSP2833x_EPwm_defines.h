@@ -7,8 +7,8 @@
 // TITLE:  #defines used in ePWM examples examples
 // 
 //###########################################################################
-// $TI Release: DSP2833x Header Files V1.01 $
-// $Release Date: September 26, 2007 $
+// $TI Release: DSP2833x/DSP2823x C/C++ Header Files V1.31 $
+// $Release Date: August 4, 2009 $
 //###########################################################################
 
 #ifndef DSP2833x_EPWM_DEFINES_H
@@ -151,6 +151,7 @@ extern "C" {
 
 #define	HR_CTR_ZERO		0x0
 #define	HR_CTR_PRD		0x1
+
 
 
 #ifdef __cplusplus

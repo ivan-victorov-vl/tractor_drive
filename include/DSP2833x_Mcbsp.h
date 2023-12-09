@@ -1,5 +1,5 @@
-// TI File $Revision: /main/4 $
-// Checkin $Date: September 20, 2007   14:47:47 $
+// TI File $Revision: /main/5 $
+// Checkin $Date: May 14, 2008   16:30:31 $
 //###########################################################################
 //
 // FILE:   DSP2833x_Mcbsp.h
@@ -7,8 +7,8 @@
 // TITLE:  DSP2833x Device McBSP Register Definitions.
 //
 //###########################################################################
-// $TI Release: DSP2833x Header Files V1.01 $
-// $Release Date: September 26, 2007 $
+// $TI Release: DSP2833x/DSP2823x C/C++ Header Files V1.31 $
+// $Release Date: August 4, 2009 $
 //###########################################################################
 
 #ifndef DSP2833x_MCBSP_H
@@ -647,10 +647,9 @@ union XCERH_REG {
 // McBSP Interrupt enable register for RINT/XINT
 struct  MFFINT_BITS {       // bits description
     Uint16     XINT:1;      // 0    XINT  interrupt enable
-    Uint16     XEVTA:1;     // 1    XEVTA interrupt enable
+    Uint16     rsvd1:1;     // 1    reserved
     Uint16     RINT:1;      // 2    RINT  interrupt enable
-    Uint16     REVTA:1;     // 3    REVTA interrupt enable
-    Uint16     rsvd:12;     // 15:4 reserved
+    Uint16     rsvd2:13;    // 15:3 reserved
 };
 
 union MFFINT_REG {
