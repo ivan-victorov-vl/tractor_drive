@@ -62,29 +62,22 @@ void MainInit(void)
 	//! SPIA initialization
 	InitSPIA();
 
-	//! SCIA initialization
-	InitSCIA();
-	//! SCIB initialization
-	InitSCIB();
-
 	//! processor delay for a specified time
 	TimeDelaySys(TIME_DELAY_IN_SEC);
 
-	//! enable the chip
-	CS_AD2S90_ON;
 	//! to start communication with the chip, set 0 value for transmission
 	SpiaRegs.SPITXBUF = 0;
 
-	//! setting of modules epwm 1 to epwm 3 for output shim to motor,
-	//! epwm 4 custom PWM,
-	//! epwm to set the basic cycle
+	//! setting of modules ePWM 1 to ePWM 3 for output PWM to motor,
+	//! ePWM 4 custom PWM,
+	//! ePWM to set the basic cycle
 	InitEPwm_1_2_3_4_6_Timers(PWM_OUT_PHASE, PWM_USR, PERD_BASE_CYCLE);
 
 	//! ADC initialization
 	AdcInitDrive();
 
 	//! CPU interrupt resolution
-	//! interrupt CPU int3 to connect to epwm
+	//! interrupt CPU int3 to connect to ePWM
 	IER |= M_INT3;
 	//! PWM interrupt enable 6
 	PieCtrlRegs.PIEIER3.bit.INTx6 = 1;
@@ -95,24 +88,14 @@ void MainInit(void)
 	//! resolution of global interrupts in real time DBGM
 	ERTM;
 
-	//! Initializable part:
-	//! modbus memory initialization
-	pMBmemory = &rpd_ctrl_regs.bits_reg1.all;
-
 	//! initialization to view current parameters
 	brwsr.pbrws =  &brwsr.pstn_rtr_md;
 
 	//! initialization of permanent magnet synchronous motor model
 	PMSMotorFuncScalInit(&data_pmsm.md, &data_pmsm.sd, &flags_drive);
 
-	//! retrieving initial modbus memory data during initialization
-	ExtrctModbusValInit(&rpd_ctrl_regs, &flags_drive, &data_pmsm);
-
-	//! set microcontroller pins 0...5 to PWM mode
+	//! set pins 0...5 to PWM mode
 	Init_GPIO_0_5_in_PWM();
-
-	//! deactivate the seven-segment display
-	VDHlOff();
 
 	//! ADC data update
 	AdcRegs.ADCTRL2.bit.SOC_SEQ1 = 1;

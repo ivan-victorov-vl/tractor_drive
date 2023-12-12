@@ -23,7 +23,7 @@ void InitEPwm_1_2_3_4_6_Timers(Uint16 prd_epwm_1_2_3, Uint16 prd_epwm_4, Uint16 
 	EALLOW;
 	//! reset the EWPM clocking of the TBCLK module
 	SysCtrlRegs.PCLKCR0.bit.TBCLKSYNC = 0;
-	//! unmodify forbidden registers
+	//! not modify forbidden registers
 	EDIS;
 
 	//! supplying the clock frequency to the PWM modules:
@@ -41,7 +41,7 @@ void InitEPwm_1_2_3_4_6_Timers(Uint16 prd_epwm_1_2_3, Uint16 prd_epwm_4, Uint16 
 	SysCtrlRegs.PCLKCR1.bit.EPWM5ENCLK = 1;
 	//! EPWM6 clocking resolution
 	SysCtrlRegs.PCLKCR1.bit.EPWM6ENCLK = 1;
-	//! unmodify forbidden registers
+	//!  not modify forbidden registers
 	EDIS;
 
 

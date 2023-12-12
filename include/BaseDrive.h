@@ -96,45 +96,51 @@ typedef struct
 } PID_Rgltr_S;
 
 
-//----------------------------------------------------------------------------------------------------------------
-// √руппа параметра: 					( ƒанные ѕ„ )
-// Ќазвание идентификационных данных: 	ƒанные управлени€ преобразователем частоты
-// ƒоступ к регистру 					„тение / «апись
-//----------------------------------------------------------------------------------------------------------------
+/*
+ * \brief Inverter model parameter group
+ */
 typedef struct
 {
-	// заданна€ частота
+	//! set freauency
 	B32_Numb_S k_f_mul_ref;
-	// текуща€ частота вращени€ двигател€
+	//! current motor speed
 	B32_Numb_S k_f_mul;
-	// номинальный ток двигател€
+	//! nominal motor current
 	B32_Numb_S isnom;
-	// ток статора
+	//! current stator
 	B32_Numb_S is;
-	// ток фазы u
+	//! current phase u
 	B32_Numb_S iu;
-	// ток фазы v
+	//! current phase v
 	B32_Numb_S iv;
-	// ток фазы w
+	//! current phase w
 	B32_Numb_S iw;
-	// заданный угол поворота
+	//! set rotation angle
 	B32_Numb_S theta;
-	// приращающа€ часть на разгон с n(min) до n(nom)
+	//! incremental part for acceleration from n(min) to n(nom)
 	B32_Numb_S k_f_mul_plus;
-	// приращаюша€ часть на замедление с n(nom) до n(min)
+	//! incremental part for deceleration from n(nom) to n(min)
 	B32_Numb_S k_f_mul_minus;
-	// текущее значение положени€ ротора
+	//! current value of rotor position
 	B32_Numb_S cur_pstn_rtr;
-	// уровень напр€жени€ фазы U
+	//! phase voltage U
 	B32_Numb_S uu;
-	// уровень напр€жени€ фазы V
+	//! phase voltage V
 	B32_Numb_S uv;
-	// уровень напр€жени€ фазы W
+	//! phase voltage W
 	B32_Numb_S uw;
-	// уровень напр€жени€ звена посто€нного тока
+	//! level voltage DC
 	B32_Numb_S udc;
-	// положение ротора структуры пид регул€тора
+	//! position rotor of structure PID regulator
 	PID_Rgltr_S pstn_rtr;
+
+	B32_Numb_S uac_is_1_0;
+	B32_Numb_S uac_is_2_0;
+	B32_Numb_S uac_is_3_0;
+	B32_Numb_S uac_is_1_1
+
+
+
 } Model_Data_PMSM_S;
 
 
