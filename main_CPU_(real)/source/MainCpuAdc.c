@@ -31,7 +31,7 @@ void AdcInitDrive(void)
 	AdcRegs.ADCTRL1.bit.ACQ_PS = 4;
 	//! processing in cascade mode with one 16-level sequencer
 	AdcRegs.ADCTRL1.bit.SEQ_CASC =1;
-	//! core frequency predilator by 1
+	//! core frequency pre-divider by 1
 	AdcRegs.ADCTRL1.bit.CPS = 0;
 	//! START-STOP mode selection.
 	//! after conversion enter standby mode, and after the standby is completed
@@ -43,8 +43,10 @@ void AdcInitDrive(void)
 	AdcRegs.ADCTRL3.bit.ADCCLKPS = 1;
 	//! selecting the ADC serial polling mode
 	AdcRegs.ADCTRL3.bit.SMODE_SEL = 0;
-	//! selecting the maximum number of conversions equal to 7
-	AdcRegs.ADCMAXCONV.all =7;
+	//! selecting the maximum number of conversions equal to 8
+	AdcRegs.ADCMAXCONV.bit.MAX_CONV1 =7;
+    AdcRegs.ADCMAXCONV.bit.MAX_CONV2 =8;
+
 	//! setting CONV00 polling on ADCINA0
 	AdcRegs.ADCCHSELSEQ1.bit.CONV00 = 0x0;
 	//! setting CONV01 polling on ADCINA1
@@ -61,21 +63,21 @@ void AdcInitDrive(void)
 	AdcRegs.ADCCHSELSEQ2.bit.CONV06 = 0x6;
 	//! setting CONV07 polling on ADCINA7
 	AdcRegs.ADCCHSELSEQ2.bit.CONV07 = 0x7;
-	//! setting CONV08 polling on ADCINA0
+	//! setting CONV08 polling on ADCINB0
 	AdcRegs.ADCCHSELSEQ3.bit.CONV08 = 0x0;
-	//! setting CONV09 polling on ADCINA1
+	//! setting CONV09 polling on ADCINB1
 	AdcRegs.ADCCHSELSEQ3.bit.CONV09 = 0x1;
-	//! setting CONV10 polling on ADCINA2
+	//! setting CONV10 polling on ADCINB2
 	AdcRegs.ADCCHSELSEQ3.bit.CONV10 = 0x2;
-	//! setting CONV11 polling on ADCINA3
+	//! setting CONV11 polling on ADCINB3
 	AdcRegs.ADCCHSELSEQ3.bit.CONV11 = 0x3;
-	//! setting CONV12 polling on ADCINA4
+	//! setting CONV12 polling on ADCINB4
 	AdcRegs.ADCCHSELSEQ4.bit.CONV12 = 0x4;
-	//! setting CONV13 polling on ADCINA5
+	//! setting CONV13 polling on ADCINB5
 	AdcRegs.ADCCHSELSEQ4.bit.CONV13 = 0x5;
-	//! setting CONV14 polling on ADCINA6
+	//! setting CONV14 polling on ADCINB6
 	AdcRegs.ADCCHSELSEQ4.bit.CONV14 = 0x6;
-	//! setting CONV15 polling on ADCINA7
+	//! setting CONV15 polling on ADCINB7
 	AdcRegs.ADCCHSELSEQ4.bit.CONV15 = 0x7;
 	//! SEQ1 interrupt enable
 	AdcRegs.ADCTRL2.bit.INT_ENA_SEQ1 = 1;
@@ -85,15 +87,30 @@ void AdcInitDrive(void)
  *  \brief ADC value processing
  */
 void HandlrADC(Model_Data_PMSM_S *md_motor_l, Settng_Data_PMSM_S *sd_motor_l) {
-	Uint16 i_abs_u_l, i_abs_v_l, ramp_speed_ext_l;
+	Uint16 uac_is_1_1, uac_is_2_1, uac_is_3_1, uac_is_1_0, uac_is_2_0, uac_is_3_0, udc, temp,
+	izad_20_ma, fzad_20_ma, i_os_1_0, i_os_2_0, i_os_3_0, i_os_1_1, i_os_2_1, i_os_3_1;
 
 	AdcRegs.ADCTRL2.bit.SOC_SEQ1 = 1;
-	i_abs_u_l = AdcRegs.ADCRESULT7 >> 4;
-	i_abs_v_l = AdcRegs.ADCRESULT6 >> 4;
-	ramp_speed_ext_l= AdcRegs.ADCRESULT5 >> 4;
 
-	md_motor_l->iu.fl = ((float32)i_abs_u_l - SHIFT_IU) * DIV_1_1700 * 2;
-	md_motor_l->iv.fl = ((float32)i_abs_v_l - SHIFT_IV) * DIV_1_1700 * 2;
-	md_motor_l->iw.fl = -md_motor_l->iu.fl - md_motor_l->iv.fl;
-	sd_motor_l->k_mul_ext_ref = ramp_speed_ext_l * DIV_1_4096;
+	uac_is_1_0 = AdcRegs.ADCRESULT3 >> 4;
+	uac_is_2_0 = AdcRegs.ADCRESULT4 >> 4;
+	uac_is_3_0 = AdcRegs.ADCRESULT5 >> 4;
+    uac_is_1_1 = AdcRegs.ADCRESULT0 >> 4;
+    uac_is_2_1 = AdcRegs.ADCRESULT1 >> 4;
+    uac_is_3_1 = AdcRegs.ADCRESULT2 >> 4;
+	udc = AdcRegs.ADCRESULT6 >> 4;
+	temp = AdcRegs.ADCRESULT7 >> 4;
+    izad_20_ma = AdcRegs.ADCRESULT8 >> 4;
+    fzad_20_ma = AdcRegs.ADCRESULT9 >> 4;
+    i_os_1_0 = AdcRegs.ADCRESULT10 >> 4;
+    i_os_2_0 = AdcRegs.ADCRESULT11 >> 4;
+    i_os_3_0 = AdcRegs.ADCRESULT12 >> 4;
+    i_os_1_1 = AdcRegs.ADCRESULT13 >> 4;
+    i_os_2_1 = AdcRegs.ADCRESULT14 >> 4;
+    i_os_3_1 = AdcRegs.ADCRESULT15 >> 4;
+
+	md_motor_l->iu.fl = 0;
+	md_motor_l->iv.fl = 0;
+	md_motor_l->iw.fl = 0;
+	sd_motor_l->k_mul_ext_ref = 0;
 }

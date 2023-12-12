@@ -54,7 +54,7 @@ void Base_Cycle(void)
  */
 interrupt void epwm6_timer_isr(void)
 {
-	//! extraction of acp currents and external speed reference values
+	//! extraction of ADC currents and external speed reference values
 	HandlrADC(&data_pmsm.md, &data_pmsm.sd);
 	//! extraction from external fast-acting devices working on protocols
 	HandlrExtrnlFastDevice(&data_pmsm);
@@ -62,10 +62,10 @@ interrupt void epwm6_timer_isr(void)
 	CalcFastVarblsSttng(&data_pmsm);
 	//! frequency converter control
 	CntrlDrive(&data_pmsm.md, &data_pmsm.sd, &flags_drive, &brwsr);
-	//! conversion of phase ePwm from relative view to processor shim view
+	//! conversion of phase ePwm from relative view to processor PWM view
 	Handlr_ePwm(brwsr.pbrws, PWM_USR_DIV_2, PWM_OUT_PHASE_DIV_2, &data_pmsm.md);
 
-	//! clear epwm 6 interrupt flag
+	//! clear ePWM 6 interrupt flag
 	EPwm6Regs.ETCLR.bit.INT = 1;
 	//! group 3 interrupt reset
 	PieCtrlRegs.PIEACK.all = PIEACK_GROUP3;
