@@ -133,14 +133,38 @@ typedef struct
 	B32_Numb_S udc;
 	//! position rotor of structure PID regulator
 	PID_Rgltr_S pstn_rtr;
-
+    //! voltage  phase A first invertor
 	B32_Numb_S uac_is_1_0;
+	//! voltage  phase B first invertor
 	B32_Numb_S uac_is_2_0;
+	//! voltage  phase C first invertor
 	B32_Numb_S uac_is_3_0;
-	B32_Numb_S uac_is_1_1
-
-
-
+	//! voltage  phase A second invertor
+	B32_Numb_S uac_is_1_1;
+    //! voltage  phase B second invertor
+	B32_Numb_S uac_is_2_1;
+    //! voltage  phase B second invertor
+	B32_Numb_S uac_is_3_1;
+    //! level voltage DC
+	B32_Numb_S udc;
+    //! level temperature
+	B32_Numb_S temp;
+    //! level current assignment
+	B32_Numb_S izad_20_ma;
+    //! level frequency assignment
+	B32_Numb_S fzad_20_ma;
+    //! current phase A first invertor
+	B32_Numb_S i_os_1_0;
+    //! current phase B first invertor
+	B32_Numb_S i_os_2_0;
+    //! current phase C first invertor
+	B32_Numb_S i_os_3_0;
+	//! current phase A second invertor
+	B32_Numb_S i_os_1_1;
+    //! current phase B second invertor
+	B32_Numb_S i_os_2_1;
+    //! current phase B third invertor
+	B32_Numb_S i_os_3_1;
 } Model_Data_PMSM_S;
 
 
@@ -214,15 +238,14 @@ typedef struct
 } Brws_Param_Drive;
 
 
-//////////////// ОБЪЯВЛЕНИЕ ВНЕШНЕГО ДОСТУПА К ФУНКЦИЯМ /////////////////////
-// объявление внешнего доступа к функции PMSMotorFuncScalInit
+//////////////// DECLARATION OF EXTERNAL ACCESS TO FUNCTIONS /////////////////////
+//! declaration of external access to a function PMSMotorFuncScalInit
 extern void PMSMotorFuncScalInit(Model_Data_PMSM_S *md_l, Settng_Data_PMSM_S *sd_l, Flg_Cntrl_Drive_S *mf_l);
-//объявление внешнего доступа к функции PMSMotorFuncScalReset
+//! declaration of external access to a function PMSMotorFuncScalReset
 extern void PMSMotorFuncScalReset(Model_Data_PMSM_S *md_l, Settng_Data_PMSM_S *sd_l, Flg_Cntrl_Drive_S *mf_l);
-// объявление внешнего доступа к функции PMSMotorFuncScal
+//! declaration of external access to a function PMSMotorFuncScal
 extern void PMSMotorFuncScal(Model_Data_PMSM_S *md_la, Flg_Cntrl_Drive_S *mf_la, Brws_Param_Drive *bpd_la);
-// объявление внешнего доступа к функции CntrlDrive
+//! declaration of external access to a function CntrlDrive
 extern void CntrlDrive(Model_Data_PMSM_S *md_l, Settng_Data_PMSM_S *sd_l, Flg_Cntrl_Drive_S *mf_l, Brws_Param_Drive *bpd_l);
-
 
 #endif

@@ -87,27 +87,25 @@ void AdcInitDrive(void)
  *  \brief ADC value processing
  */
 void HandlrADC(Model_Data_PMSM_S *md_motor_l, Settng_Data_PMSM_S *sd_motor_l) {
-	Uint16 uac_is_1_1, uac_is_2_1, uac_is_3_1, uac_is_1_0, uac_is_2_0, uac_is_3_0, udc, temp,
-	izad_20_ma, fzad_20_ma, i_os_1_0, i_os_2_0, i_os_3_0, i_os_1_1, i_os_2_1, i_os_3_1;
-
 	AdcRegs.ADCTRL2.bit.SOC_SEQ1 = 1;
+    AdcRegs.ADCTRL2.bit.SOC_SEQ2 = 1;
 
-	uac_is_1_0 = AdcRegs.ADCRESULT3 >> 4;
-	uac_is_2_0 = AdcRegs.ADCRESULT4 >> 4;
-	uac_is_3_0 = AdcRegs.ADCRESULT5 >> 4;
-    uac_is_1_1 = AdcRegs.ADCRESULT0 >> 4;
-    uac_is_2_1 = AdcRegs.ADCRESULT1 >> 4;
-    uac_is_3_1 = AdcRegs.ADCRESULT2 >> 4;
-	udc = AdcRegs.ADCRESULT6 >> 4;
-	temp = AdcRegs.ADCRESULT7 >> 4;
-    izad_20_ma = AdcRegs.ADCRESULT8 >> 4;
-    fzad_20_ma = AdcRegs.ADCRESULT9 >> 4;
-    i_os_1_0 = AdcRegs.ADCRESULT10 >> 4;
-    i_os_2_0 = AdcRegs.ADCRESULT11 >> 4;
-    i_os_3_0 = AdcRegs.ADCRESULT12 >> 4;
-    i_os_1_1 = AdcRegs.ADCRESULT13 >> 4;
-    i_os_2_1 = AdcRegs.ADCRESULT14 >> 4;
-    i_os_3_1 = AdcRegs.ADCRESULT15 >> 4;
+	md_motor_l->uac_is_1_0.fl = AdcRegs.ADCRESULT3 >> 4;
+	md_motor_l->uac_is_2_0.fl = AdcRegs.ADCRESULT4 >> 4;
+	md_motor_l->uac_is_3_0.fl = AdcRegs.ADCRESULT5 >> 4;
+	md_motor_l->uac_is_1_1.fl = AdcRegs.ADCRESULT0 >> 4;
+	md_motor_l->uac_is_2_1.fl = AdcRegs.ADCRESULT1 >> 4;
+	md_motor_l->uac_is_3_1.fl = AdcRegs.ADCRESULT2 >> 4;
+	md_motor_l->udc.fl = AdcRegs.ADCRESULT6 >> 4;
+	md_motor_l->temp.fl = AdcRegs.ADCRESULT7 >> 4;
+	md_motor_l->izad_20_ma.fl = AdcRegs.ADCRESULT8 >> 4;
+	md_motor_l->fzad_20_ma.fl = AdcRegs.ADCRESULT9 >> 4;
+	md_motor_l->i_os_1_0.fl = AdcRegs.ADCRESULT10 >> 4;
+	md_motor_l->i_os_2_0.fl = AdcRegs.ADCRESULT11 >> 4;
+	md_motor_l->i_os_3_0.fl = AdcRegs.ADCRESULT12 >> 4;
+	md_motor_l->i_os_1_1.fl = AdcRegs.ADCRESULT13 >> 4;
+	md_motor_l->i_os_2_1.fl = AdcRegs.ADCRESULT14 >> 4;
+	md_motor_l->i_os_3_1.fl = AdcRegs.ADCRESULT15 >> 4;
 
 	md_motor_l->iu.fl = 0;
 	md_motor_l->iv.fl = 0;

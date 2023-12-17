@@ -60,27 +60,28 @@
 
 
 
-//////////////// ОБЪЯВЛЕНИЕ ВНЕШНЕГО ДОСТУПА К ФУНКЦИЯМ /////////////////////
-// объявление функции Stop
+//////////////// DECLARATION OF EXTERNAL ACCESS TO FUNCTIONS /////////////////////
+//! declaration of external access to a function Stop
 extern void Stop(Model_Data_PMSM_S *md_la, Settng_Data_PMSM_S *sd_la, Flg_Cntrl_Drive_S *mf_la );
-// объявление внешнего доступа к функции CalcSinCos
+//! declaration of external access to a function CalcSinCos
 extern void (**pCalcSinCos)(float32 theta_lb, float32 *sin_lb, float32 *cos_lb);
-// объявление внешнего доступа к функции CalcIm
+//! declaration of external access to a function CalcIm
 extern float32 CalcIm(float32 kf_multiply_lb, float32 kim_eqlztn_lb, float32 *eqlztn_im_lb);
-// объявление внешнего доступа к функции ApprdFltr
+//! declaration of external access to a function ApprdFltr
 extern float32 ApprdFltr(float32 first_var_lb, float32 Ti_apprd_lb, float32 *integr_lb);
-// объявление внешнего доступа к функции Calc2To3Cos
+//! declaration of external access to a function Calc2To3Cos
 extern void Calc2To3Cos(float32 first_var_lb, float32 sec_var_lb, float32 *first_res_lb, float32 *sec_res_lb, float32 *third_res_lb);
-// объявление внешнего доступа к функции Calc3To2
+//! declaration of external access to a function Calc3To2
 extern void Calc3To2(float32 first_var_lb, float32 sec_var_lb, float32 third_var_lb, float32 *first_res_lb, float32 *sec_res_lb);
-// объявление внешнего доступа к функции SpeedRef
+//! declaration of external access to a function SpeedRef
 extern void SpeedRef(float32 k_f_mul_ref_lb, float32 k_f_mul_plus_lb, float32 k_f_mul_minus_lb, float32 *k_f_mul_lb);
-// объявление внешнего доступа к функции CalcLengthVect2In
+//! declaration of external access to a function CalcLengthVect2In
 extern float32 CalcLengthVect2In(float32 first_lb, float32 secnd_lb);
-// объявление внешнего доступа к функции PID_Regltr
+//! declaration of external access to a function PID_Regltr
 extern float32 PID_Regltr(PID_Rgltr_S *v_pid_r_lb);
-// объявление внешнего доступа к функции CalcSpeedRtr
+//! declaration of external access to a function CalcSpeedRtr
 extern float32 CalcSpeedRtr(float32 theta_rtr_lb, float32 *ptheta_rtr_lb,  float32 *pcalc_speed_rez_lb);
-
+//! declaration of external access to a function CalculateConditionPMS
+extern void CalculateConditionPMS(Model_Data_PMSM_S *md_l, Settng_Data_PMSM_S *sd_l, Flg_Cntrl_Drive_S *mf_l);
 
 #endif
