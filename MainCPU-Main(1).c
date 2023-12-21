@@ -65,6 +65,8 @@ interrupt void epwm6_timer_isr(void)
 	//! conversion of phase ePwm from relative view to processor PWM view
 	Handlr_ePwm(brwsr.pbrws, PWM_USR_DIV_2, PWM_OUT_PHASE_DIV_2, &data_pmsm.md);
 
+	data_pmsm.md.theta.fl = 359;
+	CalculateConditionPMS(&data_pmsm.md);
 	//! clear ePWM 6 interrupt flag
 	EPwm6Regs.ETCLR.bit.INT = 1;
 	//! group 3 interrupt reset

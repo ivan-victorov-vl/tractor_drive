@@ -30,7 +30,7 @@ void SpeedRef(float32 k_f_mul_ref_lb, float32 k_f_mul_plus_lb, float32 k_f_mul_m
 float32 CalcLengthVect2In(float32 first_lb, float32 secnd_lb);
 float32 PID_Regltr(PID_Rgltr_S *v_pid_r_lb);
 float32 CalcSpeedRtr(float32 theta_rtr_lb, float32 *ptheta_rtr_lb,  float32 *pcalc_speed_rez_lb);
-void CalculateConditionPMS(Model_Data_PMSM_S *md_l, Settng_Data_PMSM_S *sd_l, Flg_Cntrl_Drive_S *mf_l);
+void CalculateConditionPMS(Model_Data_PMSM_S *md_l);
 
 void Stop(Model_Data_PMSM_S *md_la, Settng_Data_PMSM_S *sd_la, Flg_Cntrl_Drive_S *mf_la )
 {
@@ -38,6 +38,7 @@ void Stop(Model_Data_PMSM_S *md_la, Settng_Data_PMSM_S *sd_la, Flg_Cntrl_Drive_S
 }
 
 
+//! \brief Calculate sin and cos from degree 0-90
 void CalcSinCos_0_90(float32 theta_lb, float32 *sin_lb, float32 *cos_lb)
 {
 	int16	theta_dtabl_lb;
@@ -52,7 +53,7 @@ void CalcSinCos_0_90(float32 theta_lb, float32 *sin_lb, float32 *cos_lb)
 	*cos_lb = *(psin_90_lb - theta_dtabl_lb) + ((1 - add_angl_lb) * ( *(psin_90_lb - (theta_dtabl_lb - 1)) - *(psin_90_lb - theta_dtabl_lb)));
 }
 
-
+//! \brief Calculate sin and cos from degree 90-180
 void CalcSinCos_90_180(float32 theta_lb, float32 *sin_lb, float32 *cos_lb)
 {
 	int16	theta_dtabl_lb;
@@ -67,7 +68,7 @@ void CalcSinCos_90_180(float32 theta_lb, float32 *sin_lb, float32 *cos_lb)
 	*cos_lb = -*psin_90_lb -  (add_angl_lb * ( *(psin_90_lb + 1) - *psin_90_lb));
 }
 
-
+//! \brief Calculate sin and cos from degree 180-270
 void CalcSinCos_180_270(float32 theta_lb, float32 *sin_lb, float32 *cos_lb)
 {
 	int16	theta_dtabl_lb;
@@ -84,6 +85,7 @@ void CalcSinCos_180_270(float32 theta_lb, float32 *sin_lb, float32 *cos_lb)
 }
 
 
+//! \brief Calculate sin and cos from degree 270-360
 void CalcSinCos_270_360(float32 theta_lb, float32 *sin_lb, float32 *cos_lb)
 {
 	int16	theta_dtabl_lb;
@@ -193,11 +195,10 @@ float32 CalcSpeedRtr(float32 theta_rtr_lb, float32 *ptheta_rtr_lb,  float32 *pca
 	return	 ((*pcalc_speed_rez_lb + *(pcalc_speed_rez_lb + 1) + *(pcalc_speed_rez_lb + 2) + *(pcalc_speed_rez_lb + 3)) * K_1_DIV_4);
 }
 
-
 //! \brief Calculate condition of PMSM
-void CalculateConditionPMS(Model_Data_PMSM_S *md_l, Settng_Data_PMSM_S *sd_l, Flg_Cntrl_Drive_S *mf_l) {
-    int32 calc_theta = ((int32)md_l->theta%120)/10;
-    md_l->uu.fl = Tabl_Uu(calc_theta);
-    md_l->uv.fl = Tabl_Uv(calc_theta);
-    md_l->uw.fl = Tabl_Uw(calc_theta);
+void CalculateConditionPMS(Model_Data_PMSM_S *md_l) {
+    int32 calc_theta = ((int32)md_l->theta.fl%120)/10;
+    md_l->uu.fl = TABL_UU[calc_theta];
+    md_l->uv.fl = TABL_UV[calc_theta];
+    md_l->uw.fl = TABL_UW[calc_theta];
 }

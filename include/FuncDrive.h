@@ -82,6 +82,6 @@ extern float32 PID_Regltr(PID_Rgltr_S *v_pid_r_lb);
 //! declaration of external access to a function CalcSpeedRtr
 extern float32 CalcSpeedRtr(float32 theta_rtr_lb, float32 *ptheta_rtr_lb,  float32 *pcalc_speed_rez_lb);
 //! declaration of external access to a function CalculateConditionPMS
-extern void CalculateConditionPMS(Model_Data_PMSM_S *md_l, Settng_Data_PMSM_S *sd_l, Flg_Cntrl_Drive_S *mf_l);
+extern void CalculateConditionPMS(Model_Data_PMSM_S *md_l);
 
 #endif

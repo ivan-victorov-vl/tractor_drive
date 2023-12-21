@@ -16,11 +16,11 @@ extern const float32 Tabl_sin_90[91];
 extern const float32 SQRT175[177];
 // declaration of external access to a variable Tabl_Im
 extern const float32 Tabl_Im[18];
-// declaration of external access to a variable Tabl_Uu
-extern const int32 Tabl_Uu[12];
-// declaration of external access to a variable Tabl_Uv
-extern const int32 Tabl_Uv[12];
-// declaration of external access to a variable Tabl_Uw
-extern const int32 Tabl_Uw[12];
+// declaration of external access to a variable TABL_UU
+extern const float32 TABL_UU[12];
+// declaration of external access to a variable TABL_UV
+extern const float32 TABL_UV[12];
+// declaration of external access to a variable TABL_UW
+extern const float32 TABL_UW[12];
 
 #endif

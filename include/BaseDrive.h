@@ -129,8 +129,6 @@ typedef struct
 	B32_Numb_S uv;
 	//! phase voltage W
 	B32_Numb_S uw;
-	//! level voltage DC
-	B32_Numb_S udc;
 	//! position rotor of structure PID regulator
 	PID_Rgltr_S pstn_rtr;
     //! voltage  phase A first invertor
