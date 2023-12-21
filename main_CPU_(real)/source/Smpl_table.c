@@ -608,7 +608,7 @@ const float32 Tabl_Im[18] =
 /*
  * \brief Table condition of Uu values
  */
-const int32 Tabl_Uu[12] =
+const float32 TABL_UU[12] =
 {
     //! 0
     1,
@@ -639,7 +639,7 @@ const int32 Tabl_Uu[12] =
 /*
  * \brief Table condition of Uv values
  */
-const int32 Tabl_Uv[12] =
+const float32 TABL_UV[12] =
 {
     //! 0
     -1,
@@ -670,7 +670,7 @@ const int32 Tabl_Uv[12] =
 /*
  * \brief Table condition of Uw values
  */
-const int32 Tabl_Uw[12] =
+const float32 TABL_UW[12] =
 {
     //! 0
     0,

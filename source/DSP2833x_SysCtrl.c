@@ -27,7 +27,7 @@ void DisableDog(void);
 void InitPll(Uint16, Uint16);
 void InitPeripheralClocks(void);
 void GpioConf(void);
-extern void ADC_cal (void);
+void ADC_cal(void);
 
 //---------------------------------------------------------------------------
 // InitSysCtrl:
