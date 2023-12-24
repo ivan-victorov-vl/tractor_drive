@@ -12,53 +12,50 @@
 #define FUNCDRIVE_H_
 
 
-////////////////////// ПОДКЛЮЧЕНИЕ ЗАГОЛОВОЧНЫХ ФАЙЛОВ //////////////////////
-// подключение заголовочного файла "BaseDriveUsr.h"
+////////////////////// HEADER FILE CONNECTION //////////////////////
+// connection of the header file "BaseDriveUsr.h"
 #include "BaseDrive.h"
-// подключение заголовочного файла "Flg_Cntrl_Drive_S.h"
+// connection of the header file "Flg_Cntrl_Drive_S.h"
 #include "FlagParamDrive.h"
 
 
-////////////////////// ОБЪЯВЛЕНИЕ ИМЕНОВАННЫХ КОНСТАНТ //////////////////////
-// количество дискрет на полный оборот
+////////////////////// DECLARATION OF NAMED CONSTANTS //////////////////////
+//! number of samples per complete revolution
 #define	FULL_DSKRT			359.999
-// константа постоянной времени для вычисление секунды (1 / (время цикла * 2 ))
+//! time constant for calculating the second (1 / (cycle time * 2 )))
 #define CONST_ACCEL 		18181.81818181818
-// формат: DIV_делимое_делитель; именованная константа равна 1/SQRT(3)
+//! format: DIV_separate_divider; named constant equal to 1/SQRT(3)
 #define DIV_1_SQRT3			0.5773502691896259
-// формат: DIV_делимое_делитель; именованная константа равна SQRT(3)/2
+//! format: DIV_divider_divisor; named constant equal to SQRT(3)/2
 #define DIV_SQRT3_2			0.8660254037844386
-// формат: DIV_делимое_делитель; именованная константа равна 2/SQRT(3)
+//! format: DIV_separate_divider; named constant equal to 2/SQRT(3)
 #define DIV_2_SQRT3			1.154700538379252
-// формат: DIV_делимое_делитель; именованная константа равна 1/2
+//! format: DIV_separate_divider; named constant equal to 1/2
 #define DIV_1_2				0.5
-// формат: DIV_делимое_делитель; именованная константа равна 1/90
+//! format: DIV_divider_divider; named constant equal to 1/90
 #define DIV_1_90			1 / 90
-// уставка перегрузки по току
+//! overcurrent setpoint
 #define KOVRLD_I_FROM_NOM	1.1
-// формат: MUL_множитель.1_множитель.2; именованная константа равна 1*10
+//! format: MUL_multiplier.1_multiplier.2; named constant equals 1*10
 #define MUL_1_10 			10
-// коэффициент стабилизации im настроен на время 30 мс
+//! stabilization factor im set to 30 ms time
 #define KIM_EQLZTN			1 / (30 * 10 * 1.804402742692169)
-// уставка максимального значения реактивного тока
+//! maximum reactive current setpoint
 #define MAX_IR				0.23
-// время разгона с n(min) до n(nom)
+//! acceleration time from n(min) to n(nom)
 #define ACCEL_UP			5
-// время замедления с n(nom) до n(min)
+//! deceleration time from n(nom) to n(min)
 #define ACCEL_DOWN			5
-// номинальная скорость в об/мин
+//! nominal speed in rpm
 #define NOM_SPEED			1000
-// номинальное значение тока статора
+//! stator current rating
 #define NOM_I_STATOR		25
-// число пар полюсов
+//! number of pole pairs
 #define NUMB_PAIR_POLES		3
-// формат: DIV_делимое_делитель; именованная константа равна 1/360
+//! format: DIV_division_divider; named constant equal to 1/360
 #define K_1_DIV_360		 	0.0027777777777778
-// формат: DIV_делимое_делитель; именованная константа равна 1/4
+//! format: DIV_separate_divider; named constant equal to 1/4
 #define K_1_DIV_4			0.25
-
-
-
 
 //////////////// DECLARATION OF EXTERNAL ACCESS TO FUNCTIONS /////////////////////
 //! declaration of external access to a function Stop
