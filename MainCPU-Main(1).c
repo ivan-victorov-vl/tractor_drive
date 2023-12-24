@@ -56,8 +56,6 @@ interrupt void epwm6_timer_isr(void)
 {
 	//! extraction of ADC currents and external speed reference values
 	HandlrADC(&data_pmsm.md, &data_pmsm.sd);
-	//! extraction from external fast-acting devices working on protocols
-	HandlrExtrnlFastDevice(&data_pmsm);
 	//! computing fast variables
 	CalcFastVarblsSttng(&data_pmsm);
 	//! frequency converter control

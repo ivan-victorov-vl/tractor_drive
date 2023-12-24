@@ -44,7 +44,7 @@ void AdcInitDrive(void) {
     AdcRegs.ADCTRL3.bit.SMODE_SEL = 0;
     // select the maximum number of conversions equal to 16
     AdcRegs.ADCMAXCONV.all = 16;
-    // TODO now get for testing. For Debug.
+    // TODO now get for testing. For Debug. Is now made for ADCINA.
     AdcRegs.ADCCHSELSEQ1.bit.CONV00 = 0x0;
     AdcRegs.ADCCHSELSEQ1.bit.CONV01 = 0x1;
     AdcRegs.ADCCHSELSEQ1.bit.CONV02 = 0x2;
@@ -53,6 +53,7 @@ void AdcInitDrive(void) {
     AdcRegs.ADCCHSELSEQ2.bit.CONV05 = 0x5;
     AdcRegs.ADCCHSELSEQ2.bit.CONV06 = 0x6;
     AdcRegs.ADCCHSELSEQ2.bit.CONV07 = 0x7;
+    // TODO now get for testing. For Debug. Should be ADCINB.
     AdcRegs.ADCCHSELSEQ3.bit.CONV08 = 0x0;
     AdcRegs.ADCCHSELSEQ3.bit.CONV09 = 0x1;
     AdcRegs.ADCCHSELSEQ3.bit.CONV10 = 0x2;
@@ -65,17 +66,13 @@ void AdcInitDrive(void) {
     AdcRegs.ADCTRL2.bit.INT_ENA_SEQ1 = 1;
     // SEQ2 interrupt enable
     AdcRegs.ADCTRL2.bit.INT_ENA_SEQ2 = 1;
-
 }
 
 /*!
  *  \brief ADC value processing
  */
 void HandlrADC(Model_Data_PMSM_S *md_motor_l, Settng_Data_PMSM_S *sd_motor_l) {
-    // обновление данных АЦП
-    AdcRegs.ADCTRL2.bit.SOC_SEQ1 = 1;
-
-	md_motor_l->uac_is_1_0.fl = AdcRegs.ADCRESULT3 >> 4;
+    md_motor_l->uac_is_1_0.fl = AdcRegs.ADCRESULT3 >> 4;
 	md_motor_l->uac_is_2_0.fl = AdcRegs.ADCRESULT4 >> 4;
 	md_motor_l->uac_is_3_0.fl = AdcRegs.ADCRESULT5 >> 4;
 	md_motor_l->uac_is_1_1.fl = AdcRegs.ADCRESULT0 >> 4;
@@ -91,7 +88,6 @@ void HandlrADC(Model_Data_PMSM_S *md_motor_l, Settng_Data_PMSM_S *sd_motor_l) {
 	md_motor_l->i_os_1_1.fl = AdcRegs.ADCRESULT13 >> 4;
 	md_motor_l->i_os_2_1.fl = AdcRegs.ADCRESULT14 >> 4;
 	md_motor_l->i_os_3_1.fl = AdcRegs.ADCRESULT15 >> 4;
-
 	md_motor_l->iu.fl = 0;
 	md_motor_l->iv.fl = 0;
 	md_motor_l->iw.fl = 0;
