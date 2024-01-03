@@ -26,7 +26,7 @@ interrupt void epwm6_timer_isr(void);
 void Base_Cycle(void);
 
 /*!
- *  \brief: Main
+    \brief: Main
  */
 void main(void)
 {
@@ -41,7 +41,7 @@ void main(void)
 }
 
 /*!
- *  \brief: Main program cycle
+    \brief: Main program cycle
  */
 void Base_Cycle(void)
 {
@@ -50,20 +50,24 @@ void Base_Cycle(void)
 }
 
 /*!
- *  \brief: Interrupt from the ePWM6 timer (enters the cycle when an interrupt is triggered)
+    \brief: Interrupt from the ePWM6 timer (enters the cycle when an interrupt is triggered)
  */
 interrupt void epwm6_timer_isr(void)
 {
-	//! extraction of ADC currents and external speed reference values
+	//! First step
+    //! extraction of ADC currents and external speed reference values
 	HandlrADC(&data_pmsm.md, &data_pmsm.sd);
+
+	// Second step
 	//! computing fast variables
 	CalcFastVarblsSttng(&data_pmsm);
+
 	//! frequency converter control
 	CntrlDrive(&data_pmsm.md, &data_pmsm.sd, &flags_drive, &brwsr);
+
 	//! conversion of phase ePwm from relative view to processor PWM view
 	Handlr_ePwm(brwsr.pbrws, PWM_USR_DIV_2, PWM_OUT_PHASE_DIV_2, &data_pmsm.md);
 
-	data_pmsm.md.theta.fl = 359;
 	CalculateConditionPMS(&data_pmsm.md);
 	//! clear ePWM 6 interrupt flag
 	EPwm6Regs.ETCLR.bit.INT = 1;

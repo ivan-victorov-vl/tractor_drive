@@ -35,7 +35,12 @@ void PMSMotorFuncScal(Model_Data_PMSM_S *md_la, Flg_Cntrl_Drive_S *mf_la, Brws_P
  * \brief PMSM motor control function
  */
 void CntrlDrive(Model_Data_PMSM_S *md_l, Settng_Data_PMSM_S *sd_l, Flg_Cntrl_Drive_S *mf_l, Brws_Param_Drive *bpd_l) {
-    //! processing intensity generator values
-    SpeedRef(md_l->k_f_mul_ref.fl, md_l->k_f_mul_plus.fl, md_l->k_f_mul_minus.fl, &md_l->k_f_mul.fl);
 
+    //! work frequency control
+    if (mf_l->bits_reg2.bits.wrk_drv) {
+        //! processing intensity generator values
+        SpeedRef(md_l->k_f_mul_ref.fl, md_l->k_f_mul_plus.fl, md_l->k_f_mul_minus.fl, &md_l->k_f_mul.fl);
+    } else {
+        //! step with non-working condition of the frequency converter
+    }
 }

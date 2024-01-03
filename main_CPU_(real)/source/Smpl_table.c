@@ -13,10 +13,9 @@
 
 
 /*
- * \brief Sine from 0 to 90 degrees
+    \brief Sine from 0 to 90 degrees
  */
-const float32 Tabl_sin_90[91] =
-{
+const float32 Tabl_sin_90[91] = {
 	//! 0-ой массив
 	0		   ,
 	//! 1
@@ -202,10 +201,9 @@ const float32 Tabl_sin_90[91] =
 };
 
 /*
- * \brief Table of root values
+    \brief Table of root values
  */
-const float32 SQRT175[177] =
-{
+const float32 SQRT175[177] = {
 	//! 0-ой массив
 	0			,
 	//! 1
@@ -563,10 +561,9 @@ const float32 SQRT175[177] =
 };
 
 /*
- * \brief Table of Im values
+    \brief Table of Im values
  */
-const float32 Tabl_Im[18] =
-{
+const float32 Tabl_Im[18] = {
 	//! 0
 	1.5  ,
 	//! 1
@@ -606,10 +603,9 @@ const float32 Tabl_Im[18] =
 };
 
 /*
- * \brief Table condition of Uu values
+    \brief Table condition of Uu values
  */
-const float32 TABL_UU[12] =
-{
+const float32 TABL_UU[12] = {
     //! 0
     1,
     //! 1
@@ -637,10 +633,9 @@ const float32 TABL_UU[12] =
 };
 
 /*
- * \brief Table condition of Uv values
+    \brief Table condition of Uv values
  */
-const float32 TABL_UV[12] =
-{
+const float32 TABL_UV[12] = {
     //! 0
     -1,
     //! 1
@@ -668,10 +663,9 @@ const float32 TABL_UV[12] =
 };
 
 /*
- * \brief Table condition of Uw values
+    \brief Table condition of Uw values
  */
-const float32 TABL_UW[12] =
-{
+const float32 TABL_UW[12] = {
     //! 0
     0,
     //! 1
