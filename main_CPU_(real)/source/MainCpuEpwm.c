@@ -214,7 +214,7 @@ void InitEPwm_1_2_3_4_6_Timers(Uint16 prd_epwm_1_2_3, Uint16 prd_epwm_4, Uint16 
 
 
 /*!
- *  \brief PWM value processing
+     \brief PWM value processing
  */
 void Handlr_ePwm(float32 *pbrws_var_l, Uint16 prd_div_2_epwm_dac_l, Uint16 prd_div_2_epwm_u_v_w_l, Model_Data_PMSM_S *md_motor_l)
 {
