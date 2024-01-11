@@ -218,12 +218,12 @@ void InitEPwm_1_2_3_4_6_Timers(Uint16 prd_epwm_1_2_3, Uint16 prd_epwm_4, Uint16 
  */
 void Handlr_ePwm(float32 *pbrws_var_l, Uint16 prd_div_2_epwm_dac_l, Uint16 prd_div_2_epwm_u_v_w_l, Model_Data_PMSM_S *md_motor_l)
 {
-	//! set the pwm value for the phase u
+	//! set the PWM value for the phase u
 	EPwm1Regs.CMPA.half.CMPA = (Uint16)(( (md_motor_l->uu.fl) * (prd_div_2_epwm_u_v_w_l) ) + prd_div_2_epwm_u_v_w_l);
-	//! set the pwm'a value for phase v
+	//! set the PWM'a value for phase v
 	EPwm2Regs.CMPA.half.CMPA = (Uint16)(( (md_motor_l->uv.fl) * (prd_div_2_epwm_u_v_w_l) ) + prd_div_2_epwm_u_v_w_l);
-	//! set the pwm value for phase w
+	//! set the PWM value for phase w
 	EPwm3Regs.CMPA.half.CMPA = (Uint16)(( (md_motor_l->uw.fl) * (prd_div_2_epwm_u_v_w_l) ) + prd_div_2_epwm_u_v_w_l);
-	//! set the pwm value on the dac
+	//! set the PWM value on the DAC
 	EPwm4Regs.CMPA.half.CMPA = (Uint16)((*pbrws_var_l * (prd_div_2_epwm_dac_l) ) + prd_div_2_epwm_dac_l);
 }

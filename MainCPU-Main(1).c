@@ -58,7 +58,7 @@ interrupt void epwm6_timer_isr(void)
     //! extraction of ADC currents and external speed reference values
 	HandlrADC(&data_pmsm.md, &data_pmsm.sd);
 
-	// Second step
+	//! Second step
 	//! computing fast variables
 	CalcFastVarblsSttng(&data_pmsm);
 
