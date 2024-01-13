@@ -121,7 +121,9 @@ void SpeedRef(float32 k_f_mul_ref_lb, float32 k_f_mul_plus_lb, float32 k_f_mul_m
     }
 }
 
-
+/*!
+    \brief Apperiodic filter
+*/
 float32 ApprdFltr(float32 first_var_lb, float32  Ti_apprd_lb, float32 *integr_lb) {
 	*integr_lb += (Ti_apprd_lb * (first_var_lb - *integr_lb));
 	return (*integr_lb);
@@ -135,13 +137,17 @@ float32 PID_Regltr(PID_Rgltr_S *v_pid_r_lb) {
 float32 CalcIm(float32 kf_multiply_lb, float32 kim_eqlztn_lb, float32 *eqlztn_im_lb) {
 }
 
-
+/*!
+    \brief Conversion from two-phase to three-phase system
+*/
 void Calc3To2(float32 first_var_lb, float32 sec_var_lb, float32 third_var_lb, float32 *first_res_lb, float32 *sec_res_lb) {
 	*first_res_lb = first_var_lb;
 	*sec_res_lb = DIV_1_SQRT3 * (sec_var_lb - third_var_lb);
 }
 
-
+/*!
+    \brief Conversion from three-phase to two-phase system
+*/
 void Calc2To3Cos(float32 first_var_lb, float32 sec_var_lb, float32 *first_res_lb, float32 *sec_res_lb, float32 *third_res_lb) {
 	*first_res_lb = first_var_lb;
 	*sec_res_lb = (DIV_SQRT3_2 * sec_var_lb) - (DIV_1_2 * first_var_lb);
