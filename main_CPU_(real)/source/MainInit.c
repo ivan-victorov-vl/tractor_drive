@@ -92,7 +92,7 @@ void MainInit(void)
 	brwsr.pbrws =  &brwsr.pstn_rtr_md;
 
 	//! initialization of permanent magnet synchronous motor model
-	PMSMotorFuncScalInit(&data_pmsm.md, &data_pmsm.sd, &flags_drive);
+	PMSMotorFuncInit(&data_pmsm.md, &data_pmsm.sd, &flags_drive);
 
 	//! set pins 0...5 to PWM mode
 	Init_GPIO_0_5_in_PWM();
