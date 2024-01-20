@@ -636,7 +636,7 @@ void	GpioConf(void)
 		GpioCtrlRegs.GPCMUX1.bit.GPIO72  = 	0; 				// 0=GPIO,  
 		GpioCtrlRegs.GPCDIR.bit.GPIO72   = 	0; 				// 1=OUTput,  0=INput
 
-//!  GPIO-73 - PIN FUNCTION (D in 3)
+//!  GPIO-73 - PIN FUNCTION (D in 3 / Reset)
 		GpioCtrlRegs.GPCMUX1.bit.GPIO73  = 	0; 				// 0=GPIO,  
 		GpioCtrlRegs.GPCDIR.bit.GPIO73   = 	0; 				// 1=OUTput,  0=INput
 

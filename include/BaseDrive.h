@@ -10,98 +10,93 @@
 #define BASEDRIVE_H_
 
 
-////////////////////// ПОДКЛЮЧЕНИЕ ЗАГОЛОВОЧНЫХ ФАЙЛОВ //////////////////////
-// подключение заголовочного файла "SysSrvc.h"
+////////////////////// HEADER FILE CONNECTION //////////////////////
+//! include header file "SysSrvc.h"
 #include "SysSrvc.h"
-// подключение заголовочного файла "Flg_Cntrl_Drive_S.h"
+//! include header file "Flg_Cntrl_Drive_S.h"
 #include "FlagParamDrive.h"
-//  подключение заголовочного файла "RegParamDrive.h"
+//! include header file "RegParamDrive.h"
 #include "RegParamDrive.h"
 
 
-////////////////////// ОБЪЯВЛЕНИЕ ИМЕНОВАННЫХ КОНСТАНТ //////////////////////
-// формат: DIV_делимое_делитель; именованная константа равна 4096/360
+////////////////////// DECLARATION OF NAMED CONSTANTS //////////////////////
+//! format: DIV_separate_divider; named constant equal to 4096/360
 #define DIV_4096_360	11.37777777777778
-// формат: DIV_делимое_делитель; именованная константа равна 1/360
+//! format: DIV_division_divider; named constant equal to 1/360
 #define DIV_1_360	0.0027777777777778
-// формат: DIV_делимое_делитель; именованная константа равна 3/360
+//! format: DIV_divider_separator; named constant equal to 3/360
 #define DIV_3_360	0.0083333333333333
-// пропорциональный коэффициент пид регулятора положения ротора
+//! proportional coefficient of the rotor position controller pid
 #define K_PRPRTNL_PSTN	0.0077
-// постоянная времени пид регулятора положения ротора при инциализации равна бесконечности
+//! time constant of rotor position regulator pid at initialization is equal to infinity
 #define T_INTGRL_PSTN	7
-// постоянная времени дифферинциального коэффициента пид регулятора положения ротора
+//! time constant of the diffrential coefficient of the rotor position controller pid
 #define T_DFRNTNL_PSTN	99999999999
 
 
-///////////////////////////  МАКРОПОДСТАНОВКА ///////////////////////////////
-// Подстановка обозначает следующие значения букв
-// 1-ая буква		f - float
-//					s -параметры настройки
-// 2-ая буква		p - указатель на структуру
-//					f - float
-// 3-я буква		s - структура
-//					p - указатель на структуру
-// 4-я буква		l - локальная структура
-//					f - флаг
-// 					s - структура
-// 5-я буква		a - уровень дерева, где (пустота - 0-ой уровень), a - 1-ый уровень
-//					l - локальная структура
-//
-// Последняя буква	a - 1-ый уровень дерева
-// 					b - 2-ый уровень дерева
-//
-// макроподстановка структуры md_l -> a.fl
-#define fpsl(a)	 			(md_l->a.fl)
-// макроподстановка структуры sd_l -> a.fl
-#define sfpsl(a)			(sd_l->a.fl)
-// макроподстановка структуры md_la -> a.fl
-#define fpsla(a)	 		(md_la->a.fl)
-// макроподстановка структуры sd_l -> a.fl
-#define sfpsla(a)			(sd_la->a.fl)
-// макроподстановка структуры md_lb -> a.fl
-#define fpslb(a)	 		(md_lb->a.fl)
-// макроподстановка структуры sd_l -> a.fl
-#define sfpslb(a)			(sd_lb->a.fl)
-// макроподстановка структуры mf_l -> a.fl
-#define fpsfl(a)  			(mf_l->a.fl)
-// макроподстановка структуры mf_la -> a.fl
-#define fpsfla(a) 			(mf_la->a.fl)
-// макроподстановка структуры mf_lb -> a.fl
-#define fpsflb(a)  			(mf_l->a.fl)
+///////////////////////////  MACROSUBSTITUTION ///////////////////////////////
+//! Substitution denotes the following letter values
+//! 1st letter f - float
+//! s - configuration parameters
+//! 2nd letter p - pointer to structure
+//! f - float
+//! 3rd letter s - structure
+//! p - pointer to structure
+//! 4th letter l - local structure
+//! f - flag
+//! s - structure
+//! 5th letter a - tree level, where (empty - level 0), a - level 1
+//! l - local structure
+//!
+//! the last letter a is the 1st level of the tree
+//! b - 2nd level of the tree
+//!
+//! macro substitution of structure md_l -> a.fl
+#define fpsl(a) (md_l->a.fl)
+//! macro substitution of structure sd_l -> a.fl
+#define sfpsl(a) (sd_l->a.fl)
+//! macro substitution of the structure md_la -> a.fl
+#define fpsla(a) (md_la->a.fl)
+//! macro substitution of the structure sd_l -> a.fl
+#define sfpsla(a) (sd_la->a.fl)
+//! macro substitution of the structure md_lb -> a.fl
+#define fpslb(a) (md_lb->a.fl)
+//! macro substitution of the structure sd_l -> a.fl
+#define sfpslb(a) (sd_lb->a.fl)
+//! macro substitution of the structure mf_l -> a.fl
+#define fpsfl(a) (mf_l->a.fl)
+//! macro substitution of the structure mf_la -> a.fl
+#define fpsfla(a) (mf_la->a.fl)
+//! macro substitution of structure mf_lb -> a.fl
+#define fpsflb(a) (mf_l->a.fl)
 
-
-
-//----------------------------------------------------------------------------------------------------------------
-// Группа параметра: 					(Данные ПЧ )
-// Название идентификационных данных: 	Структура ПИД регулятора
-// Доступ к регистру 					Чтение / Запись
-//----------------------------------------------------------------------------------------------------------------
+/*!
+ * \brief PID controller structure
+ */
 typedef struct
 {
-	// текущая переменная
-	B32_Numb_S cur_var;
-	// предыдущая переменная
-	B32_Numb_S prvs_var;
-	// пропорциональный коэффициент пид регулятора
-	B32_Numb_S k_prprtnl;
-	// интегральный коэффициент пид регулятора
-	B32_Numb_S k_intgrl;
-	// интеграл пропорциональной части пид регулятора
-	B32_Numb_S p_intgrl;
-	// интеграл интегральной части пид регулятора
-	B32_Numb_S i_intgrl;
-	// дифферинциальный коэффициент пид регулятора
-	B32_Numb_S k_dfrntl;
+    //! current variable
+    B32_Numb_S cur_var;
+    //! previous variable
+    B32_Numb_S prvs_var;
+    //! proportional coefficient of the pid controller
+    B32_Numb_S k_prprprtnl;
+    //! integral coefficient of the pid regulator
+    B32_Numb_S k_intgrl;
+    //! integral of the proportional part of the pid controller
+    B32_Numb_S p_intgrl;
+    //! integral of the integral part of the pid regulator
+    B32_Numb_S i_intgrl;
+    //! differential coefficient of the pid regulator
+    B32_Numb_S k_dfrntl;
 } PID_Rgltr_S;
-
 
 /*
  * \brief Inverter model parameter group
  */
 typedef struct
 {
-	//! set freauency
+	//! set frequency
 	B32_Numb_S k_f_mul_ref;
 	//! current motor speed
 	B32_Numb_S k_f_mul;
@@ -117,6 +112,10 @@ typedef struct
 	B32_Numb_S iw;
 	//! set rotation angle
 	B32_Numb_S theta;
+	//! sinus
+    B32_Numb_S sin;
+    //! cosinus
+    B32_Numb_S cos;
 	//! incremental part for acceleration from n(min) to n(nom)
 	B32_Numb_S k_f_mul_plus;
 	//! incremental part for deceleration from n(nom) to n(min)
@@ -165,74 +164,65 @@ typedef struct
 	B32_Numb_S i_os_3_1;
 } Model_Data_PMSM_S;
 
-
-//----------------------------------------------------------------------------------------------------------------
-// Группа параметра: 					( Данные ПЧ )
-// Название идентификационных данных: 	Данные настройки преобразователя частоты
-// Доступ к регистру 					Чтение / Запись
-//----------------------------------------------------------------------------------------------------------------
+/*
+ * \brief Setting data of the frequency inverter
+ */
 typedef struct
 {
-	// время разгона частоты от 0 до номинального значения в сек.
-	B32_Numb_S accel_sec_up;
-	// время замедления частоты от номинального значения до 0 в сек.
-	B32_Numb_S accel_sec_down;
-	// реальное значение заданной частоты
-	B32_Numb_S real_ref;
-	// коэффициент перевода из реального значения скорости в относительное
-	float32 k_real_to_mul_ref;
-	// коэффициент перевода из относительного значения скорости в реальное
-	B32_Numb_S k_mul_to_real_ref;
-	// реальное значение заданной частоты
-	B32_Numb_S real_frq;
-	// реальное значение тока статора двигателя
-	B32_Numb_S real_cur_i_sttr;
-	// коэффициент перевода из относительного значения тока в реальное
-	B32_Numb_S k_mul_to_real_i_sttr;
-	// коэффициент перевода из относительного положения ротора в реальное
-	float32 k_diskr_to_real_i_pstn_rtr;
-	// реальное значение звена постоянного тока
-	B32_Numb_S real_udc;
-	// коэффициент перевода из относительного значения напряжения в реальное
-	float32 k_mul_to_real_udc;
-	// заданная частота с внешнего задатчика
-	float32 k_mul_ext_ref;
-	// дискретное значение текущего положения ротора
-	float32 diskr_cur_pstn_rtr;
-	// постоянная интегрирования пид регулятора положения ротора
-	B32_Numb_S const_integr_pid_reg_pstn_rtr;
-	// постоянная дифферинцирования пид регулятора положения ротора
-	B32_Numb_S const_differntl_pid_reg_pstn_rtr;
+    //! time of frequency acceleration from 0 to nominal value in sec.
+    B32_Numb_S accel_sec_up;
+    //! time of frequency deceleration from nominal value to 0 in sec.
+    B32_Numb_S accel_sec_down;
+    //! real value of the set frequency
+    B32_Numb_S real_ref;
+    //! conversion coefficient from the real value of speed to the relative one
+    float32 k_real_to_mul_ref;
+    //! conversion factor from relative speed value to real speed value
+    B32_Numb_S k_mul_to_real_ref;
+    //! real value of the set frequency
+    B32_Numb_S real_frq;
+    //! real value of motor stator current
+    B32_Numb_S real_cur_i_sttr;
+    //! conversion factor from relative current value to real current value
+    B32_Numb_S k_mul_to_real_i_sttr;
+    //! conversion factor from relative rotor position to real rotor position
+    float32 k_diskr_to_real_i_pstn_rtr;
+    //! real DC link value
+    B32_Numb_S real_udc;
+    //! conversion factor from relative voltage value to real voltage value
+    float32 k_mul_to_real_udc;
+    //! set frequency from external setpoint adjuster
+    float32 k_mul_ext_ref;
+    //! discrete value of the current rotor position
+    float32 diskr_cur_pstn_rtr;
+    //! integration constant of the rotor position controller pid
+    B32_Numb_S const_integr_pid_pid_reg_pstn_rtr;
+    //! integration constant of the rotor position controller pid
+    B32_Numb_S const_differntl_pid_reg_reg_pstn_rtr;
 } Settng_Data_PMSM_S;
 
-
-//----------------------------------------------------------------------------------------------------------------
-// Группа параметра: 					( Данные ПЧ )
-// Название идентификационных данных: 	Данные управления и настройки преобразователя частоты
-// Доступ к регистру 					Чтение / Запись
-//----------------------------------------------------------------------------------------------------------------
+/*!
+ * \brief Control and setting data of the frequency inverter
+ */
 typedef struct
 {
-	// данные модели управления преобразователем частоты
+    //! frequency converter control model data
 	Model_Data_PMSM_S md;
-	// настроечные данные модели управления преобразователем частоты
+	//! setting data of the frequency converter control model
 	Settng_Data_PMSM_S sd;
 } Data_PMSM_S;
 
-
-//----------------------------------------------------------------------------------------------------------------
-// Группа параметра: 					(Просмотр параметра динамических параметров ПЧ )
-// Название идентификационных данных: 	Данные для просмотра динамических параметров преобразователя частоты
-// Доступ к регистру 					Чтение / Запись
-//----------------------------------------------------------------------------------------------------------------
+/*!
+ * \brief Data for viewing the dynamic parameters of the frequency inverter
+ */
 typedef struct
 {
-	// ошибка по регулированию преобразователя частоты
-	B32_Numb_S sub_theta_md;
-	// положение ротора преобразователя частоты
-	float32 pstn_rtr_md;
-	// указатель просмотр параметров
-	float32 *pbrws;
+    //! frequency converter control error
+    B32_Numb_S sub_theta_md;
+    //! frequency converter rotor position
+    float32 pstn_rtr_md;
+    //! parameter view pointer
+    float32 *pbrws;
 } Brws_Param_Drive;
 
 
@@ -243,11 +233,12 @@ extern void PMSMotorFuncInit(Model_Data_PMSM_S *md_l, Settng_Data_PMSM_S *sd_l, 
 extern void PMSMotorFuncReset(Model_Data_PMSM_S *md_l, Settng_Data_PMSM_S *sd_l, Flg_Cntrl_Drive_S *mf_l);
 //! declaration of external access to a function PMSMotorFuncScal
 extern void PMSMotorFuncScal(Model_Data_PMSM_S *md_la, Flg_Cntrl_Drive_S *mf_la, Brws_Param_Drive *bpd_la);
-//! declaration of external access to a function PMSMotorFuncSimple
-extern void PMSMotorFuncSimple(Model_Data_PMSM_S *md_la, Flg_Cntrl_Drive_S *mf_la, Brws_Param_Drive *bpd_la);
+//! declaration of external access to a function PMSMotorFuncTechSpec
+extern void PMSMotorFuncTechSpec(Model_Data_PMSM_S *md_la, Flg_Cntrl_Drive_S *mf_la, Brws_Param_Drive *bpd_la);
 //! declaration of external access to a function PMSMotorFuncSensorless
 extern void PMSMotorFuncSensorless(Model_Data_PMSM_S *md_la, Flg_Cntrl_Drive_S *mf_la, Brws_Param_Drive *bpd_la);
 //! declaration of external access to a function CntrlDrive
 extern void CntrlDrive(Model_Data_PMSM_S *md_l, Settng_Data_PMSM_S *sd_l, Flg_Cntrl_Drive_S *mf_l, Brws_Param_Drive *bpd_l);
-
+//! declaration of external access to a function CntrlDrive
+extern void HandlerExternalButtons(Flg_Cntrl_Drive_S *mf_l);
 #endif

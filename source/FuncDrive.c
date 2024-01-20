@@ -86,7 +86,6 @@ void CalcSinCos_180_270(float32 theta_lb, float32 *sin_lb, float32 *cos_lb) {
 	*cos_lb = -*(psin_90_lb - (theta_dtabl_lb - 180) ) - ((1 - add_angl_lb) * (*(psin_90_lb - (theta_dtabl_lb - 181)) - *(psin_90_lb - (theta_dtabl_lb - 180))));
 }
 
-
 /*!
     \brief Calculate sin and cos from degree 270-360
  */
@@ -131,10 +130,12 @@ float32 ApprdFltr(float32 first_var_lb, float32  Ti_apprd_lb, float32 *integr_lb
 
 
 float32 PID_Regltr(PID_Rgltr_S *v_pid_r_lb) {
+   //TODO Required to implement?
 }
 
 
 float32 CalcIm(float32 kf_multiply_lb, float32 kim_eqlztn_lb, float32 *eqlztn_im_lb) {
+    //TODO Required to implement?
 }
 
 /*!

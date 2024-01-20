@@ -47,6 +47,8 @@ void Base_Cycle(void)
 {
     //! configuration variable calculation
 	CalcVarblsSttng(&data_pmsm);
+    //! receiving data from external control signals
+	HandlerExternalButtons(&flags_drive);
 }
 
 /*!
