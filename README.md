@@ -1,4 +1,4 @@
-# Электропривод
+# Electric drive
 
-Требуемое ПО для запуска: CodeComposer Version: 8<br/>
-Микроконтроллер: TMS320F28335<br/>
+Required startup software: CodeComposer Version: 8<br/>
+Microcontroller: TMS320F28335<br/>
