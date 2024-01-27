@@ -214,4 +214,8 @@ void CalculateConditionPMS(Model_Data_PMSM_S *md_l) {
     md_l->uu.fl = TABL_UU[calc_theta];
     md_l->uv.fl = TABL_UV[calc_theta];
     md_l->uw.fl = TABL_UW[calc_theta];
+    md_l->uu1.fl = TABL_UU1[calc_theta];
+    md_l->uv1.fl = TABL_UV1[calc_theta];
+    md_l->uw1.fl = TABL_UW1[calc_theta];
+
 }

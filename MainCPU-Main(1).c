@@ -20,21 +20,19 @@
 
 
 //! FUNCTION DECLARATION
-//! function declaration interrupt epwm6_timer_isr
-interrupt void epwm6_timer_isr(void);
+//! function declaration interrupt cpu_timer_0_isr
+interrupt void cpu_timer0_isr(void);
 //! Base_Cycle
 void Base_Cycle(void);
 
 /*!
     \brief: Main
  */
-void main(void)
-{
+void main(void) {
     //! program initialization before entering the execution loop
 	MainInit();
 	//! entering the main program cycle
-	for(;;)
-	{
+	for(;;) {
 		//! entering the cycle of operations execution in the external background
 		Base_Cycle();
 	}
@@ -43,8 +41,7 @@ void main(void)
 /*!
     \brief: Main program cycle
  */
-void Base_Cycle(void)
-{
+void Base_Cycle(void) {
     //! configuration variable calculation
 	CalcVarblsSttng(&data_pmsm);
     //! receiving data from external control signals
@@ -52,10 +49,9 @@ void Base_Cycle(void)
 }
 
 /*!
-    \brief: Interrupt from the ePWM6 timer (enters the cycle when an interrupt is triggered)
+    \brief: Interrupt from the CPU0 timer (enters the cycle when an interrupt is triggered)
  */
-interrupt void epwm6_timer_isr(void)
-{
+interrupt void cpu_timer0_isr(void) {
 	//! First step
     //! extraction of ADC currents and external speed reference values
 	HandlrADC(&data_pmsm.md, &data_pmsm.sd);
@@ -71,8 +67,6 @@ interrupt void epwm6_timer_isr(void)
 	Handlr_ePwm(brwsr.pbrws, PWM_USR_DIV_2, PWM_OUT_PHASE_DIV_2, &data_pmsm.md);
 
 	CalculateConditionPMS(&data_pmsm.md);
-	//! clear ePWM 6 interrupt flag
-	EPwm6Regs.ETCLR.bit.INT = 1;
-	//! group 3 interrupt reset
-	PieCtrlRegs.PIEACK.all = PIEACK_GROUP3;
+    PieCtrlRegs.PIEACK.all = PIEACK_GROUP1;
+
 }
