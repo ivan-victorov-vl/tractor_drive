@@ -2,7 +2,7 @@
 //
 // FILE:   MainCPU-Main.h
 //
-// TITLE:  Объявление глобальных переменных
+// TITLE: Declaration of global variables
 //
 //###########################################################################
 
@@ -10,25 +10,25 @@
 #define MAINCPU_MAIN_H
 
 
-////////////////////// ПОДКЛЮЧЕНИЕ ЗАГОЛОВОЧНЫХ ФАЙЛОВ //////////////////////
-// подключение заголовочного файла "PeripheralHeaderIncludes.h"
+////////////////////// INCLUDE OF HEADER FILES//////////////////////
+//! include header file "PeripheralHeaderIncludes.h"
 #include "PeripheralHeaderIncludes.h"
 
 
-/////////////////////////// ОБЪЯВЛЕНИЕ ПЕРЕМЕННЫХ ///////////////////////////
-// память параметров преобразователя частоты (общая память)
+/////////////////////////// VARIABLE DECLARATION ///////////////////////////
+//! frequency converter parameter memory (shared memory)
 Rpd_Ctrl_Regs_S rpd_ctrl_regs;
-// память параметров преобразователя частоты  (память модели)
+// frequency converter parameter memory (model memory)
 Data_PMSM_S data_pmsm;
-// общая память флагов преобразователя частоты
+// common flag memory of the frequency converter
 Flg_Cntrl_Drive_S flags_drive;
-// структура данных сервисных параметров  modbus'а
+// modbus service parameters data structure
 MB_Servc mb_servc;
-// указатель на память modbus
+// modbus memory pointer
 Uint16 	*pMBmemory;
-// счётчик отображения семисегментного индикатора
+// counter for displaying the seven-segment indicator
 Uint16 cnt_vdhl;
-// объявление структуры просмотра параметров
+// declaration of the parameter view structure
 Brws_Param_Drive brwsr;
 
 

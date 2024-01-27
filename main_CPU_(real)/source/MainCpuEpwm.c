@@ -12,12 +12,12 @@
 
 /////////////////////////// FUNCTION DECLARATION //////////////////////////////
 // function declaration InitEPwm_1_2_3_4_6_Timers
-void InitEPwm_1_2_3_4_6_Timers(Uint16 prd_epwm_1_2_3, Uint16 prd_epwm_4, Uint16 prd_epwm_6);
+void InitEPwm_1_2_3_4_5_6_Timers(Uint16 prd_epwm_1_2_3_4_5_6, Uint16 prd_epwm_4, Uint16 prd_epwm_6);
 // Handlr_ePwm function declaration
 void  Handlr_ePwm(float32 *pbrws_var_l, Uint16 prd_div_2_epwm_dac_l, Uint16 prd_div_2_epwm_u_v_w_l, Model_Data_PMSM_S *md_motor_l);
 
 
-void InitEPwm_1_2_3_4_6_Timers(Uint16 prd_epwm_1_2_3, Uint16 prd_epwm_4, Uint16 prd_epwm_6)
+void InitEPwm_1_2_3_4_5_6_Timers(Uint16 prd_epwm_1_2_3_4_5_6, Uint16 prd_epwm_4, Uint16 prd_epwm_6)
 {
 	//! allow changes to forbidden registers
 	EALLOW;
@@ -47,7 +47,7 @@ void InitEPwm_1_2_3_4_6_Timers(Uint16 prd_epwm_1_2_3, Uint16 prd_epwm_4, Uint16 
 
 	//! configuring the epwm1 module:
 	//! PWM period selection
-	EPwm1Regs.TBPRD = prd_epwm_1_2_3;
+	EPwm1Regs.TBPRD = prd_epwm_1_2_3_4_5_6;
 	//! PWM register phase shift selection
 	EPwm1Regs.TBPHS.half.TBPHS = 0;
 	//! select symmetrical mode
@@ -82,7 +82,7 @@ void InitEPwm_1_2_3_4_6_Timers(Uint16 prd_epwm_1_2_3, Uint16 prd_epwm_4, Uint16 
 	EPwm1Regs.CMPA.half.CMPA = 0;
 
 	//! PWM period selection
-	EPwm2Regs.TBPRD = prd_epwm_1_2_3;
+	EPwm2Regs.TBPRD = prd_epwm_1_2_3_4_5_6;
 	//! PWM register phase shift selection
 	EPwm2Regs.TBPHS.half.TBPHS = 0;
 	//! select symmetrical mode
@@ -118,7 +118,7 @@ void InitEPwm_1_2_3_4_6_Timers(Uint16 prd_epwm_1_2_3, Uint16 prd_epwm_4, Uint16 
 
 
 	//! PWM period selection
-	EPwm3Regs.TBPRD = prd_epwm_1_2_3;
+	EPwm3Regs.TBPRD = prd_epwm_1_2_3_4_5_6;
 	//! PWM register phase shift selection
 	EPwm3Regs.TBPHS.half.TBPHS = 0;
 	//! select symmetrical mode
@@ -152,57 +152,113 @@ void InitEPwm_1_2_3_4_6_Timers(Uint16 prd_epwm_1_2_3, Uint16 prd_epwm_4, Uint16 
 	//! set the effective value to low signal level
 	EPwm3Regs.CMPA.half.CMPA = 0;
 
-	//! from inlet to outlet
-	EPwm5Regs.TBCTL.bit.SYNCOSEL = TB_SYNC_IN;
-	//! sync output off
-	EPwm6Regs.TBCTL.bit.SYNCOSEL = TB_CTR_ZERO;
 
-	//! turn on phase tracking. register epwm 4
-	EPwm4Regs.TBCTL.bit.PHSEN = TB_ENABLE;
-	//! turn on phase tracking. register epwm 5
-	EPwm5Regs.TBCTL.bit.PHSEN = TB_ENABLE;
-	//! turn on phase tracking. register epwm 6
-	EPwm6Regs.TBCTL.bit.PHSEN = TB_ENABLE;
+    //! PWM period selection
+    EPwm4Regs.TBPRD = prd_epwm_1_2_3_4_5_6;
+    //! PWM register phase shift selection
+    EPwm4Regs.TBPHS.half.TBPHS = 0;
+    //! select symmetrical mode
+    EPwm4Regs.TBCTL.bit.CTRMODE = TB_COUNT_UPDOWN;
+    //! phase loading
+    EPwm4Regs.TBCTL.bit.PHSEN = TB_ENABLE;
+    //! loading the active register from the shadow register
+    EPwm4Regs.TBCTL.bit.PRDLD = TB_SHADOW;
+    //! epwm synchronization
+    EPwm4Regs.TBCTL.bit.SYNCOSEL = TB_SYNC_IN;
+    //! shadow mode of channel a
+    EPwm4Regs.CMPCTL.bit.SHDWAMODE = CC_SHADOW;
+    //! shadow mode of channel b
+    EPwm4Regs.CMPCTL.bit.SHDWBMODE = CC_SHADOW;
+    //! set CTR mode = 0 channel a
+    EPwm4Regs.CMPCTL.bit.LOADAMODE = CC_CTR_ZERO;
+    //! set CTR mode = 0 channel b
+    EPwm4Regs.CMPCTL.bit.LOADBMODE = CC_CTR_ZERO;
+    //! set incrementing (signal reset) to a low voltage state
+    EPwm4Regs.AQCTLA.bit.CAU = AQ_CLEAR;
+    //! set incrementing (signal reset) to high voltage state
+    EPwm4Regs.AQCTLA.bit.CAD = AQ_SET;
+    //! output both complementary signals
+    EPwm4Regs.DBCTL.bit.OUT_MODE = DB_FULL_ENABLE;
+    //! the active level is the lower state
+    EPwm4Regs.DBCTL.bit.POLSEL =  DB_ACTV_LOC;
+    //! select delay on edge transition to high signal level
+    EPwm4Regs.DBFED = 50;
+    //! set the effective value to low signal level
+    EPwm4Regs.DBRED = 50;
+    //! set the effective value to low signal level
+    EPwm4Regs.CMPA.half.CMPA = 0;
 
-	//! phase loading in EPWM6;
-	//! EPwm4Regs.TBPHS.half.TBPHS = 0;
-	//! synchronization epwm 5 by 0
-	EPwm5Regs.TBPHS.half.TBPHS = 0;
-	//! synchronization epwm 6 by 0
-	EPwm6Regs.TBPHS.half.TBPHS = 0;
 
-	//! PWM period selection
-	EPwm4Regs.TBPRD = prd_epwm_4;
-	//! set the mode when there is no frequency division
-	EPwm4Regs.TBCTL.bit.HSPCLKDIV = 0x0;
 
-	EPwm4Regs.DBCTL.bit.OUT_MODE =DBB_ENABLE;
-	//! invert the output
-	EPwm4Regs.DBCTL.bit.POLSEL = DB_ACTV_LOC;
-	//! counting mode: up - down
-	EPwm4Regs.TBCTL.bit.CTRMODE = TB_COUNT_UPDOWN;
-	//! loading from shadow register (shadow register)
-	EPwm4Regs.TBCTL.bit.PRDLD = TB_SHADOW;
-	//! shdow
-	EPwm4Regs.CMPCTL.bit.SHDWAMODE = CC_SHADOW;
-	//! PRD and Zero comparison update
-	EPwm4Regs.CMPCTL.bit.LOADAMODE = 2;
-	//! set incrementing (signal reset) to high voltage state
-	EPwm4Regs.AQCTLA.bit.CAU = AQ_SET;
-	//! set incrementing (signal reset) to a low voltage state
-	EPwm4Regs.AQCTLA.bit.CAD = AQ_CLEAR;
-	//! clear the flag
-	EPwm6Regs.ETCLR.bit.INT = 1;
-	//! load period
-	EPwm6Regs.TBPRD = prd_epwm_6;
-	//! select saw mode
-	EPwm6Regs.TBCTL.bit.CTRMODE = TB_COUNT_UP;
-	//! enable interrupt on transition to 0
-	EPwm6Regs.ETSEL.bit.INTSEL 	= ET_CTR_ZERO;
-	//! interrupt
-	EPwm6Regs.ETSEL.bit.INTEN 	= 1;
-	//! generate an interrupt on the first event
-	EPwm6Regs.ETPS.bit.INTPRD	= 1;
+    //! PWM period selection
+    EPwm5Regs.TBPRD = prd_epwm_1_2_3_4_5_6;
+    //! PWM register phase shift selection
+    EPwm5Regs.TBPHS.half.TBPHS = 0;
+    //! select symmetrical mode
+    EPwm5Regs.TBCTL.bit.CTRMODE = TB_COUNT_UPDOWN;
+    //! phase loading
+    EPwm5Regs.TBCTL.bit.PHSEN = TB_ENABLE;
+    //! loading the active register from the shadow register
+    EPwm5Regs.TBCTL.bit.PRDLD = TB_SHADOW;
+    //! epwm synchronization
+    EPwm5Regs.TBCTL.bit.SYNCOSEL = TB_SYNC_IN;
+    //! shadow mode of channel a
+    EPwm5Regs.CMPCTL.bit.SHDWAMODE = CC_SHADOW;
+    //! shadow mode of channel b
+    EPwm5Regs.CMPCTL.bit.SHDWBMODE = CC_SHADOW;
+    //! set CTR mode = 0 channel a
+    EPwm5Regs.CMPCTL.bit.LOADAMODE = CC_CTR_ZERO;
+    //! set CTR mode = 0 channel b
+    EPwm5Regs.CMPCTL.bit.LOADBMODE = CC_CTR_ZERO;
+    //! set incrementing (signal reset) to a low voltage state
+    EPwm5Regs.AQCTLA.bit.CAU = AQ_CLEAR;
+    //! set incrementing (signal reset) to high voltage state
+    EPwm5Regs.AQCTLA.bit.CAD = AQ_SET;
+    //! output both complementary signals
+    EPwm5Regs.DBCTL.bit.OUT_MODE = DB_FULL_ENABLE;
+    //! the active level is the lower state
+    EPwm5Regs.DBCTL.bit.POLSEL =  DB_ACTV_LOC;
+    //! select delay on edge transition to high signal level
+    EPwm5Regs.DBFED = 50;
+    //! set the effective value to low signal level
+    EPwm5Regs.DBRED = 50;
+    //! set the effective value to low signal level
+    EPwm5Regs.CMPA.half.CMPA = 0;
+
+    //! PWM period selection
+    EPwm6Regs.TBPRD = prd_epwm_1_2_3_4_5_6;
+    //! PWM register phase shift selection
+    EPwm6Regs.TBPHS.half.TBPHS = 0;
+    //! select symmetrical mode
+    EPwm6Regs.TBCTL.bit.CTRMODE = TB_COUNT_UPDOWN;
+    //! phase loading
+    EPwm6Regs.TBCTL.bit.PHSEN = TB_ENABLE;
+    //! loading the active register from the shadow register
+    EPwm6Regs.TBCTL.bit.PRDLD = TB_SHADOW;
+    //! epwm synchronization
+    EPwm6Regs.TBCTL.bit.SYNCOSEL = TB_SYNC_IN;
+    //! shadow mode of channel a
+    EPwm6Regs.CMPCTL.bit.SHDWAMODE = CC_SHADOW;
+    //! shadow mode of channel b
+    EPwm6Regs.CMPCTL.bit.SHDWBMODE = CC_SHADOW;
+    //! set CTR mode = 0 channel a
+    EPwm6Regs.CMPCTL.bit.LOADAMODE = CC_CTR_ZERO;
+    //! set CTR mode = 0 channel b
+    EPwm6Regs.CMPCTL.bit.LOADBMODE = CC_CTR_ZERO;
+    //! set incrementing (signal reset) to a low voltage state
+    EPwm6Regs.AQCTLA.bit.CAU = AQ_CLEAR;
+    //! set incrementing (signal reset) to high voltage state
+    EPwm6Regs.AQCTLA.bit.CAD = AQ_SET;
+    //! output both complementary signals
+    EPwm6Regs.DBCTL.bit.OUT_MODE = DB_FULL_ENABLE;
+    //! the active level is the lower state
+    EPwm6Regs.DBCTL.bit.POLSEL =  DB_ACTV_LOC;
+    //! select delay on edge transition to high signal level
+    EPwm6Regs.DBFED = 50;
+    //! set the effective value to low signal level
+    EPwm6Regs.DBRED = 50;
+    //! set the effective value to low signal level
+    EPwm6Regs.CMPA.half.CMPA = 0;
 
 	//! allow changes to forbidden register
 	EALLOW;
@@ -224,6 +280,11 @@ void Handlr_ePwm(float32 *pbrws_var_l, Uint16 prd_div_2_epwm_dac_l, Uint16 prd_d
 	EPwm2Regs.CMPA.half.CMPA = (Uint16)(( (md_motor_l->uv.fl) * (prd_div_2_epwm_u_v_w_l) ) + prd_div_2_epwm_u_v_w_l);
 	//! set the PWM value for phase w
 	EPwm3Regs.CMPA.half.CMPA = (Uint16)(( (md_motor_l->uw.fl) * (prd_div_2_epwm_u_v_w_l) ) + prd_div_2_epwm_u_v_w_l);
-	//! set the PWM value on the DAC
-	EPwm4Regs.CMPA.half.CMPA = (Uint16)((*pbrws_var_l * (prd_div_2_epwm_dac_l) ) + prd_div_2_epwm_dac_l);
+    //! set the PWM value for the phase u
+    EPwm4Regs.CMPA.half.CMPA = (Uint16)(( (md_motor_l->uu1.fl) * (prd_div_2_epwm_u_v_w_l) ) + prd_div_2_epwm_u_v_w_l);
+    //! set the PWM'a value for phase v
+    EPwm5Regs.CMPA.half.CMPA = (Uint16)(( (md_motor_l->uv1.fl) * (prd_div_2_epwm_u_v_w_l) ) + prd_div_2_epwm_u_v_w_l);
+    //! set the PWM value for phase w
+    EPwm6Regs.CMPA.half.CMPA = (Uint16)(( (md_motor_l->uw1.fl) * (prd_div_2_epwm_u_v_w_l) ) + prd_div_2_epwm_u_v_w_l);
+
 }

@@ -26,9 +26,9 @@ typedef struct
 	Uint16 strt_drv : 1;
 	// 2 frequency inverter stop: 0 - stop, 1 - stop
 	Uint16 stp_drv : 1;
-	// 3 external speed setting: 0 - prohibited, 1 - enabled
-	Uint16 ext_spd : 1;
-	// 15 : 4 reserved
+	// 3 feedback from the angle control sensor: 0 - not signal, 1 - signal
+	Uint16 ext_angle : 1;
+    // 15 : 4 reserved
 	Uint16 rsvd : 12;
 } Flg_Adr01_Bits_S;
 

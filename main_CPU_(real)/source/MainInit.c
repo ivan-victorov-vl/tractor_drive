@@ -54,8 +54,8 @@ void MainInit(void)
 	//! configuring interrupt handling functions:
 	//! allow changes to forbidden registers
 	EALLOW;
-	//! setting the pwm6 interrupt
-	PieVectTable.EPWM6_INT = &epwm6_timer_isr;
+	//! setting the cpu_timer_0 interrupt
+	PieVectTable.TINT0 = &cpu_timer0_isr;
 	//! unmodify forbidden registers
 	EDIS;
 
@@ -67,20 +67,21 @@ void MainInit(void)
 
 	//! to start communication with the chip, set 0 value for transmission
 	SpiaRegs.SPITXBUF = 0;
-
+	//! Set config cpu_timer_0
+	ConfigCpuTimer(&CpuTimer0, 150, 10000);
 	//! setting of modules ePWM 1 to ePWM 3 for output PWM to motor,
-	//! ePWM 4 custom PWM,
 	//! ePWM to set the basic cycle
-	InitEPwm_1_2_3_4_6_Timers(PWM_OUT_PHASE, PWM_USR, PERD_BASE_CYCLE);
+	InitEPwm_1_2_3_4_5_6_Timers(PWM_OUT_PHASE, PWM_USR, PERD_BASE_CYCLE);
 
 	//! ADC initialization
 	AdcInitDrive();
 
 	//! CPU interrupt resolution
-	//! interrupt CPU int3 to connect to ePWM
-	IER |= M_INT3;
-	//! PWM interrupt enable 6
-	PieCtrlRegs.PIEIER3.bit.INTx6 = 1;
+	 CpuTimer0Regs.TCR.all = 0x4000;
+	//! interrupt CPU int
+	IER |= M_INT1;
+	//! CPU_TIMER_0
+	PieCtrlRegs.PIEIER1.bit.INTx7 = 1;
 
 	//! global interrupt resolution and real-time debugging of high-priority interrupts:
 	//! resolution of global INTM interrupts

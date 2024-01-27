@@ -22,5 +22,11 @@ extern const float32 TABL_UU[12];
 extern const float32 TABL_UV[12];
 // declaration of external access to a variable TABL_UW
 extern const float32 TABL_UW[12];
+// declaration of external access to a variable TABL_UU1
+extern const float32 TABL_UU1[12];
+// declaration of external access to a variable TABL_UV1
+extern const float32 TABL_UV1[12];
+// declaration of external access to a variable TABL_UW1
+extern const float32 TABL_UW1[12];
 
 #endif

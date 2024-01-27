@@ -32,6 +32,10 @@
 #define T_INTGRL_PSTN	7
 //! time constant of the diffrential coefficient of the rotor position controller pid
 #define T_DFRNTNL_PSTN	99999999999
+//! Minimum transition angle
+#define MIN_CROSS_ANGLE 10
+//! Model with intensity setter
+//#define MODEL_INTENSITY_SET TRUE_VAL
 
 
 ///////////////////////////  MACROSUBSTITUTION ///////////////////////////////
@@ -100,6 +104,8 @@ typedef struct
 	B32_Numb_S k_f_mul_ref;
 	//! current motor speed
 	B32_Numb_S k_f_mul;
+	//! koefficient regulator amplitude
+	B32_Numb_S k_reg_mul;
 	//! nominal motor current
 	B32_Numb_S isnom;
 	//! current stator
@@ -124,10 +130,16 @@ typedef struct
 	B32_Numb_S cur_pstn_rtr;
 	//! phase voltage U
 	B32_Numb_S uu;
+	//! phase voltage U1
+	B32_Numb_S uu1;
 	//! phase voltage V
 	B32_Numb_S uv;
+    //! phase voltage V1
+    B32_Numb_S uv1;
 	//! phase voltage W
 	B32_Numb_S uw;
+	//! phase voltage W1
+	B32_Numb_S uw1;
 	//! position rotor of structure PID regulator
 	PID_Rgltr_S pstn_rtr;
     //! voltage  phase A first invertor
@@ -235,6 +247,8 @@ extern void PMSMotorFuncReset(Model_Data_PMSM_S *md_l, Settng_Data_PMSM_S *sd_l,
 extern void PMSMotorFuncScal(Model_Data_PMSM_S *md_la, Flg_Cntrl_Drive_S *mf_la, Brws_Param_Drive *bpd_la);
 //! declaration of external access to a function PMSMotorFuncTechSpec
 extern void PMSMotorFuncTechSpec(Model_Data_PMSM_S *md_la, Flg_Cntrl_Drive_S *mf_la, Brws_Param_Drive *bpd_la);
+//! declaration of external access to a function PMSMotorFuncTechSpecWithoutIntenstCntrllr
+extern void PMSMotorFuncTechSpecWithoutIntenstCntrllr(Model_Data_PMSM_S *md_la, Flg_Cntrl_Drive_S *mf_la, Brws_Param_Drive *bpd_la);
 //! declaration of external access to a function PMSMotorFuncSensorless
 extern void PMSMotorFuncSensorless(Model_Data_PMSM_S *md_la, Flg_Cntrl_Drive_S *mf_la, Brws_Param_Drive *bpd_la);
 //! declaration of external access to a function CntrlDrive

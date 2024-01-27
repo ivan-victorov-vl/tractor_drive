@@ -1,17 +1,16 @@
 //###########################################################################
 //
-// Файл:    	MainInit.c
+// File: MainInit.c
 //
-// Описание:   	Заголовочный файл MainInit.c
+// Description: MainInit.c header file
 //
 //###########################################################################
 
 #ifndef MAININIT_H_
 #define MAININIT_H_
 
-
-//////////////// ОБЪЯВЛЕНИЕ ВНЕШНЕГО ДОСТУПА К ФУНКЦИЯМ /////////////////////
-// объявление внешнего доступа к функции MainInit
+//////////////// DECLARATION OF EXTERNAL ACCESS TO FUNCTIONS /////////////////////
+// declaration of external access to the MainInit function
 extern void MainInit(void);
 
 
