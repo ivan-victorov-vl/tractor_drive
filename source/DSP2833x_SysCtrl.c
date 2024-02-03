@@ -46,7 +46,7 @@ void InitSysCtrl(void)
 
    // Initialize the PLL control: PLLCR and DIVSEL
    // DSP28_PLLCR and DSP28_DIVSEL are defined in DSP2833x_Examples.h
-   InitPll(0xC,2);
+   InitPll(0x6,2);
 
    // Initialize the peripheral clocks
    InitPeripheralClocks();

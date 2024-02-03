@@ -100,4 +100,5 @@ void MainInit(void)
 
 	//! ADC data update
 	AdcRegs.ADCTRL2.bit.SOC_SEQ1 = 1;
+    AdcRegs.ADCTRL2.bit.SOC_SEQ2 = 1;
 }
