@@ -143,17 +143,17 @@ typedef struct
 	//! position rotor of structure PID regulator
 	PID_Rgltr_S pstn_rtr;
     //! voltage  phase A first invertor
-	B32_Numb_S uac_is_1_0;
+	B32_Numb_S uac_os_1_0;
 	//! voltage  phase B first invertor
-	B32_Numb_S uac_is_2_0;
+	B32_Numb_S uac_os_2_0;
 	//! voltage  phase C first invertor
-	B32_Numb_S uac_is_3_0;
+	B32_Numb_S uac_os_3_0;
 	//! voltage  phase A second invertor
-	B32_Numb_S uac_is_1_1;
+	B32_Numb_S uac_os_1_1;
     //! voltage  phase B second invertor
-	B32_Numb_S uac_is_2_1;
+	B32_Numb_S uac_os_2_1;
     //! voltage  phase B second invertor
-	B32_Numb_S uac_is_3_1;
+	B32_Numb_S uac_os_3_1;
     //! level voltage DC
 	B32_Numb_S udc;
     //! level temperature
