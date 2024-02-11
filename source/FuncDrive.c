@@ -128,14 +128,26 @@ float32 ApprdFltr(float32 first_var_lb, float32  Ti_apprd_lb, float32 *integr_lb
 	return (*integr_lb);
 }
 
-
+/*!
+ *  \brief PID controller calculation function
+ *  Detailed description
+ *  e(t) = SP(t) - PV(t)
+ *  CO(t) = CObias + Kp * (e(t) + (1/Ti)*Integrl_t_0((e(theta)dtheta) - Td*((dPV(t))/dt)) )
+ */
 float32 PID_Regltr(PID_Rgltr_S *v_pid_r_lb) {
-   //TODO Required to implement?
+    static float32 prop_lb = 0, integr_lb = 0, different_lb = 0;
+
+    prop_lb = v_pid_r_lb->error.fl;
+    integr_lb += (1 / v_pid_r_lb->t_intgrl.fl) * v_pid_r_lb->error.fl * v_pid_r_lb->dt.fl;
+    different_lb = -v_pid_r_lb->t_dfrntl.fl * (v_pid_r_lb->cur_var.fl - v_pid_r_lb->prvs_var.fl)/ v_pid_r_lb->dt.fl;
+    v_pid_r_lb->cur_var.fl = v_pid_r_lb->cur_var.fl - v_pid_r_lb->prvs_var.fl;
+    return (prop_lb + integr_lb + different_lb);
 }
 
 
 float32 CalcIm(float32 kf_multiply_lb, float32 kim_eqlztn_lb, float32 *eqlztn_im_lb) {
     //TODO Required to implement?
+    return 0;
 }
 
 /*!

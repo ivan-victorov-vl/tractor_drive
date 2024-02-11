@@ -23,7 +23,6 @@ void PMSMotorFuncSensorless(Model_Data_PMSM_S *md_la, Flg_Cntrl_Drive_S *mf_la, 
 void CntrlDrive(Model_Data_PMSM_S *md_l, Settng_Data_PMSM_S *sd_l, Flg_Cntrl_Drive_S *mf_l, Brws_Param_Drive *bpd_l);
 void HandlerExternalButtons(Flg_Cntrl_Drive_S *mf_l);
 
-
 /*!
  * \brief initialization PMSM motor control
  */
@@ -96,7 +95,6 @@ void PMSMotorFuncTechSpec(Model_Data_PMSM_S *md_la, Flg_Cntrl_Drive_S *mf_la, Br
     md_la->uv1.fl =  md_la->uw1.fl * md_la->k_reg_mul.fl;
 }
 
-
 /*!
  * \brief PMSM motor control function from technical specification without intensity controller
  */
@@ -160,6 +158,8 @@ void CntrlDrive(Model_Data_PMSM_S *md_l, Settng_Data_PMSM_S *sd_l, Flg_Cntrl_Dri
         }
     #endif
     } else {
+        //! reset variable PMSM-Motor
+        PMSMotorFuncReset(md_l, sd_l, mf_l);
         //! step with non-working condition of the frequency converter
         //! start drive converter
         mf_l->bits_reg2.bits.strt_drv = GpioDataRegs.GPCDAT.bit.GPIO72;

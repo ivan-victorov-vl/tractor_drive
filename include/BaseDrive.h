@@ -85,14 +85,18 @@ typedef struct
     B32_Numb_S prvs_var;
     //! proportional coefficient of the pid controller
     B32_Numb_S k_prprprtnl;
-    //! integral coefficient of the pid regulator
-    B32_Numb_S k_intgrl;
+    //! Ti of the pid regulator
+    B32_Numb_S t_intgrl;
     //! integral of the proportional part of the pid controller
     B32_Numb_S p_intgrl;
     //! integral of the integral part of the pid regulator
     B32_Numb_S i_intgrl;
-    //! differential coefficient of the pid regulator
-    B32_Numb_S k_dfrntl;
+    //! differential t of the pid regulator
+    B32_Numb_S t_dfrntl;
+    //! error value
+    B32_Numb_S error;
+    //! dt value
+    B32_Numb_S dt;
 } PID_Rgltr_S;
 
 /*
@@ -116,6 +120,12 @@ typedef struct
 	B32_Numb_S iv;
 	//! current phase w
 	B32_Numb_S iw;
+    //! current phase u1
+    B32_Numb_S iu1;
+    //! current phase v1
+    B32_Numb_S iv1;
+    //! current phase w1
+    B32_Numb_S iw1;
 	//! set rotation angle
 	B32_Numb_S theta;
 	//! sinus

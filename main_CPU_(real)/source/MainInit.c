@@ -67,18 +67,18 @@ void MainInit(void)
 
 	//! to start communication with the chip, set 0 value for transmission
 	SpiaRegs.SPITXBUF = 0;
-	//! Set config cpu_timer_0
+	//! Set configuration for cpu_timer_0
 	ConfigCpuTimer(&CpuTimer0, 150, 10000);
 	//! setting of modules ePWM 1 to ePWM 3 for output PWM to motor,
 	//! ePWM to set the basic cycle
-	InitEPwm_1_2_3_4_5_6_Timers(PWM_OUT_PHASE, PWM_USR, PERD_BASE_CYCLE);
+	InitEPwm_1_2_3_4_5_6_Timers(PWM_OUT_PHASE);
 
 	//! ADC initialization
 	AdcInitDrive();
 
 	//! CPU interrupt resolution
 	 CpuTimer0Regs.TCR.all = 0x4000;
-	//! interrupt CPU int
+	//! set interrupt M_INT1
 	IER |= M_INT1;
 	//! CPU_TIMER_0
 	PieCtrlRegs.PIEIER1.bit.INTx7 = 1;
