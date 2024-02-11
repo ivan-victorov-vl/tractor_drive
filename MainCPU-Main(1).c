@@ -68,5 +68,4 @@ interrupt void cpu_timer0_isr(void) {
 
 	CalculateConditionPMS(&data_pmsm.md);
     PieCtrlRegs.PIEACK.all = PIEACK_GROUP1;
-
 }

@@ -1,8 +1,8 @@
 //###########################################################################
 //
-// Файл:    	MainCpuAdc.h
+// File: MainCpuAdc.h
 //
-// Описание:   	Заголовочный файл MainCpuAdc.c
+// Description: MainCpuAdc.c header file
 //
 //###########################################################################
 
@@ -10,26 +10,26 @@
 #define MAINCPU_ADC_H_
 
 
-////////////////////// ПОДКЛЮЧЕНИЕ ЗАГОЛОВОЧНЫХ ФАЙЛОВ //////////////////////
-// подключение заголовочного файла "BaseDriveUsr.h"
+////////////////////// HEADER FILE INCLUDE //////////////////////
+// include header file "BaseDriveUsr.h"
 #include "BaseDrive.h"
 
 
-////////////////////// ОБЪЯВЛЕНИЕ ИМЕНОВАННЫХ КОНСТАНТ //////////////////////
-// формат: DIV_делимое_делитель; именованная константа равна 1/1700
-#define DIV_1_1700	  	0.0005882352941176471
-// формат: DIV_делимое_делитель; именованная константа равна 1/4095
-#define DIV_1_4096	  	0.000244140625
-// сдвиг тока iu для извлечения нулевого значения
-#define SHIFT_IU	  	1722
-// сдвиг тока iv для извлечения нулевого значения
-#define SHIFT_IV	  	1725
+////////////////////// DECLARATION OF NAMED CONSTANTS //////////////////////
+// format: DIV_divider; named constant equals 1/1700
+#define DIV_1_1700 0.0005882352941176471
+// format: DIV_divider; named constant equals 1/4095
+#define DIV_1_4096 0.000244140625
+// current shift iu to extract zero value
+#define SHIFT_IU 1722
+// current shift iv to extract zero value
+#define SHIFT_IV 1725
 
 
-//////////////// ОБЪЯВЛЕНИЕ ВНЕШНЕГО ДОСТУПА К ФУНКЦИЯМ /////////////////////
-// объявление внешнего доступа к функции AdcInitDrive
+//////////////// FUNCTION EXTERNAL ACCESS DECLARATION /////////////////////
+// declaration of external access to the AdcInitDrive function
 extern void AdcInitDrive(void);
-// объявление внешнего доступа к функции HandlrADC
+// declaration of external access to the HandlrADC function
 extern void HandlrADC(Model_Data_PMSM_S *md_motor_l, Settng_Data_PMSM_S *sd_motor_l);
 
 

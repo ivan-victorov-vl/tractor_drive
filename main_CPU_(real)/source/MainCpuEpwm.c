@@ -12,12 +12,12 @@
 
 /////////////////////////// FUNCTION DECLARATION //////////////////////////////
 // function declaration InitEPwm_1_2_3_4_6_Timers
-void InitEPwm_1_2_3_4_5_6_Timers(Uint16 prd_epwm_1_2_3_4_5_6, Uint16 prd_epwm_4, Uint16 prd_epwm_6);
+void InitEPwm_1_2_3_4_5_6_Timers(Uint16 prd_epwm_1_2_3_4_5_6);
 // Handlr_ePwm function declaration
 void  Handlr_ePwm(float32 *pbrws_var_l, Uint16 prd_div_2_epwm_dac_l, Uint16 prd_div_2_epwm_u_v_w_l, Model_Data_PMSM_S *md_motor_l);
 
 
-void InitEPwm_1_2_3_4_5_6_Timers(Uint16 prd_epwm_1_2_3_4_5_6, Uint16 prd_epwm_4, Uint16 prd_epwm_6)
+void InitEPwm_1_2_3_4_5_6_Timers(Uint16 prd_epwm_1_2_3_4_5_6)
 {
 	//! allow changes to forbidden registers
 	EALLOW;
@@ -43,7 +43,6 @@ void InitEPwm_1_2_3_4_5_6_Timers(Uint16 prd_epwm_1_2_3_4_5_6, Uint16 prd_epwm_4,
 	SysCtrlRegs.PCLKCR1.bit.EPWM6ENCLK = 1;
 	//!  not modify forbidden registers
 	EDIS;
-
 
 	//! configuring the epwm1 module:
 	//! PWM period selection
@@ -91,7 +90,7 @@ void InitEPwm_1_2_3_4_5_6_Timers(Uint16 prd_epwm_1_2_3_4_5_6, Uint16 prd_epwm_4,
 	EPwm2Regs.TBCTL.bit.PHSEN = TB_ENABLE;
 	//! loading the active register from the shad
 	EPwm2Regs.TBCTL.bit.PRDLD = TB_SHADOW;
-	//! epwm synchronization
+	//! EPWM synchronization
 	EPwm2Regs.TBCTL.bit.SYNCOSEL = TB_SYNC_IN;
 	//! shadow mode of channel a
 	EPwm2Regs.CMPCTL.bit.SHDWAMODE = CC_SHADOW;
@@ -127,7 +126,7 @@ void InitEPwm_1_2_3_4_5_6_Timers(Uint16 prd_epwm_1_2_3_4_5_6, Uint16 prd_epwm_4,
 	EPwm3Regs.TBCTL.bit.PHSEN = TB_ENABLE;
 	//! loading the active register from the shadow register
 	EPwm3Regs.TBCTL.bit.PRDLD = TB_SHADOW;
-	//! epwm synchronization
+	//! EPWM synchronization
 	EPwm3Regs.TBCTL.bit.SYNCOSEL = TB_SYNC_IN;
 	//! shadow mode of channel a
 	EPwm3Regs.CMPCTL.bit.SHDWAMODE = CC_SHADOW;
@@ -163,7 +162,7 @@ void InitEPwm_1_2_3_4_5_6_Timers(Uint16 prd_epwm_1_2_3_4_5_6, Uint16 prd_epwm_4,
     EPwm4Regs.TBCTL.bit.PHSEN = TB_ENABLE;
     //! loading the active register from the shadow register
     EPwm4Regs.TBCTL.bit.PRDLD = TB_SHADOW;
-    //! epwm synchronization
+    //! EPWM synchronization
     EPwm4Regs.TBCTL.bit.SYNCOSEL = TB_SYNC_IN;
     //! shadow mode of channel a
     EPwm4Regs.CMPCTL.bit.SHDWAMODE = CC_SHADOW;
@@ -200,7 +199,7 @@ void InitEPwm_1_2_3_4_5_6_Timers(Uint16 prd_epwm_1_2_3_4_5_6, Uint16 prd_epwm_4,
     EPwm5Regs.TBCTL.bit.PHSEN = TB_ENABLE;
     //! loading the active register from the shadow register
     EPwm5Regs.TBCTL.bit.PRDLD = TB_SHADOW;
-    //! epwm synchronization
+    //! EPWM synchronization
     EPwm5Regs.TBCTL.bit.SYNCOSEL = TB_SYNC_IN;
     //! shadow mode of channel a
     EPwm5Regs.CMPCTL.bit.SHDWAMODE = CC_SHADOW;
@@ -235,7 +234,7 @@ void InitEPwm_1_2_3_4_5_6_Timers(Uint16 prd_epwm_1_2_3_4_5_6, Uint16 prd_epwm_4,
     EPwm6Regs.TBCTL.bit.PHSEN = TB_ENABLE;
     //! loading the active register from the shadow register
     EPwm6Regs.TBCTL.bit.PRDLD = TB_SHADOW;
-    //! epwm synchronization
+    //! EPWM synchronization
     EPwm6Regs.TBCTL.bit.SYNCOSEL = TB_SYNC_IN;
     //! shadow mode of channel a
     EPwm6Regs.CMPCTL.bit.SHDWAMODE = CC_SHADOW;

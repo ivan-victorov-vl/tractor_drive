@@ -138,9 +138,13 @@ void HandlrADC(Model_Data_PMSM_S *md_motor_l, Settng_Data_PMSM_S *sd_motor_l) {
     //! ADCINB7
     md_motor_l->i_os_3_1.fl = (float32)(AdcRegs.ADCRESULT15 >> 4);
 
-    md_motor_l->iu.fl = 0;
-    md_motor_l->iv.fl = 0;
-    md_motor_l->iw.fl = 0;
+    //! TODO please change shift current for debug (IT IS NOT SET UP NOW!!!)
+    md_motor_l->iu.fl = md_motor_l->i_os_1_0.fl - 2048;
+    md_motor_l->iv.fl = md_motor_l->i_os_2_0.fl - 2048;
+    md_motor_l->iw.fl = md_motor_l->i_os_3_0.fl - 2048;
+    md_motor_l->iu1.fl = md_motor_l->i_os_1_1.fl - 2048;
+    md_motor_l->iv1.fl = md_motor_l->i_os_2_1.fl - 2048;
+    md_motor_l->iw1.fl = md_motor_l->i_os_3_1.fl - 2048;
     sd_motor_l->k_mul_ext_ref = 0;
     AdcRegs.ADCTRL2.all = 0x2020;
 }
