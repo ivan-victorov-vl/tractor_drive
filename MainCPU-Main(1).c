@@ -31,6 +31,8 @@ void Base_Cycle(void);
 void main(void) {
     //! program initialization before entering the execution loop
     MainInit();
+    //! light up the LED with the value "net"
+    LED_NET_ON;
 	//! entering the main program cycle
 	for(;;) {
 		//! entering the cycle of operations execution in the external background

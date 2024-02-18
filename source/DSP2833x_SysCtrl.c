@@ -511,10 +511,10 @@ void	GpioConf(void)
 		GpioCtrlRegs.GPBDIR.bit.GPIO46   = 	1; 				// 1=OUTput,  0=INput 
 		GpioDataRegs.GPBCLEAR.bit.GPIO46 = 	1; 				// uncomment if --> Set Low initially
 
-//!  GPIO-47 - PIN FUNCTION (LED_VD1)
+//!  GPIO-47 - PIN FUNCTION (LED_VD1 - "net")
 		GpioCtrlRegs.GPBMUX1.bit.GPIO47  = 	0; 				// 0=GPIO,  1=Resv,  2=XA7,  3=XA7
 		GpioCtrlRegs.GPBDIR.bit.GPIO47   = 	1; 				// 1=OUTput,  0=INput
-		GpioDataRegs.GPBCLEAR.bit.GPIO47 =  1;              // uncomment if --> Set Low initially
+		GpioDataRegs.GPBSET.bit.GPIO47 =  1;              // uncomment if --> Set High initially
 
 //!  GPIO-48 - PIN FUNCTION (NONE)
 		GpioCtrlRegs.GPBMUX2.bit.GPIO48  = 	0; 				// 0=GPIO,  1=ECAP5,  2=XD31,  3=Resv
@@ -632,19 +632,19 @@ void	GpioConf(void)
 		GpioCtrlRegs.GPCDIR.bit.GPIO71   = 	1; 				// 1=OUTput,  0=INput 
 		GpioDataRegs.GPCCLEAR.bit.GPIO71 = 	1; 				// uncomment if --> Set Low initially
 
-//!  GPIO-72 - PIN FUNCTION (D in 4)
+//!  GPIO-72 - PIN FUNCTION (D in 4 / Reset)
 		GpioCtrlRegs.GPCMUX1.bit.GPIO72  = 	0; 				// 0=GPIO,  
 		GpioCtrlRegs.GPCDIR.bit.GPIO72   = 	0; 				// 1=OUTput,  0=INput
 
-//!  GPIO-73 - PIN FUNCTION (D in 3 / Reset)
+//!  GPIO-73 - PIN FUNCTION (D in 3 / Stop)
 		GpioCtrlRegs.GPCMUX1.bit.GPIO73  = 	0; 				// 0=GPIO,  
 		GpioCtrlRegs.GPCDIR.bit.GPIO73   = 	0; 				// 1=OUTput,  0=INput
 
-//!  GPIO-74 - PIN FUNCTION (D in 2 / Stop)
+//!  GPIO-74 - PIN FUNCTION (D in 2 / Start)
 		GpioCtrlRegs.GPCMUX1.bit.GPIO74  = 	0; 				// 0=GPIO,  
 		GpioCtrlRegs.GPCDIR.bit.GPIO74   = 	0; 				// 1=OUTput,  0=INput
 
-//!  GPIO-75 - PIN FUNCTION (D in 1 / Start)
+//!  GPIO-75 - PIN FUNCTION (D in 1)
 		GpioCtrlRegs.GPCMUX1.bit.GPIO75  = 	0; 				// 0=GPIO,  
 		GpioCtrlRegs.GPCDIR.bit.GPIO75   = 	0; 				// 1=OUTput,  0=INput
 
@@ -668,20 +668,20 @@ void	GpioConf(void)
 		GpioCtrlRegs.GPCDIR.bit.GPIO79   = 	1; 				// 1=OUTput,  0=INput 
 		GpioDataRegs.GPCCLEAR.bit.GPIO79 = 	1; 				// uncomment if --> Set Low initially
 
-//!  GPIO-80 - PIN FUNCTION (LED_VD2)
+//!  GPIO-80 - PIN FUNCTION (LED_VD2 - "start")
 		GpioCtrlRegs.GPCMUX2.bit.GPIO80  = 	0; 				// 0=GPIO,  
 		GpioCtrlRegs.GPCDIR.bit.GPIO80   = 	1; 				// 1=OUTput,  0=INput 
-		GpioDataRegs.GPCCLEAR.bit.GPIO80 = 	1; 				// uncomment if --> Set Low initially
+		GpioDataRegs.GPCSET.bit.GPIO80 = 	1; 				// uncomment if --> Set High initially
 
-//!  GPIO-81 - PIN FUNCTION (LED_VD3)
+//!  GPIO-81 - PIN FUNCTION (LED_VD3 - "stop")
 		GpioCtrlRegs.GPCMUX2.bit.GPIO81  = 	0; 				// 0=GPIO,  
 		GpioCtrlRegs.GPCDIR.bit.GPIO81   = 	1; 				// 1=OUTput,  0=INput 
-		GpioDataRegs.GPCCLEAR.bit.GPIO81 = 	1; 				// uncomment if --> Set Low initially
+		GpioDataRegs.GPCSET.bit.GPIO81 = 	1; 				// uncomment if --> Set High  initially
 
-//!  GPIO-82 - PIN FUNCTION (LED_VD4)
+//!  GPIO-82 - PIN FUNCTION (LED_VD4 - "error")
 		GpioCtrlRegs.GPCMUX2.bit.GPIO82  = 	0; 				// 0=GPIO,  
 		GpioCtrlRegs.GPCDIR.bit.GPIO82   = 	1; 				// 1=OUTput,  0=INput 
-		GpioDataRegs.GPCCLEAR.bit.GPIO82 = 	1; 				// uncomment if --> Set Low initially
+		GpioDataRegs.GPCSET.bit.GPIO82 = 	1; 				// uncomment if --> Set High initially
 
 //!  GPIO-83 - PIN FUNCTION (NONE)
 		GpioCtrlRegs.GPCMUX2.bit.GPIO83  = 	0; 				// 0=GPIO,  
