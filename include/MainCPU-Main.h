@@ -10,10 +10,9 @@
 #define MAINCPU_MAIN_H
 
 
-////////////////////// INCLUDE OF HEADER FILES//////////////////////
+////////////////////// INCLUDE OF HEADER FILES //////////////////////
 //! include header file "PeripheralHeaderIncludes.h"
 #include "PeripheralHeaderIncludes.h"
-
 
 /////////////////////////// VARIABLE DECLARATION ///////////////////////////
 //! frequency converter parameter memory (shared memory)

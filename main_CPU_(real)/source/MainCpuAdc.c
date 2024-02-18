@@ -25,24 +25,23 @@ void HandlrADC(Model_Data_PMSM_S *md_motor_l, Settng_Data_PMSM_S *sd_motor_l);
  */
 void AdcInitDrive(void) {
 
-    // zeroing of ADCTRL1 register data
+    //! zeroing of ADCTRL1 register data
     AdcRegs.ADCTRL1.all = 0;
 
-
-    // control SOC pulse width equal to 7 = 8 x ADCCLK
+    //! control SOC pulse width equal to 7 = 8 x ADCCLK
     AdcRegs.ADCTRL1.bit.ACQ_PS = 0x1;
-    // core frequency predilator by 1
+    //! core frequency predilator by 1
     AdcRegs.ADCTRL1.bit.CPS = 0;
-    // START-STOP mode selection.
-    // after conversion enter standby mode, and after standby is completed
-    // start the conversion again
-    // zeroing of ADCTRL3 register data
+    //! START-STOP mode selection.
+    //! after conversion enter standby mode, and after standby is completed
+    //! start the conversion again
+    //! zeroing of ADCTRL3 register data
     AdcRegs.ADCTRL3.all = 0x00E0;
-    // frequency division by 1
+    //! frequency division by 1
     AdcRegs.ADCTRL3.bit.ADCCLKPS = 0;
     AdcRegs.ADCTRL3.bit.SMODE_SEL = 0x1;
     //! processing in cascade mode with one 16-level sequencer
-    AdcRegs.ADCTRL1.bit.SEQ_CASC=0;
+    AdcRegs.ADCTRL1.bit.SEQ_CASC = 0;
     //! SEQ1 interrupt enable
     AdcRegs.ADCTRL2.bit.INT_ENA_SEQ1 = 0x1;
     //! SEQ2 interrupt enable
@@ -94,11 +93,7 @@ void AdcInitDrive(void) {
     //! Setup  conv  from  ADCINA7  &amp;  ADCINB7
     AdcRegs.ADCCHSELSEQ3.bit.CONV11  =  0x7;
     */
-
-
-
     AdcRegs.ADCTRL2.all = 0x2020;
-
 }
 
 /*!
@@ -145,6 +140,7 @@ void HandlrADC(Model_Data_PMSM_S *md_motor_l, Settng_Data_PMSM_S *sd_motor_l) {
     md_motor_l->iu1.fl = md_motor_l->i_os_1_1.fl - 2048;
     md_motor_l->iv1.fl = md_motor_l->i_os_2_1.fl - 2048;
     md_motor_l->iw1.fl = md_motor_l->i_os_3_1.fl - 2048;
-    sd_motor_l->k_mul_ext_ref = 0;
+    sd_motor_l->k_mul_ext_ref = DIV_1_4096 * md_motor_l->fzad_20_ma.fl;
+
     AdcRegs.ADCTRL2.all = 0x2020;
 }

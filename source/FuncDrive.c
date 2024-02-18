@@ -22,13 +22,13 @@ void CalcSinCos_270_360(float32 theta_lb, float32 *sin_lb, float32 *cos_lb);
 void Calc2To3Cos(float32 first_var_lb, float32 sec_var_lb, float32 *first_res_lb, float32 *sec_res_lb, float32 *third_res_lb);
 void Calc3To2(float32 first_var_lb, float32 sec_var_lb, float32 third_var_lb, float32 *first_res_lb, float32 *sec_res_lb);
 float32 ApprdFltr(float32 first_var_lb, float32 Ti_apprd_lb, float32 *integr_lb);
-float32 CalcIm (float32 kf_multiply_lb, float32 kim_eqlztn_lb, float32 *eqlztn_im_lb);
 void (*CalcSinCos[4])(float32 theta_lb, float32 *sin_lb, float32 *cos_lb) = {&CalcSinCos_0_90, &CalcSinCos_90_180, &CalcSinCos_180_270, &CalcSinCos_270_360};
 void (**pCalcSinCos)(float32 theta_lb, float32 *sin_lb, float32 *cos_lb) = &CalcSinCos[0];
 void SpeedRef(float32 k_f_mul_ref_lb, float32 k_f_mul_plus_lb, float32 k_f_mul_minus_lb, float32 *k_f_mul_lb);
 float32 CalcLengthVect2In(float32 first_lb, float32 secnd_lb);
+float32 PI_Regltr(float32 cur_var_lb, float32 k_prprnl_lb, float32 k_integral_lb, float32 *integral_lb);
 float32 PID_Regltr(PID_Rgltr_S *v_pid_r_lb);
-float32 CalcSpeedRtr(float32 theta_rtr_lb, float32 *ptheta_rtr_lb,  float32 *pcalc_speed_rez_lb);
+
 void CalculateConditionPMS(Model_Data_PMSM_S *md_l);
 
 
@@ -38,7 +38,7 @@ void Stop(Model_Data_PMSM_S *md_la, Settng_Data_PMSM_S *sd_la, Flg_Cntrl_Drive_S
 
 
 /*!
-     \brief Calculate sin and cos from degree 0-90
+     \brief calculate sin and cos from degree 0-90
 */
 void CalcSinCos_0_90(float32 theta_lb, float32 *sin_lb, float32 *cos_lb) {
 	int16	theta_dtabl_lb;
@@ -54,7 +54,7 @@ void CalcSinCos_0_90(float32 theta_lb, float32 *sin_lb, float32 *cos_lb) {
 }
 
 /*!
-     \brief Calculate sin and cos from degree 90-180
+     \brief calculate sin and cos from degree 90-180
 */
 void CalcSinCos_90_180(float32 theta_lb, float32 *sin_lb, float32 *cos_lb) {
 	int16	theta_dtabl_lb;
@@ -70,7 +70,7 @@ void CalcSinCos_90_180(float32 theta_lb, float32 *sin_lb, float32 *cos_lb) {
 }
 
 /*!
-    \brief Calculate sin and cos from degree 180-270
+    \brief calculate sin and cos from degree 180-270
 */
 void CalcSinCos_180_270(float32 theta_lb, float32 *sin_lb, float32 *cos_lb) {
 	int16	theta_dtabl_lb;
@@ -87,7 +87,7 @@ void CalcSinCos_180_270(float32 theta_lb, float32 *sin_lb, float32 *cos_lb) {
 }
 
 /*!
-    \brief Calculate sin and cos from degree 270-360
+    \brief calculate sin and cos from degree 270-360
  */
 void CalcSinCos_270_360(float32 theta_lb, float32 *sin_lb, float32 *cos_lb) {
 	int16	theta_dtabl_lb;
@@ -104,7 +104,7 @@ void CalcSinCos_270_360(float32 theta_lb, float32 *sin_lb, float32 *cos_lb) {
 }
 
 /*!
-    \brief Calculating the speed setter
+    \brief calculating the speed setter
  */
 void SpeedRef(float32 k_f_mul_ref_lb, float32 k_f_mul_plus_lb, float32 k_f_mul_minus_lb, float32 *k_f_mul_lb) {
     //! if the current speed setting is greater than the set speed setting
@@ -121,11 +121,21 @@ void SpeedRef(float32 k_f_mul_ref_lb, float32 k_f_mul_plus_lb, float32 k_f_mul_m
 }
 
 /*!
-    \brief Apperiodic filter
+    \brief apperiodic filter
 */
 float32 ApprdFltr(float32 first_var_lb, float32  Ti_apprd_lb, float32 *integr_lb) {
 	*integr_lb += (Ti_apprd_lb * (first_var_lb - *integr_lb));
 	return (*integr_lb);
+}
+
+/*!
+ *  \brief: calculation of variable value after PI regulator
+ */
+float32 PI_Regltr(float32 cur_var_lb, float32 k_prprnl_lb, float32 k_integral_lb, float32 *integral_lb) {
+    //! calculation of the integral component of the pi controller
+    *integral_lb +=  cur_var_lb;
+    //! calculation of the return value of the pi regulator function
+    return ((cur_var_lb * k_prprnl_lb) + (k_integral_lb * *integral_lb));
 }
 
 /*!
@@ -145,13 +155,8 @@ float32 PID_Regltr(PID_Rgltr_S *v_pid_r_lb) {
 }
 
 
-float32 CalcIm(float32 kf_multiply_lb, float32 kim_eqlztn_lb, float32 *eqlztn_im_lb) {
-    //TODO Required to implement?
-    return 0;
-}
-
 /*!
-    \brief Conversion from two-phase to three-phase system
+    \brief conversion from two-phase to three-phase system
 */
 void Calc3To2(float32 first_var_lb, float32 sec_var_lb, float32 third_var_lb, float32 *first_res_lb, float32 *sec_res_lb) {
 	*first_res_lb = first_var_lb;
@@ -159,7 +164,7 @@ void Calc3To2(float32 first_var_lb, float32 sec_var_lb, float32 third_var_lb, fl
 }
 
 /*!
-    \brief Conversion from three-phase to two-phase system
+    \brief conversion from three-phase to two-phase system
 */
 void Calc2To3Cos(float32 first_var_lb, float32 sec_var_lb, float32 *first_res_lb, float32 *sec_res_lb, float32 *third_res_lb) {
 	*first_res_lb = first_var_lb;
@@ -167,59 +172,34 @@ void Calc2To3Cos(float32 first_var_lb, float32 sec_var_lb, float32 *first_res_lb
 	*third_res_lb = (-DIV_1_2 * first_var_lb) - (DIV_SQRT3_2 * sec_var_lb);
 }
 
-
+/*!
+ *  \brief: calculating the modulus of a vector by two input values
+ */
 float32 CalcLengthVect2In(float32 first_lb, float32 secnd_lb) {
-	float32 len_vect_diskrf_lb;
-	Uint16 len_vect_diskri_lb;
-	float32 add_len_vect_lb;
-	const float32 *len_vect_tablf_lb;
+    //! declaration of the variable len_vect_diskrf_lb
+    float32 len_vect_diskrf_lb;
+    //! declaration of the variable len_vect_diskri_lb
+    Uint16 len_vect_diskri_lb;
+    //! declaration of vector length calculation variable
+    float32 add_len_vect_lb;
+    //! declaration of the variable of vector length table calculation
+    const float32 *len_vect_tablf_lb;
 
-	len_vect_diskrf_lb = ((first_lb * first_lb) + (secnd_lb * secnd_lb)) * 100;
-	len_vect_diskri_lb = (Uint16)len_vect_diskrf_lb;
-	add_len_vect_lb = len_vect_diskrf_lb - (float32)len_vect_diskri_lb;
-	len_vect_tablf_lb = &SQRT175[len_vect_diskri_lb];
+    //! conversion to an array variable
+    len_vect_diskrf_lb = ((first_lb * first_lb) + (secnd_lb * secnd_lb)) * 100;
+    //! conversion from floating point to integer type
+    len_vect_diskri_lb = (Uint16)len_vect_diskrf_lb;
+    //! calculation of the additive variable for vector length calculation
+    add_len_vect_lb = len_vect_diskrf_lb - (float32)len_vect_diskri_lb;
+    //! specify array address
+    len_vect_tablf_lb = &SQRT175[len_vect_diskri_lb];
 
-	return (*len_vect_tablf_lb + (add_len_vect_lb * (*(len_vect_tablf_lb + 1) - *len_vect_tablf_lb)));
-}
-
-
-float32 CalcSpeedRtr(float32 theta_rtr_lb, float32 *ptheta_rtr_lb,  float32 *pcalc_speed_rez_lb) {
-	static Uint16 cnt_speed_lb = 0, cnt_speed_fltr_lb = 0;
-	static float32 calc_speed_sum_lb = 0, calc_speed_rez_lb = 0;
-
-	cnt_speed_lb++;
-	*(ptheta_rtr_lb + 1) = theta_rtr_lb;
- 	if (((*(ptheta_rtr_lb + 1) - *ptheta_rtr_lb) < - 2) || ((*(ptheta_rtr_lb + 1) - *ptheta_rtr_lb) > 2))
- 	{
- 		if ((*(ptheta_rtr_lb + 1) - *ptheta_rtr_lb) < - (FULL_DSKRT - 2))
- 		calc_speed_sum_lb += (*(ptheta_rtr_lb + 1) + (FULL_DSKRT - *ptheta_rtr_lb));
- 		if ((*(ptheta_rtr_lb + 1) - *ptheta_rtr_lb) > (FULL_DSKRT - 2))
- 		calc_speed_sum_lb += (*(ptheta_rtr_lb + 1) - (FULL_DSKRT - *ptheta_rtr_lb));
- 		*ptheta_rtr_lb = *(ptheta_rtr_lb + 1);
-	}
- 	else
- 	{
- 		calc_speed_sum_lb += (*(ptheta_rtr_lb + 1) - *ptheta_rtr_lb);
- 		*ptheta_rtr_lb = *(ptheta_rtr_lb + 1);
- 	}
-	if (cnt_speed_lb > FULL_DSKRT)
-	{
-		cnt_speed_lb = 0;
-		*ptheta_rtr_lb = *(ptheta_rtr_lb + 1) = theta_rtr_lb;
-		calc_speed_rez_lb = calc_speed_sum_lb * K_1_DIV_360 *  NUMB_PAIR_POLES;
-		calc_speed_sum_lb = 0;
-		cnt_speed_fltr_lb++;
-		if (cnt_speed_fltr_lb > 3) cnt_speed_fltr_lb = 0;
-	}
-	if ((calc_speed_rez_lb > 1.1) || (calc_speed_rez_lb < -1.1))
-		calc_speed_rez_lb = *(pcalc_speed_rez_lb + cnt_speed_fltr_lb);
-	*(pcalc_speed_rez_lb + cnt_speed_fltr_lb) = calc_speed_rez_lb;
-
-	return	 ((*pcalc_speed_rez_lb + *(pcalc_speed_rez_lb + 1) + *(pcalc_speed_rez_lb + 2) + *(pcalc_speed_rez_lb + 3)) * K_1_DIV_4);
+    //! calculate the return value of the function
+    return (*len_vect_tablf_lb + (add_len_vect_lb * (*(len_vect_tablf_lb + 1) - *len_vect_tablf_lb)));
 }
 
 /*!
-    \brief Calculate condition of PMSM
+    \brief calculate condition of PMSM
  */
 void CalculateConditionPMS(Model_Data_PMSM_S *md_l) {
     int32 calc_theta = ((int32)md_l->theta.fl%120)/10;
@@ -229,5 +209,4 @@ void CalculateConditionPMS(Model_Data_PMSM_S *md_l) {
     md_l->uu1.fl = TABL_UU1[calc_theta];
     md_l->uv1.fl = TABL_UV1[calc_theta];
     md_l->uw1.fl = TABL_UW1[calc_theta];
-
 }

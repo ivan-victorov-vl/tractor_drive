@@ -62,8 +62,6 @@
 extern void Stop(Model_Data_PMSM_S *md_la, Settng_Data_PMSM_S *sd_la, Flg_Cntrl_Drive_S *mf_la );
 //! declaration of external access to a function CalcSinCos
 extern void (**pCalcSinCos)(float32 theta_lb, float32 *sin_lb, float32 *cos_lb);
-//! declaration of external access to a function CalcIm
-extern float32 CalcIm(float32 kf_multiply_lb, float32 kim_eqlztn_lb, float32 *eqlztn_im_lb);
 //! declaration of external access to a function ApprdFltr
 extern float32 ApprdFltr(float32 first_var_lb, float32 Ti_apprd_lb, float32 *integr_lb);
 //! declaration of external access to a function Calc2To3Cos
@@ -76,8 +74,6 @@ extern void SpeedRef(float32 k_f_mul_ref_lb, float32 k_f_mul_plus_lb, float32 k_
 extern float32 CalcLengthVect2In(float32 first_lb, float32 secnd_lb);
 //! declaration of external access to a function PID_Regltr
 extern float32 PID_Regltr(PID_Rgltr_S *v_pid_r_lb);
-//! declaration of external access to a function CalcSpeedRtr
-extern float32 CalcSpeedRtr(float32 theta_rtr_lb, float32 *ptheta_rtr_lb,  float32 *pcalc_speed_rez_lb);
 //! declaration of external access to a function CalculateConditionPMS
 extern void CalculateConditionPMS(Model_Data_PMSM_S *md_l);
 //! declaration of external access to a function (*CalcSinCos[4])
