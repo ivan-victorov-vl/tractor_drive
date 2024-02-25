@@ -1,6 +1,6 @@
 //###########################################################################
 //
-// File: BaseDriveUsr.c
+// File: BaseDrive.c
 //
 // Title: Frequency converter control
 //
@@ -43,6 +43,8 @@ void PMSMotorFuncInit(Model_Data_PMSM_S *md_l, Settng_Data_PMSM_S *sd_l, Flg_Cnt
     md_l->udc.fl = 0;
     md_l->isnom.fl = 0;
     mf_l->bits_reg2.bits.wrk_drv=0;
+    mf_l->bits_reg2.bits.strt_drv=0;
+    mf_l->bits_reg2.bits.stp_drv=0;
 }
 
 /*!
@@ -96,12 +98,12 @@ void PMSMotorFuncTechSpec(Model_Data_PMSM_S *md_la, Flg_Cntrl_Drive_S *mf_la, Br
     // TODO Now kk_f_mul amplitude is not regulator. Please to do regulator to voltage or current
     md_la->k_reg_mul.fl = md_la->k_f_mul.fl;
     //! calculate phase with amplitude
-    md_la->uu.fl =  md_la->uu.fl * md_la->k_reg_mul.fl;
-    md_la->uv.fl =  md_la->uv.fl * md_la->k_reg_mul.fl;
-    md_la->uw.fl =  md_la->uw.fl * md_la->k_reg_mul.fl;
-    md_la->uu1.fl =  md_la->uu1.fl * md_la->k_reg_mul.fl;
-    md_la->uv1.fl =  md_la->uv1.fl * md_la->k_reg_mul.fl;
-    md_la->uv1.fl =  md_la->uw1.fl * md_la->k_reg_mul.fl;
+    md_la->uu.fl =  md_la->uu.fl * md_la->k_f_mul.fl;
+    md_la->uv.fl =  md_la->uv.fl * md_la->k_f_mul.fl;
+    md_la->uw.fl =  md_la->uw.fl * md_la->k_f_mul.fl;
+    md_la->uu1.fl =  md_la->uu1.fl * md_la->k_f_mul.fl;
+    md_la->uv1.fl =  md_la->uv1.fl * md_la->k_f_mul.fl;
+    md_la->uv1.fl =  md_la->uw1.fl * md_la->k_f_mul.fl;
 }
 
 /*!

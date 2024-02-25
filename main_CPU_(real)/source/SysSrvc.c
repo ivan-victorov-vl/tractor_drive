@@ -13,11 +13,14 @@
 #include "SysSrvc.h"
 
 void TimeDelaySys(float32 time_in_sec_l);
-void Init_GPIO_0_5_in_PWM(void);
 Uint16 HandlrBttn(Uint16 push_l);
 void LimitVar(float32 min_var, float32 max_var, float32 *var_lim);
 float32 FltrMas6Var(float32 cur_var, Uint16 *cur_mas, float32 *pmas_var);
 
+
+/*!
+    \brief Added system delay
+ */
 void TimeDelaySys(float32 time_in_sec_l) {
 	Uint32 a, i;
 
@@ -27,31 +30,9 @@ void TimeDelaySys(float32 time_in_sec_l) {
 	};
 }
 
-
-
-void Init_GPIO_0_5_in_PWM(void) {
-	EALLOW;
-
-	GpioCtrlRegs.GPAMUX1.bit.GPIO0 = 1;
-	GpioCtrlRegs.GPADIR.bit.GPIO0  = 1;
-
-	GpioCtrlRegs.GPAMUX1.bit.GPIO1 = 1;
-	GpioCtrlRegs.GPADIR.bit.GPIO1  = 1;
-
-	GpioCtrlRegs.GPAMUX1.bit.GPIO2 = 1;
-	GpioCtrlRegs.GPADIR.bit.GPIO2  = 1;
-
-	GpioCtrlRegs.GPAMUX1.bit.GPIO3 = 1;
-	GpioCtrlRegs.GPADIR.bit.GPIO3  = 1;
-
-	GpioCtrlRegs.GPAMUX1.bit.GPIO4 = 1;
-	GpioCtrlRegs.GPADIR.bit.GPIO4  = 1;
-
-	GpioCtrlRegs.GPAMUX1.bit.GPIO5 = 1;
-	GpioCtrlRegs.GPADIR.bit.GPIO5  = 1;
-	EDIS;
-}
-
+/*!
+    \brief Handler for button
+ */
 Uint16 HandlrBttn(Uint16 push_l) {
 	static Uint16 n_cnt_fltr = 0;
 	Uint16 FlgBttn = 0;
@@ -78,9 +59,8 @@ void LimitVar(float32 min_var, float32 max_var, float32 *var_lim) {
 	*var_lim = (*var_lim > max_var) ? max_var : *var_lim;
 }
 
-
 /*!
-    \brief Filter six values
+    \brief Filter 6 values
  */
 float32 FltrMas6Var(float32 cur_var, Uint16 *cur_mas, float32 *pmas_var) {
 	if (*cur_mas ==  6) *cur_mas = 0;

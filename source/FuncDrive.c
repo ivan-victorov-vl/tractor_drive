@@ -28,7 +28,6 @@ void SpeedRef(float32 k_f_mul_ref_lb, float32 k_f_mul_plus_lb, float32 k_f_mul_m
 float32 CalcLengthVect2In(float32 first_lb, float32 secnd_lb);
 float32 PI_Regltr(float32 cur_var_lb, float32 k_prprnl_lb, float32 k_integral_lb, float32 *integral_lb);
 float32 PID_Regltr(PID_Rgltr_S *v_pid_r_lb);
-
 void CalculateConditionPMS(Model_Data_PMSM_S *md_l);
 
 
@@ -129,7 +128,7 @@ float32 ApprdFltr(float32 first_var_lb, float32  Ti_apprd_lb, float32 *integr_lb
 }
 
 /*!
- *  \brief: calculation of variable value after PI regulator
+ *  \brief calculation of variable value after PI regulator
  */
 float32 PI_Regltr(float32 cur_var_lb, float32 k_prprnl_lb, float32 k_integral_lb, float32 *integral_lb) {
     //! calculation of the integral component of the pi controller
@@ -173,7 +172,7 @@ void Calc2To3Cos(float32 first_var_lb, float32 sec_var_lb, float32 *first_res_lb
 }
 
 /*!
- *  \brief: calculating the modulus of a vector by two input values
+ *  \brief calculating the modulus of a vector by two input values
  */
 float32 CalcLengthVect2In(float32 first_lb, float32 secnd_lb) {
     //! declaration of the variable len_vect_diskrf_lb

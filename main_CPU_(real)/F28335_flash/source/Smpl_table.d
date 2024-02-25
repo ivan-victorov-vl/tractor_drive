@@ -35,13 +35,11 @@ source/Smpl_table.obj: C:/Work/sespel/tractor_drive/include/MainModbus.h
 source/Smpl_table.obj: C:/Work/sespel/tractor_drive/include/MainCpuEpwm.h
 source/Smpl_table.obj: C:/Work/sespel/tractor_drive/include/BaseDriveUsr.h
 source/Smpl_table.obj: C:/Work/sespel/tractor_drive/include/MainCPU-Main_defs.h
-source/Smpl_table.obj: C:/Work/sespel/tractor_drive/include/LedIndicat.h
 source/Smpl_table.obj: C:/Work/sespel/tractor_drive/include/FuncDrive.h
 source/Smpl_table.obj: C:/Work/sespel/tractor_drive/include/MenuModbus.h
 source/Smpl_table.obj: C:/Work/sespel/tractor_drive/include/MainInit.h
 source/Smpl_table.obj: C:/Work/sespel/tractor_drive/include/MainSetting.h
 source/Smpl_table.obj: C:/Work/sespel/tractor_drive/include/MeasExtrnlDevice.h
-source/Smpl_table.obj: C:/Work/sespel/tractor_drive/include/MainLedIndctn.h
 
 ../source/Smpl_table.c: 
 C:/Work/sespel/tractor_drive/include/PeripheralHeaderIncludes.h: 
@@ -78,10 +76,8 @@ C:/Work/sespel/tractor_drive/include/MainModbus.h:
 C:/Work/sespel/tractor_drive/include/MainCpuEpwm.h: 
 C:/Work/sespel/tractor_drive/include/BaseDriveUsr.h: 
 C:/Work/sespel/tractor_drive/include/MainCPU-Main_defs.h: 
-C:/Work/sespel/tractor_drive/include/LedIndicat.h: 
 C:/Work/sespel/tractor_drive/include/FuncDrive.h: 
 C:/Work/sespel/tractor_drive/include/MenuModbus.h: 
 C:/Work/sespel/tractor_drive/include/MainInit.h: 
 C:/Work/sespel/tractor_drive/include/MainSetting.h: 
 C:/Work/sespel/tractor_drive/include/MeasExtrnlDevice.h: 
-C:/Work/sespel/tractor_drive/include/MainLedIndctn.h: 

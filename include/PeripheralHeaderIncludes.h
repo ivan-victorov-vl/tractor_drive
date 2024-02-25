@@ -170,8 +170,6 @@ typedef unsigned short 	Ushort;
 #include "MainCpuEpwm.h"
 //! include header file "MainCPU-Main_defs.h"
 #include "MainCPU-Main_defs.h"
-//! include header file "LedIndicat.h"
-#include "LedIndicat.h"
 //! include header file "MainModbus.h"
 #include "MainModbus.h"
 //! include header file "BaseDrive.h"
@@ -192,9 +190,6 @@ typedef unsigned short 	Ushort;
 #include "MainSetting.h"
 //! include header file "MeasExtrnlDevice.h"
 #include "MeasExtrnlDevice.h"
-//! include header file "MainLedIndctn.h"
-#include "MainLedIndctn.h"
-
 
 #ifdef __cplusplus
 }
