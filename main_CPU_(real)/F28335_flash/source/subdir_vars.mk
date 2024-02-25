@@ -23,7 +23,6 @@ C:/Work/sespel/tractor_drive/source/FuncDrive.c \
 ../source/MainCpuSci.c \
 ../source/MainCpuSpi.c \
 ../source/MainInit.c \
-../source/MainLedIndctn.c \
 C:/Work/sespel/tractor_drive/source/MainModbus.c \
 ../source/MainPanel.c \
 ../source/MainSetting.c \
@@ -47,7 +46,6 @@ C_DEPS += \
 ./source/MainCpuSci.d \
 ./source/MainCpuSpi.d \
 ./source/MainInit.d \
-./source/MainLedIndctn.d \
 ./source/MainModbus.d \
 ./source/MainPanel.d \
 ./source/MainSetting.d \
@@ -74,7 +72,6 @@ OBJS += \
 ./source/MainCpuSci.obj \
 ./source/MainCpuSpi.obj \
 ./source/MainInit.obj \
-./source/MainLedIndctn.obj \
 ./source/MainModbus.obj \
 ./source/MainPanel.obj \
 ./source/MainSetting.obj \
@@ -106,7 +103,6 @@ OBJS__QUOTED += \
 "source\MainCpuSci.obj" \
 "source\MainCpuSpi.obj" \
 "source\MainInit.obj" \
-"source\MainLedIndctn.obj" \
 "source\MainModbus.obj" \
 "source\MainPanel.obj" \
 "source\MainSetting.obj" \
@@ -130,7 +126,6 @@ C_DEPS__QUOTED += \
 "source\MainCpuSci.d" \
 "source\MainCpuSpi.d" \
 "source\MainInit.d" \
-"source\MainLedIndctn.d" \
 "source\MainModbus.d" \
 "source\MainPanel.d" \
 "source\MainSetting.d" \
@@ -159,7 +154,6 @@ C_SRCS__QUOTED += \
 "../source/MainCpuSci.c" \
 "../source/MainCpuSpi.c" \
 "../source/MainInit.c" \
-"../source/MainLedIndctn.c" \
 "C:/Work/sespel/tractor_drive/source/MainModbus.c" \
 "../source/MainPanel.c" \
 "../source/MainSetting.c" \

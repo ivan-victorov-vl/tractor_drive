@@ -95,9 +95,6 @@ void MainInit(void)
 	//! initialization of permanent magnet synchronous motor model
 	PMSMotorFuncInit(&data_pmsm.md, &data_pmsm.sd, &flags_drive);
 
-	//! set pins 0...5 to PWM mode
-	Init_GPIO_0_5_in_PWM();
-
 	//! ADC data update
 	AdcRegs.ADCTRL2.bit.SOC_SEQ1 = 1;
     AdcRegs.ADCTRL2.bit.SOC_SEQ2 = 1;

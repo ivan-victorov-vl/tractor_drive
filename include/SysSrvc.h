@@ -52,8 +52,6 @@
 //////////////// DECLARATION OF EXTERNAL ACCESS TO FUNCTIONS /////////////////////
 //! declaration of external access to the TimeDelay function
 extern void TimeDelaySys(float32 time_in_sec_l);
-//! declaration of external access to the Init_GPIO_0_5_in_PWM function
-extern void Init_GPIO_0_5_in_PWM(void);
 //! declaration of external access to the HandlrBttn function
 extern Uint16 HandlrBttn(Uint16 push_l);
 //! declaration of external access to the LimitVar function

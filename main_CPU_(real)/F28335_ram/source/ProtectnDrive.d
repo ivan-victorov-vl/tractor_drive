@@ -35,13 +35,11 @@ C:/Work/sespel/tractor_drive/RAM/ProtectnDrive.obj: C:/Work/sespel/tractor_drive
 C:/Work/sespel/tractor_drive/RAM/ProtectnDrive.obj: C:/Work/sespel/tractor_drive/include/MainCpuEpwm.h
 C:/Work/sespel/tractor_drive/RAM/ProtectnDrive.obj: C:/Work/sespel/tractor_drive/include/BaseDriveUsr.h
 C:/Work/sespel/tractor_drive/RAM/ProtectnDrive.obj: C:/Work/sespel/tractor_drive/include/MainCPU-Main_defs.h
-C:/Work/sespel/tractor_drive/RAM/ProtectnDrive.obj: C:/Work/sespel/tractor_drive/include/LedIndicat.h
 C:/Work/sespel/tractor_drive/RAM/ProtectnDrive.obj: C:/Work/sespel/tractor_drive/include/FuncDrive.h
 C:/Work/sespel/tractor_drive/RAM/ProtectnDrive.obj: C:/Work/sespel/tractor_drive/include/MenuModbus.h
 C:/Work/sespel/tractor_drive/RAM/ProtectnDrive.obj: C:/Work/sespel/tractor_drive/include/MainInit.h
 C:/Work/sespel/tractor_drive/RAM/ProtectnDrive.obj: C:/Work/sespel/tractor_drive/include/MainSetting.h
 C:/Work/sespel/tractor_drive/RAM/ProtectnDrive.obj: C:/Work/sespel/tractor_drive/include/MeasExtrnlDevice.h
-C:/Work/sespel/tractor_drive/RAM/ProtectnDrive.obj: C:/Work/sespel/tractor_drive/include/MainLedIndctn.h
 C:/Work/sespel/tractor_drive/RAM/ProtectnDrive.obj: C:/Work/sespel/tractor_drive/include/ProtectnDrive.h
 
 ../source/ProtectnDrive.c: 
@@ -79,11 +77,9 @@ C:/Work/sespel/tractor_drive/include/MainModbus.h:
 C:/Work/sespel/tractor_drive/include/MainCpuEpwm.h: 
 C:/Work/sespel/tractor_drive/include/BaseDriveUsr.h: 
 C:/Work/sespel/tractor_drive/include/MainCPU-Main_defs.h: 
-C:/Work/sespel/tractor_drive/include/LedIndicat.h: 
 C:/Work/sespel/tractor_drive/include/FuncDrive.h: 
 C:/Work/sespel/tractor_drive/include/MenuModbus.h: 
 C:/Work/sespel/tractor_drive/include/MainInit.h: 
 C:/Work/sespel/tractor_drive/include/MainSetting.h: 
 C:/Work/sespel/tractor_drive/include/MeasExtrnlDevice.h: 
-C:/Work/sespel/tractor_drive/include/MainLedIndctn.h: 
 C:/Work/sespel/tractor_drive/include/ProtectnDrive.h: 

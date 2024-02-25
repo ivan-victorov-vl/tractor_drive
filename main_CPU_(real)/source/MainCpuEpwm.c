@@ -13,10 +13,13 @@
 /////////////////////////// FUNCTION DECLARATION //////////////////////////////
 // function declaration InitEPwm_1_2_3_4_6_Timers
 void InitEPwm_1_2_3_4_5_6_Timers(Uint16 prd_epwm_1_2_3_4_5_6);
-// Handlr_ePwm function declaration
-void Handlr_ePwm(float32 *pbrws_var_l, Uint16 prd_div_2_epwm_dac_l, Uint16 prd_div_2_epwm_u_v_w_l, Model_Data_PMSM_S *md_motor_l);
+// function declaration Handlr_ePwm
+void Handlr_ePwm(float32 *pbrws_var_l, Uint16 prd_div_2_epwm_u_v_w_l, Model_Data_PMSM_S *md_motor_l);
 
 
+/*!
+     \brief Initialization timer for 1,2,3,4,5,6 ePWM value
+ */
 void InitEPwm_1_2_3_4_5_6_Timers(Uint16 prd_epwm_1_2_3_4_5_6) {
 	//! allow changes to forbidden registers
 	EALLOW;
@@ -113,7 +116,6 @@ void InitEPwm_1_2_3_4_5_6_Timers(Uint16 prd_epwm_1_2_3_4_5_6) {
 	EPwm2Regs.DBRED = 50;
 	//! set the effective value to low signal level
 	EPwm2Regs.CMPA.half.CMPA = 0;
-
 
 	//! PWM period selection
 	EPwm3Regs.TBPRD = prd_epwm_1_2_3_4_5_6;
@@ -266,7 +268,7 @@ void InitEPwm_1_2_3_4_5_6_Timers(Uint16 prd_epwm_1_2_3_4_5_6) {
 /*!
      \brief PWM value processing
  */
-void Handlr_ePwm(float32 *pbrws_var_l, Uint16 prd_div_2_epwm_dac_l, Uint16 prd_div_2_epwm_u_v_w_l, Model_Data_PMSM_S *md_motor_l) {
+void Handlr_ePwm(float32 *pbrws_var_l, Uint16 prd_div_2_epwm_u_v_w_l, Model_Data_PMSM_S *md_motor_l) {
 	//! set the PWM value for the phase u
 	EPwm1Regs.CMPA.half.CMPA = (Uint16)(( (md_motor_l->uu.fl) * (prd_div_2_epwm_u_v_w_l) ) + prd_div_2_epwm_u_v_w_l);
 	//! set the PWM'a value for phase v

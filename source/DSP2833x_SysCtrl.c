@@ -1,5 +1,5 @@
 // TI File $Revision: /main/8 $
-// Checkin $Date: April 15, 2009   09:54:05 $
+// Checking $Date: April 15, 2009   09:54:05 $
 //###########################################################################
 //
 // FILE:   DSP2833x_SysCtrl.c
@@ -284,63 +284,50 @@ void	GpioConf(void)
 //!  GPIO-00 - PIN FUNCTION (EPWM1A)
 		GpioCtrlRegs.GPAMUX1.bit.GPIO0  =  1; 				// 0=GPIO,  1=EPWM1A,  2=Resv,  3=Resv
 		GpioCtrlRegs.GPADIR.bit.GPIO0   =  1; 				// 1=OUTput,  0=INput 
-        GpioDataRegs.GPACLEAR.bit.GPIO0   =  1;              // uncomment if --> Set Low initially
-
 
 //!  GPIO-01 - PIN FUNCTION (EPWM1B)
 		GpioCtrlRegs.GPAMUX1.bit.GPIO1  =  1; 				// 0=GPIO,  1=EPWM1B,  2=ECAP6,  3=MFSR-B
 		GpioCtrlRegs.GPADIR.bit.GPIO1   =  1; 				// 1=OUTput,  0=INput 
-        GpioDataRegs.GPACLEAR.bit.GPIO1   =  1;              // uncomment if --> Set Low initially
 
 //!  GPIO-02 - PIN FUNCTION (EPWM2A)
 		GpioCtrlRegs.GPAMUX1.bit.GPIO2  =  1; 				// 0=GPIO,  1=EPWM2A,  2=Resv,  3=Resv
 		GpioCtrlRegs.GPADIR.bit.GPIO2   =  1; 				// 1=OUTput,  0=INput 
-        GpioDataRegs.GPACLEAR.bit.GPIO2   =  1;              // uncomment if --> Set Low initially
 
 //!  GPIO-03 - PIN FUNCTION (EPWM2B)
 		GpioCtrlRegs.GPAMUX1.bit.GPIO3  =  1; 				// 0=GPIO,  1=EPWM2B,  2=ECAP5,  3=MCLKR-B
 		GpioCtrlRegs.GPADIR.bit.GPIO3   =  1; 				// 1=OUTput,  0=INput 
-        GpioDataRegs.GPACLEAR.bit.GPIO3   =  1;              // uncomment if --> Set Low initially
 
 //!  GPIO-04 - PIN FUNCTION (EPWM3A)
 		GpioCtrlRegs.GPAMUX1.bit.GPIO4  =  1; 				// 0=GPIO,  1=EPWM3A,  2=Resv,  3=Resv
 		GpioCtrlRegs.GPADIR.bit.GPIO4   =  1; 				// 1=OUTput,  0=INput 
-        GpioDataRegs.GPACLEAR.bit.GPIO4   =  1;              // uncomment if --> Set Low initially
 
 //!  GPIO-05 - PIN FUNCTION (EPWM3B)
 		GpioCtrlRegs.GPAMUX1.bit.GPIO5  = 	1; 				// 0=GPIO,  1=EPWM3B,  2=MFSR-A,  3=ECAP1
 		GpioCtrlRegs.GPADIR.bit.GPIO5   = 	1; 				// 1=OUTput,  0=INput 
-        GpioDataRegs.GPACLEAR.bit.GPIO5   =  1;              // uncomment if --> Set Low initially
 
 //!  GPIO-06 - PIN FUNCTION (EPWM4A)
 		GpioCtrlRegs.GPAMUX1.bit.GPIO6  = 	1; 				// 0=GPIO,  1=EPWM4A,  2=SYNCI,  3=SYNCO
 		GpioCtrlRegs.GPADIR.bit.GPIO6   = 	1; 				// 1=OUTput,  0=INput 
-        GpioDataRegs.GPACLEAR.bit.GPIO6   =  1;              // uncomment if --> Set Low initially
 
 //!  GPIO-07 - PIN FUNCTION (EPWM4B)
 		GpioCtrlRegs.GPAMUX1.bit.GPIO7  = 	1; 				// 0=GPIO,  1=EPWM4B,  2=MCLKR-A,  3=ECAP2
 		GpioCtrlRegs.GPADIR.bit.GPIO7   = 	1; 				// 1=OUTput,  0=INput 
-        GpioDataRegs.GPACLEAR.bit.GPIO7   =  1;              // uncomment if --> Set Low initially
 
 //!  GPIO-08 - PIN FUNCTION (EPWM5A)
 		GpioCtrlRegs.GPAMUX1.bit.GPIO8  = 	1; 				// 0=GPIO,  1=EPWM5A,  2=CANTX-B,  3=ADCSOC-A
 		GpioCtrlRegs.GPADIR.bit.GPIO8   = 	1; 				// 1=OUTput,  0=INput 
-        GpioDataRegs.GPACLEAR.bit.GPIO8   =  1;              // uncomment if --> Set Low initially
 
 //!  GPIO-09 - PIN FUNCTION (EPWM5B)
 		GpioCtrlRegs.GPAMUX1.bit.GPIO9  = 	1; 				// 0=GPIO,  1=EPWM5B,  2=SCITX-B,  3=ECAP3
 		GpioCtrlRegs.GPADIR.bit.GPIO9   = 	1; 				// 1=OUTput,  0=INput 
-        GpioDataRegs.GPACLEAR.bit.GPIO9   =  1;              // uncomment if --> Set Low initially
 
 //!  GPIO-10 - PIN FUNCTION (EPWM6A)
 		GpioCtrlRegs.GPAMUX1.bit.GPIO10  = 	1; 				// 0=GPIO,  1=EPWM6A,  2=CANRX-B,  3=ADCSOC-B
 		GpioCtrlRegs.GPADIR.bit.GPIO10   = 	1; 				// 1=OUTput,  0=INput 
-        GpioDataRegs.GPACLEAR.bit.GPIO10   =  1;              // uncomment if --> Set Low initially
 
 //!  GPIO-11 - PIN FUNCTION (EPWM6B)
 		GpioCtrlRegs.GPAMUX1.bit.GPIO11  = 	1; 				// 0=GPIO,  1=EPWM6B,  2=SCIRX-B,  3=ECAP4
 		GpioCtrlRegs.GPADIR.bit.GPIO11   = 	1; 				// 1=OUTput,  0=INput 
-        GpioDataRegs.GPACLEAR.bit.GPIO11   =  1;              // uncomment if --> Set Low initially
 
 //!  GPIO-12 - PIN FUNCTION (Err IGBT1.1)
 		GpioCtrlRegs.GPAMUX1.bit.GPIO12  = 	0; 				// 0=GPIO,  1=TZ1,  2=CANTX-B,  3=MDX-B
