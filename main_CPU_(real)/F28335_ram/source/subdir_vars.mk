@@ -6,26 +6,26 @@ SHELL = cmd.exe
 
 # Add inputs and outputs from these tool invocations to the build variables 
 ASM_SRCS += \
-C:/Work/sespel/tractor_drive/source/DSP2833x_ADC_cal.asm \
-C:/Work/sespel/tractor_drive/source/DSP2833x_CodeStartBranch.asm 
+C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/source/DSP2833x_ADC_cal.asm \
+C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/source/DSP2833x_CodeStartBranch.asm 
 
 C_SRCS += \
 ../source/BaseDrive.c \
-C:/Work/sespel/tractor_drive/source/DSP2833x_DefaultIsr.c \
-C:/Work/sespel/tractor_drive/source/DSP2833x_GlobalVariableDefs.c \
-C:/Work/sespel/tractor_drive/source/DSP2833x_PieCtrl.c \
-C:/Work/sespel/tractor_drive/source/DSP2833x_PieVect.c \
-C:/Work/sespel/tractor_drive/source/DSP2833x_SysCtrl.c \
-C:/Work/sespel/tractor_drive/source/FuncDrive.c \
+C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/source/DSP2833x_DefaultIsr.c \
+C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/source/DSP2833x_GlobalVariableDefs.c \
+C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/source/DSP2833x_PieCtrl.c \
+C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/source/DSP2833x_PieVect.c \
+C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/source/DSP2833x_SysCtrl.c \
+C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/source/FuncDrive.c \
 ../source/MainCpuAdc.c \
 ../source/MainCpuEpwm.c \
 ../source/MainCpuSci.c \
 ../source/MainCpuSpi.c \
 ../source/MainInit.c \
-C:/Work/sespel/tractor_drive/source/MainModbus.c \
+C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/source/MainModbus.c \
 ../source/MainPanel.c \
 ../source/MainSetting.c \
-C:/Work/sespel/tractor_drive/source/Main_CPU_CpuTimers.c \
+C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/source/Main_CPU_CpuTimers.c \
 ../source/MeasExtrnlDevice.c \
 ../source/MenuModbus.c \
 ../source/ProtectnDrive.c \
@@ -56,58 +56,58 @@ C_DEPS += \
 ./source/SysSrvc.d 
 
 OBJS += \
-C:/Work/sespel/tractor_drive/RAM/BaseDrive.obj \
-C:/Work/sespel/tractor_drive/RAM/DSP2833x_ADC_cal.obj \
-C:/Work/sespel/tractor_drive/RAM/DSP2833x_CodeStartBranch.obj \
-C:/Work/sespel/tractor_drive/RAM/DSP2833x_DefaultIsr.obj \
-C:/Work/sespel/tractor_drive/RAM/DSP2833x_GlobalVariableDefs.obj \
-C:/Work/sespel/tractor_drive/RAM/DSP2833x_PieCtrl.obj \
-C:/Work/sespel/tractor_drive/RAM/DSP2833x_PieVect.obj \
-C:/Work/sespel/tractor_drive/RAM/DSP2833x_SysCtrl.obj \
-C:/Work/sespel/tractor_drive/RAM/FuncDrive.obj \
-C:/Work/sespel/tractor_drive/RAM/MainCpuAdc.obj \
-C:/Work/sespel/tractor_drive/RAM/MainCpuEpwm.obj \
-C:/Work/sespel/tractor_drive/RAM/MainCpuSci.obj \
-C:/Work/sespel/tractor_drive/RAM/MainCpuSpi.obj \
-C:/Work/sespel/tractor_drive/RAM/MainInit.obj \
-C:/Work/sespel/tractor_drive/RAM/MainModbus.obj \
-C:/Work/sespel/tractor_drive/RAM/MainPanel.obj \
-C:/Work/sespel/tractor_drive/RAM/MainSetting.obj \
-C:/Work/sespel/tractor_drive/RAM/Main_CPU_CpuTimers.obj \
-C:/Work/sespel/tractor_drive/RAM/MeasExtrnlDevice.obj \
-C:/Work/sespel/tractor_drive/RAM/MenuModbus.obj \
-C:/Work/sespel/tractor_drive/RAM/ProtectnDrive.obj \
-C:/Work/sespel/tractor_drive/RAM/Smpl_table.obj \
-C:/Work/sespel/tractor_drive/RAM/SysSrvc.obj 
+C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/RAM/BaseDrive.obj \
+C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/RAM/DSP2833x_ADC_cal.obj \
+C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/RAM/DSP2833x_CodeStartBranch.obj \
+C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/RAM/DSP2833x_DefaultIsr.obj \
+C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/RAM/DSP2833x_GlobalVariableDefs.obj \
+C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/RAM/DSP2833x_PieCtrl.obj \
+C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/RAM/DSP2833x_PieVect.obj \
+C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/RAM/DSP2833x_SysCtrl.obj \
+C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/RAM/FuncDrive.obj \
+C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/RAM/MainCpuAdc.obj \
+C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/RAM/MainCpuEpwm.obj \
+C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/RAM/MainCpuSci.obj \
+C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/RAM/MainCpuSpi.obj \
+C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/RAM/MainInit.obj \
+C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/RAM/MainModbus.obj \
+C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/RAM/MainPanel.obj \
+C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/RAM/MainSetting.obj \
+C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/RAM/Main_CPU_CpuTimers.obj \
+C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/RAM/MeasExtrnlDevice.obj \
+C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/RAM/MenuModbus.obj \
+C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/RAM/ProtectnDrive.obj \
+C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/RAM/Smpl_table.obj \
+C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/RAM/SysSrvc.obj 
 
 ASM_DEPS += \
 ./source/DSP2833x_ADC_cal.d \
 ./source/DSP2833x_CodeStartBranch.d 
 
 OBJS__QUOTED += \
-"C:\Work\sespel\tractor_drive\RAM\BaseDrive.obj" \
-"C:\Work\sespel\tractor_drive\RAM\DSP2833x_ADC_cal.obj" \
-"C:\Work\sespel\tractor_drive\RAM\DSP2833x_CodeStartBranch.obj" \
-"C:\Work\sespel\tractor_drive\RAM\DSP2833x_DefaultIsr.obj" \
-"C:\Work\sespel\tractor_drive\RAM\DSP2833x_GlobalVariableDefs.obj" \
-"C:\Work\sespel\tractor_drive\RAM\DSP2833x_PieCtrl.obj" \
-"C:\Work\sespel\tractor_drive\RAM\DSP2833x_PieVect.obj" \
-"C:\Work\sespel\tractor_drive\RAM\DSP2833x_SysCtrl.obj" \
-"C:\Work\sespel\tractor_drive\RAM\FuncDrive.obj" \
-"C:\Work\sespel\tractor_drive\RAM\MainCpuAdc.obj" \
-"C:\Work\sespel\tractor_drive\RAM\MainCpuEpwm.obj" \
-"C:\Work\sespel\tractor_drive\RAM\MainCpuSci.obj" \
-"C:\Work\sespel\tractor_drive\RAM\MainCpuSpi.obj" \
-"C:\Work\sespel\tractor_drive\RAM\MainInit.obj" \
-"C:\Work\sespel\tractor_drive\RAM\MainModbus.obj" \
-"C:\Work\sespel\tractor_drive\RAM\MainPanel.obj" \
-"C:\Work\sespel\tractor_drive\RAM\MainSetting.obj" \
-"C:\Work\sespel\tractor_drive\RAM\Main_CPU_CpuTimers.obj" \
-"C:\Work\sespel\tractor_drive\RAM\MeasExtrnlDevice.obj" \
-"C:\Work\sespel\tractor_drive\RAM\MenuModbus.obj" \
-"C:\Work\sespel\tractor_drive\RAM\ProtectnDrive.obj" \
-"C:\Work\sespel\tractor_drive\RAM\Smpl_table.obj" \
-"C:\Work\sespel\tractor_drive\RAM\SysSrvc.obj" 
+"C:\Users\Lenovo\programs\TMS320F28335\tractor_drive\RAM\BaseDrive.obj" \
+"C:\Users\Lenovo\programs\TMS320F28335\tractor_drive\RAM\DSP2833x_ADC_cal.obj" \
+"C:\Users\Lenovo\programs\TMS320F28335\tractor_drive\RAM\DSP2833x_CodeStartBranch.obj" \
+"C:\Users\Lenovo\programs\TMS320F28335\tractor_drive\RAM\DSP2833x_DefaultIsr.obj" \
+"C:\Users\Lenovo\programs\TMS320F28335\tractor_drive\RAM\DSP2833x_GlobalVariableDefs.obj" \
+"C:\Users\Lenovo\programs\TMS320F28335\tractor_drive\RAM\DSP2833x_PieCtrl.obj" \
+"C:\Users\Lenovo\programs\TMS320F28335\tractor_drive\RAM\DSP2833x_PieVect.obj" \
+"C:\Users\Lenovo\programs\TMS320F28335\tractor_drive\RAM\DSP2833x_SysCtrl.obj" \
+"C:\Users\Lenovo\programs\TMS320F28335\tractor_drive\RAM\FuncDrive.obj" \
+"C:\Users\Lenovo\programs\TMS320F28335\tractor_drive\RAM\MainCpuAdc.obj" \
+"C:\Users\Lenovo\programs\TMS320F28335\tractor_drive\RAM\MainCpuEpwm.obj" \
+"C:\Users\Lenovo\programs\TMS320F28335\tractor_drive\RAM\MainCpuSci.obj" \
+"C:\Users\Lenovo\programs\TMS320F28335\tractor_drive\RAM\MainCpuSpi.obj" \
+"C:\Users\Lenovo\programs\TMS320F28335\tractor_drive\RAM\MainInit.obj" \
+"C:\Users\Lenovo\programs\TMS320F28335\tractor_drive\RAM\MainModbus.obj" \
+"C:\Users\Lenovo\programs\TMS320F28335\tractor_drive\RAM\MainPanel.obj" \
+"C:\Users\Lenovo\programs\TMS320F28335\tractor_drive\RAM\MainSetting.obj" \
+"C:\Users\Lenovo\programs\TMS320F28335\tractor_drive\RAM\Main_CPU_CpuTimers.obj" \
+"C:\Users\Lenovo\programs\TMS320F28335\tractor_drive\RAM\MeasExtrnlDevice.obj" \
+"C:\Users\Lenovo\programs\TMS320F28335\tractor_drive\RAM\MenuModbus.obj" \
+"C:\Users\Lenovo\programs\TMS320F28335\tractor_drive\RAM\ProtectnDrive.obj" \
+"C:\Users\Lenovo\programs\TMS320F28335\tractor_drive\RAM\Smpl_table.obj" \
+"C:\Users\Lenovo\programs\TMS320F28335\tractor_drive\RAM\SysSrvc.obj" 
 
 C_DEPS__QUOTED += \
 "source\BaseDrive.d" \
@@ -138,21 +138,21 @@ ASM_DEPS__QUOTED += \
 
 C_SRCS__QUOTED += \
 "../source/BaseDrive.c" \
-"C:/Work/sespel/tractor_drive/source/DSP2833x_DefaultIsr.c" \
-"C:/Work/sespel/tractor_drive/source/DSP2833x_GlobalVariableDefs.c" \
-"C:/Work/sespel/tractor_drive/source/DSP2833x_PieCtrl.c" \
-"C:/Work/sespel/tractor_drive/source/DSP2833x_PieVect.c" \
-"C:/Work/sespel/tractor_drive/source/DSP2833x_SysCtrl.c" \
-"C:/Work/sespel/tractor_drive/source/FuncDrive.c" \
+"C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/source/DSP2833x_DefaultIsr.c" \
+"C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/source/DSP2833x_GlobalVariableDefs.c" \
+"C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/source/DSP2833x_PieCtrl.c" \
+"C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/source/DSP2833x_PieVect.c" \
+"C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/source/DSP2833x_SysCtrl.c" \
+"C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/source/FuncDrive.c" \
 "../source/MainCpuAdc.c" \
 "../source/MainCpuEpwm.c" \
 "../source/MainCpuSci.c" \
 "../source/MainCpuSpi.c" \
 "../source/MainInit.c" \
-"C:/Work/sespel/tractor_drive/source/MainModbus.c" \
+"C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/source/MainModbus.c" \
 "../source/MainPanel.c" \
 "../source/MainSetting.c" \
-"C:/Work/sespel/tractor_drive/source/Main_CPU_CpuTimers.c" \
+"C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/source/Main_CPU_CpuTimers.c" \
 "../source/MeasExtrnlDevice.c" \
 "../source/MenuModbus.c" \
 "../source/ProtectnDrive.c" \
@@ -160,7 +160,7 @@ C_SRCS__QUOTED += \
 "../source/SysSrvc.c" 
 
 ASM_SRCS__QUOTED += \
-"C:/Work/sespel/tractor_drive/source/DSP2833x_ADC_cal.asm" \
-"C:/Work/sespel/tractor_drive/source/DSP2833x_CodeStartBranch.asm" 
+"C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/source/DSP2833x_ADC_cal.asm" \
+"C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/source/DSP2833x_CodeStartBranch.asm" 
 
 
