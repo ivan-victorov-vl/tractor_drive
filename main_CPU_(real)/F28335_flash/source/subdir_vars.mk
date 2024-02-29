@@ -6,27 +6,27 @@ SHELL = cmd.exe
 
 # Add inputs and outputs from these tool invocations to the build variables 
 ASM_SRCS += \
-C:/Work/sespel/tractor_drive/source/DSP2833x_ADC_cal.asm \
-C:/Work/sespel/tractor_drive/source/DSP28xxx_CodeStartBranch_for_flash.asm \
-C:/Work/sespel/tractor_drive/source/DSP28xxx_SectionCopy_nonBIOS.asm 
+C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/source/DSP2833x_ADC_cal.asm \
+C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/source/DSP28xxx_CodeStartBranch_for_flash.asm \
+C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/source/DSP28xxx_SectionCopy_nonBIOS.asm 
 
 C_SRCS += \
 ../source/BaseDrive.c \
-C:/Work/sespel/tractor_drive/source/DSP2833x_DefaultIsr.c \
-C:/Work/sespel/tractor_drive/source/DSP2833x_GlobalVariableDefs.c \
-C:/Work/sespel/tractor_drive/source/DSP2833x_PieCtrl.c \
-C:/Work/sespel/tractor_drive/source/DSP2833x_PieVect.c \
-C:/Work/sespel/tractor_drive/source/DSP2833x_SysCtrl.c \
-C:/Work/sespel/tractor_drive/source/FuncDrive.c \
+C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/source/DSP2833x_DefaultIsr.c \
+C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/source/DSP2833x_GlobalVariableDefs.c \
+C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/source/DSP2833x_PieCtrl.c \
+C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/source/DSP2833x_PieVect.c \
+C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/source/DSP2833x_SysCtrl.c \
+C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/source/FuncDrive.c \
 ../source/MainCpuAdc.c \
 ../source/MainCpuEpwm.c \
 ../source/MainCpuSci.c \
 ../source/MainCpuSpi.c \
 ../source/MainInit.c \
-C:/Work/sespel/tractor_drive/source/MainModbus.c \
+C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/source/MainModbus.c \
 ../source/MainPanel.c \
 ../source/MainSetting.c \
-C:/Work/sespel/tractor_drive/source/Main_CPU_CpuTimers.c \
+C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/source/Main_CPU_CpuTimers.c \
 ../source/MeasExtrnlDevice.c \
 ../source/MenuModbus.c \
 ../source/ProtectnDrive.c \
@@ -143,21 +143,21 @@ ASM_DEPS__QUOTED += \
 
 C_SRCS__QUOTED += \
 "../source/BaseDrive.c" \
-"C:/Work/sespel/tractor_drive/source/DSP2833x_DefaultIsr.c" \
-"C:/Work/sespel/tractor_drive/source/DSP2833x_GlobalVariableDefs.c" \
-"C:/Work/sespel/tractor_drive/source/DSP2833x_PieCtrl.c" \
-"C:/Work/sespel/tractor_drive/source/DSP2833x_PieVect.c" \
-"C:/Work/sespel/tractor_drive/source/DSP2833x_SysCtrl.c" \
-"C:/Work/sespel/tractor_drive/source/FuncDrive.c" \
+"C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/source/DSP2833x_DefaultIsr.c" \
+"C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/source/DSP2833x_GlobalVariableDefs.c" \
+"C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/source/DSP2833x_PieCtrl.c" \
+"C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/source/DSP2833x_PieVect.c" \
+"C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/source/DSP2833x_SysCtrl.c" \
+"C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/source/FuncDrive.c" \
 "../source/MainCpuAdc.c" \
 "../source/MainCpuEpwm.c" \
 "../source/MainCpuSci.c" \
 "../source/MainCpuSpi.c" \
 "../source/MainInit.c" \
-"C:/Work/sespel/tractor_drive/source/MainModbus.c" \
+"C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/source/MainModbus.c" \
 "../source/MainPanel.c" \
 "../source/MainSetting.c" \
-"C:/Work/sespel/tractor_drive/source/Main_CPU_CpuTimers.c" \
+"C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/source/Main_CPU_CpuTimers.c" \
 "../source/MeasExtrnlDevice.c" \
 "../source/MenuModbus.c" \
 "../source/ProtectnDrive.c" \
@@ -165,8 +165,8 @@ C_SRCS__QUOTED += \
 "../source/SysSrvc.c" 
 
 ASM_SRCS__QUOTED += \
-"C:/Work/sespel/tractor_drive/source/DSP2833x_ADC_cal.asm" \
-"C:/Work/sespel/tractor_drive/source/DSP28xxx_CodeStartBranch_for_flash.asm" \
-"C:/Work/sespel/tractor_drive/source/DSP28xxx_SectionCopy_nonBIOS.asm" 
+"C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/source/DSP2833x_ADC_cal.asm" \
+"C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/source/DSP28xxx_CodeStartBranch_for_flash.asm" \
+"C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/source/DSP28xxx_SectionCopy_nonBIOS.asm" 
 
 

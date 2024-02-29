@@ -6,7 +6,7 @@ SHELL = cmd.exe
 
 # Add inputs and outputs from these tool invocations to the build variables 
 LIB_SRCS += \
-C:/Work/sespel/tractor_drive/lib/rts2800_fpu32.lib 
+C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/lib/rts2800_fpu32.lib 
 
 EXE_OUTPUTS += \
 ./lib/rts2800_fpu32.exe 
