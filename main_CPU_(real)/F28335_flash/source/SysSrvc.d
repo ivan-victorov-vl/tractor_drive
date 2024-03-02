@@ -33,7 +33,6 @@ source/SysSrvc.obj: C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/include/
 source/SysSrvc.obj: C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/include/MainCpuSci.h
 source/SysSrvc.obj: C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/include/MainModbus.h
 source/SysSrvc.obj: C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/include/MainCpuEpwm.h
-source/SysSrvc.obj: C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/include/BaseDriveUsr.h
 source/SysSrvc.obj: C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/include/MainCPU-Main_defs.h
 source/SysSrvc.obj: C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/include/FuncDrive.h
 source/SysSrvc.obj: C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/include/MenuModbus.h
@@ -74,7 +73,6 @@ C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/include/MainCpuSpi.h:
 C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/include/MainCpuSci.h: 
 C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/include/MainModbus.h: 
 C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/include/MainCpuEpwm.h: 
-C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/include/BaseDriveUsr.h: 
 C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/include/MainCPU-Main_defs.h: 
 C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/include/FuncDrive.h: 
 C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/include/MenuModbus.h: 

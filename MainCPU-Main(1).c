@@ -68,6 +68,9 @@ interrupt void cpu_timer0_isr(void) {
 	//! conversion of phase ePwm from relative view to processor PWM view
 	Handlr_ePwm(brwsr.pbrws, PWM_OUT_PHASE_DIV_2, &data_pmsm.md);
 
+	//! handler freeze protection
+	HandlerFreezeProtection();
+
 	//! TODO for Debug
 	//CalculateConditionPMS(&data_pmsm.md);
     PieCtrlRegs.PIEACK.all = PIEACK_GROUP1;

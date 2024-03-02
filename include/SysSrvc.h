@@ -11,7 +11,6 @@
 #ifndef SYSSRVC_H_
 #define SYSSRVC_H_
 
-
 ////////////////////// DECLARATION OF NAMED CONSTANTS //////////////////////
 // processor frequency in Hz
 #define FRQ_HZ_PRCSR	150000000
@@ -47,7 +46,10 @@
 #define GET_DIN_3_STOP_BUTTON GpioDataRegs.GPCDAT.bit.GPIO73
 //! define D_in_4 "RESET" button
 #define GET_DIN_4_RESET_BUTTON GpioDataRegs.GPCDAT.bit.GPIO72
-
+//! define freeze protection on
+#define FREEZE_PROTECTION_ON GpioDataRegs.GPBSET.bit.GPIO58 = 1
+//! define freze protection off
+#define FREEZE_PROTECTION_OFF GpioDataRegs.GPBCLEAR.bit.GPIO58 = 1
 
 //////////////// DECLARATION OF EXTERNAL ACCESS TO FUNCTIONS /////////////////////
 //! declaration of external access to the TimeDelay function
