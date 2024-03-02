@@ -10,12 +10,6 @@
 #ifndef MAINCPUEPWM_H
 #define MAINCPUEPWM_H
 
-
-////////////////////// INCLUDE HEADER FILE //////////////////////
-//! include header file "BaseDriveUsr.h"
-#include "BaseDriveUsr.h"
-
-
 //////////////// DECLARATION OF EXTERNAL ACCESS TO FUNCTIONS /////////////////////
 //! declaration of external access to a function InitEPwm_1_2_3_4_5_6_Timers
 extern void InitEPwm_1_2_3_4_5_6_Timers(Uint16 prd_epwm_1_2_3_4_5_6);

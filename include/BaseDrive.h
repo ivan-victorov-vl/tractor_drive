@@ -34,8 +34,6 @@
 #define T_DFRNTNL_PSTN	99999999999
 //! Minimum transition angle
 #define MIN_CROSS_ANGLE 10
-//! Model with intensity setter
-//#define MODEL_INTENSITY_SET TRUE_VAL
 
 
 ///////////////////////////  MACROSUBSTITUTION ///////////////////////////////
@@ -77,8 +75,7 @@
 /*!
  * \brief PID controller structure
  */
-typedef struct
-{
+typedef struct {
     //! current variable
     B32_Numb_S cur_var;
     //! previous variable
@@ -102,8 +99,7 @@ typedef struct
 /*
  * \brief Inverter model parameter group
  */
-typedef struct
-{
+typedef struct {
 	//! set frequency
 	B32_Numb_S k_f_mul_ref;
 	//! current motor speed
@@ -189,8 +185,7 @@ typedef struct
 /*
  * \brief Setting data of the frequency inverter
  */
-typedef struct
-{
+typedef struct {
     //! time of frequency acceleration from 0 to nominal value in sec.
     B32_Numb_S accel_sec_up;
     //! time of frequency deceleration from nominal value to 0 in sec.
@@ -226,8 +221,7 @@ typedef struct
 /*!
  * \brief Control and setting data of the frequency inverter
  */
-typedef struct
-{
+typedef struct {
     //! frequency converter control model data
 	Model_Data_PMSM_S md;
 	//! setting data of the frequency converter control model
@@ -237,8 +231,7 @@ typedef struct
 /*!
  * \brief Data for viewing the dynamic parameters of the frequency inverter
  */
-typedef struct
-{
+typedef struct {
     //! frequency converter control error
     B32_Numb_S sub_theta_md;
     //! frequency converter rotor position
@@ -265,4 +258,6 @@ extern void PMSMotorFuncSensorless(Model_Data_PMSM_S *md_la, Flg_Cntrl_Drive_S *
 extern void CntrlDrive(Model_Data_PMSM_S *md_l, Settng_Data_PMSM_S *sd_l, Flg_Cntrl_Drive_S *mf_l, Brws_Param_Drive *bpd_l);
 //! declaration of external access to a function CntrlDrive
 extern void HandlerExternalButtons(Flg_Cntrl_Drive_S *mf_l);
+//! declaration of external access to a function HandlerFreezeProtection
+extern void HandlerFreezeProtection();
 #endif

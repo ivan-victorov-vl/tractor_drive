@@ -203,3 +203,17 @@ void HandlerExternalButtons(Flg_Cntrl_Drive_S *mf_l) {
     //! getting "reset" data button
     mf_l->bits_reg2.bits.reset_drv = GpioDataRegs.GPCDAT.bit.GPIO72;
 }
+
+/*!
+ * \brief handler for freeze protection
+ */
+void HandlerFreezeProtection() {
+    static Uint16 freezeCondition = 0;
+
+    //! switch pin GPIO58
+    (freezeCondition) ? (FREEZE_PROTECTION_ON) : (FREEZE_PROTECTION_OFF);
+    //! set value freeCondition
+    freezeCondition = freezeCondition ? 0 : 1;
+}
+
+
