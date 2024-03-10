@@ -120,7 +120,7 @@ void SpeedRef(float32 k_f_mul_ref_lb, float32 k_f_mul_plus_lb, float32 k_f_mul_m
 }
 
 /*!
-    \brief apperiodic filter
+    \brief aperiodic filter
 */
 float32 ApprdFltr(float32 first_var_lb, float32  Ti_apprd_lb, float32 *integr_lb) {
 	*integr_lb += (Ti_apprd_lb * (first_var_lb - *integr_lb));

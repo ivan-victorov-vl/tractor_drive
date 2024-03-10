@@ -26,6 +26,10 @@ extern void InitPieVectTable(void);
 extern void InitFlash();
 //! function declaration InitPieCtrl
 extern void InitPieCtrl(void);
+////! function declaration interrupt cpu_timer0_is
+//extern interrupt void cpu_timer0_isr(void);
+////! function declaration interrupt xint3_isr
+//extern interrupt void xint1_isr(void);
 
 
 /*!
@@ -55,7 +59,9 @@ void MainInit(void)
 	//! allow changes to forbidden registers
 	EALLOW;
 	//! setting the cpu_timer_0 interrupt
-	PieVectTable.TINT0 = &cpu_timer0_isr;
+	PieVectTable.TINT0 = &TINT0_ISR;
+    //! setting the xint3 (external interrupt for pin) interrupt
+	PieVectTable.XINT3 = &XINT3_ISR;
 	//! unmodify forbidden registers
 	EDIS;
 
@@ -78,11 +84,14 @@ void MainInit(void)
 	AdcInitDrive();
 
 	//! CPU interrupt resolution
-	 CpuTimer0Regs.TCR.all = 0x4000;
+	CpuTimer0Regs.TCR.all = 0x4000;
 	//! set interrupt M_INT1
 	IER |= M_INT1;
+    IER |= M_INT12;
 	//! CPU_TIMER_0
 	PieCtrlRegs.PIEIER1.bit.INTx7 = 1;
+    //! Enable PIE Group 1 INT4
+	PieCtrlRegs.PIEIER12.bit.INTx1 = 1;
 
 	//! global interrupt resolution and real-time debugging of high-priority interrupts:
 	//! resolution of global INTM interrupts
@@ -99,4 +108,19 @@ void MainInit(void)
 	//! ADC data update
 	AdcRegs.ADCTRL2.bit.SOC_SEQ1 = 1;
     AdcRegs.ADCTRL2.bit.SOC_SEQ2 = 1;
+
+
+    //! configuring interrupt handling functions:
+    //! allow changes to forbidden registers
+    EALLOW;
+    //! Xint3 is GPIO62
+    GpioIntRegs.GPIOXINT3SEL.bit.GPIOSEL = 30;
+    //! unmodify forbidden registers
+    EDIS;
+
+    // Configure XINT3 (Falling edge interrupt)
+    XIntruptRegs.XINT3CR.bit.POLARITY = 0;
+
+    //! Enable XINT3
+    XIntruptRegs.XINT3CR.bit.ENABLE = 1;
 }

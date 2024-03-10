@@ -572,7 +572,8 @@ void	GpioConf(void)
 
 //!  GPIO-62 - PIN FUNCTION (Hall pulse 1.0)
 		GpioCtrlRegs.GPBMUX2.bit.GPIO62  = 	0; 				// 0=GPIO,  1=SCIRX-C,  2=XD17,  3=Resv
-		GpioCtrlRegs.GPBDIR.bit.GPIO62   = 	0; 				// 1=OUTput,  0=INput 
+		GpioCtrlRegs.GPBDIR.bit.GPIO62   = 	0; 				// 1=OUTput,  0=INput
+		GpioCtrlRegs.GPBQSEL2.bit.GPIO62= 0;                // Xint1 Synch to SYSCLKOUT only
 
 //!  GPIO-63 - PIN FUNCTION (NONE)
 		GpioCtrlRegs.GPBMUX2.bit.GPIO63  = 	0; 				// 0=GPIO,  1=SCITX-C,  2=XD16,  3=Resv

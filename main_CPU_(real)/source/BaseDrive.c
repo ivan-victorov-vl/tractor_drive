@@ -160,7 +160,12 @@ void CntrlDrive(Model_Data_PMSM_S *md_l, Settng_Data_PMSM_S *sd_l, Flg_Cntrl_Dri
             if (md_l->k_f_mul.fl < md_l->k_f_mul_minus.fl) {
                //! reset the wrk_drv reset flag
                 mf_l->bits_reg2.bits.wrk_drv = 0;
+               //! set zero value flag stop
+                mf_l->bits_reg2.bits.stp_drv = 0;
             }
+        } else {
+            //! set value speed motor with reference control
+            SpeedRef(md_l->k_f_mul_ref.fl, md_l->k_f_mul_plus.fl, md_l->k_f_mul_minus.fl, &md_l->k_f_mul.fl);
         }
     #if defined(MODEL_INTENSITY_SET) && MODEL_INTENSITY_SET == TRUE_VAL
         //! processing intensity generator values
@@ -210,7 +215,7 @@ void HandlerExternalButtons(Flg_Cntrl_Drive_S *mf_l) {
 void HandlerFreezeProtection() {
     static Uint16 freezeCondition = 0;
 
-    //! switch pin GPIO58
+    //! switch pin GPIO58 for freeze
     (freezeCondition) ? (FREEZE_PROTECTION_ON) : (FREEZE_PROTECTION_OFF);
     //! set value freeCondition
     freezeCondition = freezeCondition ? 0 : 1;
