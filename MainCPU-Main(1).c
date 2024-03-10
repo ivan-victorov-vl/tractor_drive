@@ -18,10 +18,11 @@
 //!	include header file "SysSrvc.h"
 #include "SysSrvc.h"
 
-
-//! FUNCTION DECLARATION
-//! function declaration interrupt cpu_timer_0_isr
-interrupt void cpu_timer0_isr(void);
+////! FUNCTION DECLARATION
+////! function declaration interrupt CPU_TIMER0_ISR
+//interrupt void CPU_TIMER0_ISR(void);
+////! function declaration interrupt XINT1_ISR
+//interrupt void XINT1_ISR(void);
 //! Base_Cycle
 void Base_Cycle(void);
 
@@ -53,7 +54,7 @@ void Base_Cycle(void) {
 /*!
     \brief: Interrupt from the CPU0 timer (enters the cycle when an interrupt is triggered)
  */
-interrupt void cpu_timer0_isr(void) {
+interrupt void TINT0_ISR(void) {
 	//! First step
     //! extraction of ADC currents and external speed reference values
 	HandlrADC(&data_pmsm.md, &data_pmsm.sd);
@@ -73,5 +74,13 @@ interrupt void cpu_timer0_isr(void) {
 
 	//! TODO for Debug
 	//CalculateConditionPMS(&data_pmsm.md);
-    PieCtrlRegs.PIEACK.all = PIEACK_GROUP1;
+    PieCtrlRegs.PIEACK.bit.ACK7 = PIEACK_GROUP7;
+}
+
+/*!
+    \brief: Interrupt from the GPIO62
+ */
+interrupt void XINT3_ISR(void) {
+    // acknowledge this interrupt to get more from group 1
+    PieCtrlRegs.PIEACK.bit.ACK12 = PIEACK_GROUP12;
 }

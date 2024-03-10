@@ -31,8 +31,7 @@ struct CPUTIMER_VARS CpuTimer2;
 //---------------------------------------------------------------------------
 // This function initializes all three CPU timers to a known state.
 //
-void InitCpuTimers(void)
-{
+void InitCpuTimers(void) {
     // CPU Timer 0
     // Initialize address pointers to respective timer registers:
     CpuTimer0.RegsAddr = &CpuTimer0Regs;
@@ -84,8 +83,7 @@ void InitCpuTimers(void)
 // and the period in "uSeconds". The timer is held in the stopped state
 // after configuration.
 //
-void ConfigCpuTimer(struct CPUTIMER_VARS *Timer, float Freq, float Period)
-{
+void ConfigCpuTimer(struct CPUTIMER_VARS *Timer, float Freq, float Period) {
     Uint32  temp;
 
     // Initialize timer period:
