@@ -18,11 +18,6 @@
 //!	include header file "SysSrvc.h"
 #include "SysSrvc.h"
 
-////! FUNCTION DECLARATION
-////! function declaration interrupt CPU_TIMER0_ISR
-//interrupt void CPU_TIMER0_ISR(void);
-////! function declaration interrupt XINT1_ISR
-//interrupt void XINT1_ISR(void);
 //! Base_Cycle
 void Base_Cycle(void);
 
@@ -72,8 +67,6 @@ interrupt void TINT0_ISR(void) {
 	//! handler freeze protection
 	HandlerFreezeProtection();
 
-	//! TODO for Debug
-	//CalculateConditionPMS(&data_pmsm.md);
     PieCtrlRegs.PIEACK.bit.ACK7 = PIEACK_GROUP7;
 }
 
@@ -81,6 +74,8 @@ interrupt void TINT0_ISR(void) {
     \brief: Interrupt from the GPIO62
  */
 interrupt void XINT3_ISR(void) {
-    // acknowledge this interrupt to get more from group 1
+    //! set next value angle rotor
+    flags_drive.bits_reg1.bits.ext_angle=TRUE_VAL;
+    //! acknowledge this interrupt to get more from group 1
     PieCtrlRegs.PIEACK.bit.ACK12 = PIEACK_GROUP12;
 }
