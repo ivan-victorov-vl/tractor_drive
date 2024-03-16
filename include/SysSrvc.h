@@ -50,6 +50,11 @@
 #define FREEZE_PROTECTION_ON GpioDataRegs.GPBSET.bit.GPIO58 = 1
 //! define freze protection off
 #define FREEZE_PROTECTION_OFF GpioDataRegs.GPBCLEAR.bit.GPIO58 = 1
+//! define discrete out 1 on
+#define DISCRETE_OUT_1_ON GpioDataRegs.GPCSET.bit.GPIO67 = 1
+//! define discrete out 1 off
+#define DISCRETE_OUT_1_OFF GpioDataRegs.GPCCLEAR.bit.GPIO67 = 1
+
 
 //////////////// DECLARATION OF EXTERNAL ACCESS TO FUNCTIONS /////////////////////
 //! declaration of external access to the TimeDelay function

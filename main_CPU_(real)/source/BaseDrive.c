@@ -42,9 +42,9 @@ void PMSMotorFuncInit(Model_Data_PMSM_S *md_l, Settng_Data_PMSM_S *sd_l, Flg_Cnt
     md_l->cur_pstn_rtr.fl = 0;
     md_l->udc.fl = 0;
     md_l->isnom.fl = 0;
-    mf_l->bits_reg2.bits.wrk_drv=0;
-    mf_l->bits_reg2.bits.strt_drv=0;
-    mf_l->bits_reg2.bits.stp_drv=0;
+    mf_l->bits_reg2.bits.wrk_drv=FALSE_VAL;
+    mf_l->bits_reg2.bits.strt_drv=FALSE_VAL;
+    mf_l->bits_reg2.bits.stp_drv=FALSE_VAL;
 }
 
 /*!
@@ -148,6 +148,12 @@ void PMSMotorFuncSensorless(Model_Data_PMSM_S *md_la, Flg_Cntrl_Drive_S *mf_la, 
  * \brief PMSM motor control function
  */
 void CntrlDrive(Model_Data_PMSM_S *md_l, Settng_Data_PMSM_S *sd_l, Flg_Cntrl_Drive_S *mf_l, Brws_Param_Drive *bpd_l) {
+    if (md_l->udc.fl > 0.1) {
+        DISCRETE_OUT_1_ON;
+    } else {
+        DISCRETE_OUT_1_OFF;
+    }
+
     //! work frequency control
     if (mf_l->bits_reg2.bits.wrk_drv) {
         //! if a stop command has been received
@@ -159,9 +165,9 @@ void CntrlDrive(Model_Data_PMSM_S *md_l, Settng_Data_PMSM_S *sd_l, Flg_Cntrl_Dri
             //! if the speed is stopped
             if (md_l->k_f_mul.fl < md_l->k_f_mul_minus.fl) {
                //! reset the wrk_drv reset flag
-                mf_l->bits_reg2.bits.wrk_drv = 0;
+                mf_l->bits_reg2.bits.wrk_drv = FALSE_VAL;
                //! set zero value flag stop
-                mf_l->bits_reg2.bits.stp_drv = 0;
+                mf_l->bits_reg2.bits.stp_drv = FALSE_VAL;
             }
         } else {
             //! set value speed motor with reference control
@@ -173,15 +179,10 @@ void CntrlDrive(Model_Data_PMSM_S *md_l, Settng_Data_PMSM_S *sd_l, Flg_Cntrl_Dri
         // Calculate U,V,W for PMSM control
         PMSMotorFuncTechSpec(md_l, mf_l, bpd_l);
     #else
-        static Uint16 conditionSensor;
         //! Running the model without intensity setter
-        if (mf_l->bits_reg1.bits.ext_angle && conditionSensor) {
+        if (mf_l->bits_reg1.bits.ext_angle) {
             PMSMotorFuncTechSpecWithoutIntenstCntrllr(md_l, mf_l, bpd_l);
-            conditionSensor = 0;
-        }
-        //! Get condition sensor angle
-        if (!mf_l->bits_reg1.bits.ext_angle) {
-            conditionSensor = 1;
+            mf_l->bits_reg1.bits.ext_angle = FALSE_VAL;
         }
     #endif
     } else {
@@ -192,7 +193,7 @@ void CntrlDrive(Model_Data_PMSM_S *md_l, Settng_Data_PMSM_S *sd_l, Flg_Cntrl_Dri
         mf_l->bits_reg2.bits.strt_drv = GET_DIN_2_START_BUTTON;
         if (mf_l->bits_reg2.bits.strt_drv) {
             //! set "work" bit
-            mf_l->bits_reg2.bits.wrk_drv = 1;
+            mf_l->bits_reg2.bits.wrk_drv = TRUE_VAL;
             //! set "start" bit
             LED_START_ON;
         }
@@ -218,7 +219,7 @@ void HandlerFreezeProtection() {
     //! switch pin GPIO58 for freeze
     (freezeCondition) ? (FREEZE_PROTECTION_ON) : (FREEZE_PROTECTION_OFF);
     //! set value freeCondition
-    freezeCondition = freezeCondition ? 0 : 1;
+    freezeCondition = freezeCondition ? FALSE_VAL : TRUE_VAL;
 }
 
 

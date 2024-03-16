@@ -26,10 +26,6 @@ extern void InitPieVectTable(void);
 extern void InitFlash();
 //! function declaration InitPieCtrl
 extern void InitPieCtrl(void);
-////! function declaration interrupt cpu_timer0_is
-//extern interrupt void cpu_timer0_isr(void);
-////! function declaration interrupt xint3_isr
-//extern interrupt void xint1_isr(void);
 
 
 /*!
@@ -64,6 +60,9 @@ void MainInit(void)
 	PieVectTable.XINT3 = &XINT3_ISR;
 	//! unmodify forbidden registers
 	EDIS;
+
+
+    AdcRegs.ADCTRL3.all = 0x00E0;  // Power up bandgap/reference/ADC circuits
 
 	//! SPIA initialization
 	InitSPIA();
