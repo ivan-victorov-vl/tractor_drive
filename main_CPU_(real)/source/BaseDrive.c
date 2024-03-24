@@ -54,8 +54,8 @@ void PMSMotorFuncReset(Model_Data_PMSM_S *md_l, Settng_Data_PMSM_S *sd_l, Flg_Cn
     //! resetting the frequency inverter data
     md_l->k_f_mul_ref.fl = 0;
     md_l->k_f_mul.fl = 0;
-    md_l->k_f_mul_plus.fl = 0;
-    md_l->k_f_mul_minus.fl = 0;
+    md_l->k_f_mul_plus.fl = ADD_PART_INTESNE_SETTER;
+    md_l->k_f_mul_minus.fl = ADD_PART_INTESNE_SETTER;
     md_l->uu.fl = 0;
     md_l->uv.fl = 0;
     md_l->uw.fl = 0;
@@ -148,7 +148,10 @@ void PMSMotorFuncSensorless(Model_Data_PMSM_S *md_la, Flg_Cntrl_Drive_S *mf_la, 
  * \brief PMSM motor control function
  */
 void CntrlDrive(Model_Data_PMSM_S *md_l, Settng_Data_PMSM_S *sd_l, Flg_Cntrl_Drive_S *mf_l, Brws_Param_Drive *bpd_l) {
-    if (md_l->udc.fl > 0.1) {
+    //! TODO value for debug
+    md_l->k_f_mul_ref.fl = sd_l->k_mul_ext_ref;
+
+    if (md_l->udc.fl > DO1_ACTIVATION) {
         DISCRETE_OUT_1_ON;
     } else {
         DISCRETE_OUT_1_OFF;
@@ -170,6 +173,8 @@ void CntrlDrive(Model_Data_PMSM_S *md_l, Settng_Data_PMSM_S *sd_l, Flg_Cntrl_Dri
                 mf_l->bits_reg2.bits.stp_drv = FALSE_VAL;
             }
         } else {
+            //! getting "stop" data button
+            mf_l->bits_reg2.bits.stp_drv = GET_DIN_3_STOP_BUTTON;
             //! set value speed motor with reference control
             SpeedRef(md_l->k_f_mul_ref.fl, md_l->k_f_mul_plus.fl, md_l->k_f_mul_minus.fl, &md_l->k_f_mul.fl);
         }
@@ -204,10 +209,8 @@ void CntrlDrive(Model_Data_PMSM_S *md_l, Settng_Data_PMSM_S *sd_l, Flg_Cntrl_Dri
  * \brief processing of external buttons
  */
 void HandlerExternalButtons(Flg_Cntrl_Drive_S *mf_l) {
-    //! getting "stop" data button
-    mf_l->bits_reg2.bits.stp_drv = GpioDataRegs.GPCDAT.bit.GPIO73;
     //! getting "reset" data button
-    mf_l->bits_reg2.bits.reset_drv = GpioDataRegs.GPCDAT.bit.GPIO72;
+    mf_l->bits_reg2.bits.reset_drv = GET_DIN_4_RESET_BUTTON;
 }
 
 /*!
@@ -222,4 +225,16 @@ void HandlerFreezeProtection() {
     freezeCondition = freezeCondition ? FALSE_VAL : TRUE_VAL;
 }
 
+
+/*!
+ * \brief handler for switch processing
+ */
+Uint16 HandlerSwitchProcessing(Uint16 current_count, Uint16 maxCount) {
+    // get value current count
+    if (current_count < (maxCount>>1)) {
+        return TRUE_VAL;
+    } else {
+        return FALSE_VAL;
+    }
+}
 

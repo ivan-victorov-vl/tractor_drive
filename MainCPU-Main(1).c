@@ -44,12 +44,33 @@ void Base_Cycle(void) {
 	CalcVarblsSttng(&data_pmsm);
     //! receiving data from external control signals
 	HandlerExternalButtons(&flags_drive);
+
+	flags_drive.bits_reg2.bits.err_drv = !(GpioDataRegs.GPADAT.bit.GPIO12 && GpioDataRegs.GPADAT.bit.GPIO12 &&
+	                                     GpioDataRegs.GPADAT.bit.GPIO13 && GpioDataRegs.GPADAT.bit.GPIO14 &&
+	                                     GpioDataRegs.GPADAT.bit.GPIO12 && GpioDataRegs.GPADAT.bit.GPIO16);
+
 }
 
 /*!
     \brief: Interrupt from the CPU0 timer (enters the cycle when an interrupt is triggered)
  */
 interrupt void TINT0_ISR(void) {
+    static Uint16 current_count = 0;
+    //! increment for current count
+    current_count++;
+    //! get condition for switch
+    if (HandlerSwitchProcessing(current_count, VAL_MAX_LED_NET))  {
+        //! on led net
+        LED_NET_ON;
+    } else {
+        //! off led net
+        LED_NET_OFF;
+        //! if bigger max value then reset current_count
+        if (current_count > VAL_MAX_LED_NET) {
+            //! reset current_count
+            current_count = 0;
+        }
+    }
 	//! First step
     //! extraction of ADC currents and external speed reference values
 	HandlrADC(&data_pmsm.md, &data_pmsm.sd);
