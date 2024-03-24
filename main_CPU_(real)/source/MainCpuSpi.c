@@ -42,12 +42,10 @@ void InitSPIA(void)
 
 Uint16 RXRotorPostnSPI(void) {
 	Uint16 meas_positn_l, i;
-	if(SpiaRegs.SPISTS.bit.INT_FLAG)
-	{
+	if(SpiaRegs.SPISTS.bit.INT_FLAG) {
 		CS_AD2S90_OFF;
 
-		for(i = 0; i < 5; i++)
-		{
+		for(i = 0; i < 5; i++) {
 			asm ("NOP");
 		};
 

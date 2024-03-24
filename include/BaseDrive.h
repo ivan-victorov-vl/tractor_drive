@@ -260,4 +260,6 @@ extern void CntrlDrive(Model_Data_PMSM_S *md_l, Settng_Data_PMSM_S *sd_l, Flg_Cn
 extern void HandlerExternalButtons(Flg_Cntrl_Drive_S *mf_l);
 //! declaration of external access to a function HandlerFreezeProtection
 extern void HandlerFreezeProtection();
+//! declaration of external access to a function HandlerSwitchProcessing
+extern Uint16 HandlerSwitchProcessing(Uint16 current_count, Uint16 maxCount);
 #endif
