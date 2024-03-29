@@ -64,6 +64,9 @@ void PMSMotorFuncReset(Model_Data_PMSM_S *md_l, Settng_Data_PMSM_S *sd_l, Flg_Cn
     md_l->uw1.fl = 0;
     LED_START_OFF;
     LED_STOP_OFF;
+    mf_l->bits_reg2.bits.wrk_drv=FALSE_VAL;
+    mf_l->bits_reg2.bits.strt_drv=FALSE_VAL;
+    mf_l->bits_reg2.bits.stp_drv=FALSE_VAL;
 }
 
 void PMSMotorFuncScal(Model_Data_PMSM_S *md_la, Flg_Cntrl_Drive_S *mf_la, Brws_Param_Drive *bpd_la) {
@@ -148,7 +151,7 @@ void PMSMotorFuncSensorless(Model_Data_PMSM_S *md_la, Flg_Cntrl_Drive_S *mf_la, 
  * \brief PMSM motor control function
  */
 void CntrlDrive(Model_Data_PMSM_S *md_l, Settng_Data_PMSM_S *sd_l, Flg_Cntrl_Drive_S *mf_l, Brws_Param_Drive *bpd_l) {
-    //! TODO value for debug
+    //! set external reference
     md_l->k_f_mul_ref.fl = sd_l->k_mul_ext_ref;
 
     if (md_l->udc.fl > DO1_ACTIVATION) {
