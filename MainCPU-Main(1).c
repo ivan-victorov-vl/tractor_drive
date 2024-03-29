@@ -44,11 +44,21 @@ void Base_Cycle(void) {
 	CalcVarblsSttng(&data_pmsm);
     //! receiving data from external control signals
 	HandlerExternalButtons(&flags_drive);
-
-	flags_drive.bits_reg2.bits.err_drv = !(GpioDataRegs.GPADAT.bit.GPIO12 && GpioDataRegs.GPADAT.bit.GPIO12 &&
-	                                     GpioDataRegs.GPADAT.bit.GPIO13 && GpioDataRegs.GPADAT.bit.GPIO14 &&
-	                                     GpioDataRegs.GPADAT.bit.GPIO12 && GpioDataRegs.GPADAT.bit.GPIO16);
-
+	//! reset error drive
+	if (flags_drive.bits_reg2.bits.err_drv) {
+	    LED_ERROR_ON;
+	    LED_NET_OFF;
+	    PMSMotorFuncReset(&data_pmsm.md, &data_pmsm.sd, &flags_drive);
+	    if (flags_drive.bits_reg2.bits.reset_drv) {
+	        flags_drive.bits_reg2.bits.err_drv = FALSE_VAL;
+	        LED_ERROR_OFF;
+	        LED_NET_ON;
+	    }
+	} else {
+	    flags_drive.bits_reg2.bits.err_drv = !(GpioDataRegs.GPADAT.bit.GPIO12 && GpioDataRegs.GPADAT.bit.GPIO13 &&
+	                                         GpioDataRegs.GPADAT.bit.GPIO14 && GpioDataRegs.GPADAT.bit.GPIO15 &&
+	                                         GpioDataRegs.GPADAT.bit.GPIO16 && GpioDataRegs.GPADAT.bit.GPIO17);
+	}
 }
 
 /*!
@@ -56,21 +66,6 @@ void Base_Cycle(void) {
  */
 interrupt void TINT0_ISR(void) {
     static Uint16 current_count = 0;
-    //! increment for current count
-    current_count++;
-    //! get condition for switch
-    if (HandlerSwitchProcessing(current_count, VAL_MAX_LED_NET))  {
-        //! on led net
-        LED_NET_ON;
-    } else {
-        //! off led net
-        LED_NET_OFF;
-        //! if bigger max value then reset current_count
-        if (current_count > VAL_MAX_LED_NET) {
-            //! reset current_count
-            current_count = 0;
-        }
-    }
 	//! First step
     //! extraction of ADC currents and external speed reference values
 	HandlrADC(&data_pmsm.md, &data_pmsm.sd);
@@ -78,12 +73,28 @@ interrupt void TINT0_ISR(void) {
 	//! Second step
 	//! computing fast variables
 	CalcFastVarblsSttng(&data_pmsm);
-
-	//! frequency converter control
-	CntrlDrive(&data_pmsm.md, &data_pmsm.sd, &flags_drive, &brwsr);
-
+	//! if there is an error, the operation stops.
+	if (!flags_drive.bits_reg2.bits.err_drv) {
+	    //! increment for current count
+	    current_count++;
+	    //! get condition for switch
+	    if (HandlerSwitchProcessing(current_count, VAL_MAX_LED_NET))  {
+	        //! on led net
+	        LED_NET_ON;
+	    } else {
+	        //! off led net
+	        LED_NET_OFF;
+	        //! if bigger max value then reset current_count
+	        if (current_count > VAL_MAX_LED_NET) {
+	            //! reset current_count
+	            current_count = 0;
+	        }
+	    }
+	    //! frequency converter control
+	    CntrlDrive(&data_pmsm.md, &data_pmsm.sd, &flags_drive, &brwsr);
+	}
 	//! conversion of phase ePwm from relative view to processor PWM view
-	Handlr_ePwm(brwsr.pbrws, PWM_OUT_PHASE_DIV_2, &data_pmsm.md);
+	Handlr_ePwm(&flags_drive, PWM_OUT_PHASE_DIV_2, &data_pmsm.md);
 
 	//! handler freeze protection
 	HandlerFreezeProtection();
