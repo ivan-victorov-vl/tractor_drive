@@ -67,18 +67,18 @@ void InitEPwm_1_2_3_4_5_6_Timers(Uint16 prd_epwm_1_2_3_4_5_6) {
 	EPwm1Regs.CMPCTL.bit.LOADAMODE = CC_CTR_ZERO;
 	//! set CTR mode = 0 channel b
 	EPwm1Regs.CMPCTL.bit.LOADBMODE = CC_CTR_ZERO;
-	//! set incrementing (signal reset) to a low voltage state
-	EPwm1Regs.AQCTLA.bit.CAU = AQ_CLEAR;
-	//! set incrementing (signal reset) to high voltage state
-	EPwm1Regs.AQCTLA.bit.CAD = AQ_SET;
+	//! set incrementing (signal reset) to a high voltage state
+	EPwm1Regs.AQCTLA.bit.CAU = AQ_SET;
+	//! set incrementing (signal reset) to low voltage state
+	EPwm1Regs.AQCTLA.bit.CAD = AQ_CLEAR;
 	//! output both complementary signals
 	EPwm1Regs.DBCTL.bit.OUT_MODE = DB_FULL_ENABLE;
-	//! the active level is the lower state
-	EPwm1Regs.DBCTL.bit.POLSEL = DB_ACTV_LOC;
+	//! the active level is the higher complimentary state
+	EPwm1Regs.DBCTL.bit.POLSEL = DB_ACTV_HIC;
 	//! select delay on edge transition to low signal level
-	EPwm1Regs.DBFED = 50;
+	EPwm1Regs.DBFED = DEAD_BAND;
 	//! select delay on edge transition to high signal level
-	EPwm1Regs.DBRED = 50;
+	EPwm1Regs.DBRED = DEAD_BAND;
 	//! set the effective value to low signal level
 	EPwm1Regs.CMPA.half.CMPA = 0;
 
@@ -102,55 +102,55 @@ void InitEPwm_1_2_3_4_5_6_Timers(Uint16 prd_epwm_1_2_3_4_5_6) {
 	EPwm2Regs.CMPCTL.bit.LOADAMODE = CC_CTR_ZERO;
 	//! set CTR mode = 0 channel b
 	EPwm2Regs.CMPCTL.bit.LOADBMODE = CC_CTR_ZERO;
-	//! set incrementing (signal reset) to a low voltage state
-	EPwm2Regs.AQCTLA.bit.CAU = AQ_CLEAR;
-	//! set incrementing (signal reset) to high voltage stat
-	EPwm2Regs.AQCTLA.bit.CAD = AQ_SET;
+	//! set incrementing (signal reset) to a high voltage state
+	EPwm2Regs.AQCTLA.bit.CAU = AQ_SET;
+	//! set incrementing (signal reset) to low voltage state
+	EPwm2Regs.AQCTLA.bit.CAD = AQ_CLEAR;
 	//! output both complementary signals
 	EPwm2Regs.DBCTL.bit.OUT_MODE = DB_FULL_ENABLE;
-	//! the active level is the lower state
-	EPwm2Regs.DBCTL.bit.POLSEL =  DB_ACTV_LOC;
+	//! the active level is the higher complimentary state
+	EPwm2Regs.DBCTL.bit.POLSEL = DB_ACTV_HIC;
 	//! select the delay on the transition to the lower edge
-	EPwm2Regs.DBFED = 50;
+	EPwm2Regs.DBFED = DEAD_BAND;
 	//! select delay on edge transition to high signal level
-	EPwm2Regs.DBRED = 50;
+	EPwm2Regs.DBRED = DEAD_BAND;
 	//! set the effective value to low signal level
 	EPwm2Regs.CMPA.half.CMPA = 0;
 
-	//! PWM period selection
-	EPwm3Regs.TBPRD = prd_epwm_1_2_3_4_5_6;
-	//! PWM register phase shift selection
-	EPwm3Regs.TBPHS.half.TBPHS = 0;
-	//! select symmetrical mode
-	EPwm3Regs.TBCTL.bit.CTRMODE = TB_COUNT_UPDOWN;
-	//! phase loading
-	EPwm3Regs.TBCTL.bit.PHSEN = TB_ENABLE;
-	//! loading the active register from the shadow register
-	EPwm3Regs.TBCTL.bit.PRDLD = TB_SHADOW;
-	//! EPWM synchronization
-	EPwm3Regs.TBCTL.bit.SYNCOSEL = TB_SYNC_IN;
-	//! shadow mode of channel a
-	EPwm3Regs.CMPCTL.bit.SHDWAMODE = CC_SHADOW;
-	//! shadow mode of channel b
-	EPwm3Regs.CMPCTL.bit.SHDWBMODE = CC_SHADOW;
-	//! set CTR mode = 0 channel a
-	EPwm3Regs.CMPCTL.bit.LOADAMODE = CC_CTR_ZERO;
-	//! set CTR mode = 0 channel b
-	EPwm3Regs.CMPCTL.bit.LOADBMODE = CC_CTR_ZERO;
-	//! set incrementing (signal reset) to a low voltage state
-	EPwm3Regs.AQCTLA.bit.CAU = AQ_CLEAR;
-	//! set incrementing (signal reset) to high voltage state
-	EPwm3Regs.AQCTLA.bit.CAD = AQ_SET;
-	//! output both complementary signals
-	EPwm3Regs.DBCTL.bit.OUT_MODE = DB_FULL_ENABLE;
-	//! the active level is the lower state
-	EPwm3Regs.DBCTL.bit.POLSEL =  DB_ACTV_LOC;
-	//! select delay on edge transition to high signal level
-	EPwm3Regs.DBFED = 50;
-	//! set the effective value to low signal level
-	EPwm3Regs.DBRED = 50;
-	//! set the effective value to low signal level
-	EPwm3Regs.CMPA.half.CMPA = 0;
+    //! PWM period selection
+    EPwm3Regs.TBPRD = prd_epwm_1_2_3_4_5_6;
+    //! PWM register phase shift selection
+    EPwm3Regs.TBPHS.half.TBPHS = 0;
+    //! select symmetrical mode
+    EPwm3Regs.TBCTL.bit.CTRMODE = TB_COUNT_UPDOWN;
+    //! phase loading
+    EPwm3Regs.TBCTL.bit.PHSEN = TB_ENABLE;
+    //! loading the active register from the shadow register
+    EPwm3Regs.TBCTL.bit.PRDLD = TB_SHADOW;
+    //! EPWM synchronization
+    EPwm3Regs.TBCTL.bit.SYNCOSEL = TB_SYNC_IN;
+    //! shadow mode of channel a
+    EPwm3Regs.CMPCTL.bit.SHDWAMODE = CC_SHADOW;
+    //! shadow mode of channel b
+    EPwm3Regs.CMPCTL.bit.SHDWBMODE = CC_SHADOW;
+    //! set CTR mode = 0 channel a
+    EPwm3Regs.CMPCTL.bit.LOADAMODE = CC_CTR_ZERO;
+    //! set CTR mode = 0 channel b
+    EPwm3Regs.CMPCTL.bit.LOADBMODE = CC_CTR_ZERO;
+    //! set incrementing (signal reset) to a high voltage state
+    EPwm3Regs.AQCTLA.bit.CAU = AQ_SET;
+    //! set incrementing (signal reset) to low voltage state
+    EPwm3Regs.AQCTLA.bit.CAD = AQ_CLEAR;
+    //! output both complementary signals
+    EPwm3Regs.DBCTL.bit.OUT_MODE = DB_FULL_ENABLE;
+    //! the active level is the higher complimentary state
+    EPwm3Regs.DBCTL.bit.POLSEL = DB_ACTV_HIC;
+    //! select delay on edge transition to high signal level
+    EPwm3Regs.DBFED = DEAD_BAND;
+    //! set the effective value to low signal level
+    EPwm3Regs.DBRED = DEAD_BAND;
+    //! set the effective value to low signal level
+    EPwm3Regs.CMPA.half.CMPA = 0;
 
     //! PWM period selection
     EPwm4Regs.TBPRD = prd_epwm_1_2_3_4_5_6;
@@ -172,18 +172,18 @@ void InitEPwm_1_2_3_4_5_6_Timers(Uint16 prd_epwm_1_2_3_4_5_6) {
     EPwm4Regs.CMPCTL.bit.LOADAMODE = CC_CTR_ZERO;
     //! set CTR mode = 0 channel b
     EPwm4Regs.CMPCTL.bit.LOADBMODE = CC_CTR_ZERO;
-    //! set incrementing (signal reset) to a low voltage state
-    EPwm4Regs.AQCTLA.bit.CAU = AQ_CLEAR;
-    //! set incrementing (signal reset) to high voltage state
-    EPwm4Regs.AQCTLA.bit.CAD = AQ_SET;
+    //! set incrementing (signal reset) to a high voltage state
+    EPwm4Regs.AQCTLA.bit.CAU = AQ_SET;
+    //! set incrementing (signal reset) to low voltage state
+    EPwm4Regs.AQCTLA.bit.CAD = AQ_CLEAR;
     //! output both complementary signals
     EPwm4Regs.DBCTL.bit.OUT_MODE = DB_FULL_ENABLE;
-    //! the active level is the lower state
-    EPwm4Regs.DBCTL.bit.POLSEL =  DB_ACTV_LOC;
+    //! the active level is the higher complimentary state
+    EPwm4Regs.DBCTL.bit.POLSEL = DB_ACTV_HIC;
     //! select delay on edge transition to high signal level
-    EPwm4Regs.DBFED = 50;
+    EPwm4Regs.DBFED = DEAD_BAND;
     //! set the effective value to low signal level
-    EPwm4Regs.DBRED = 50;
+    EPwm4Regs.DBRED = DEAD_BAND;
     //! set the effective value to low signal level
     EPwm4Regs.CMPA.half.CMPA = 0;
 
@@ -207,18 +207,18 @@ void InitEPwm_1_2_3_4_5_6_Timers(Uint16 prd_epwm_1_2_3_4_5_6) {
     EPwm5Regs.CMPCTL.bit.LOADAMODE = CC_CTR_ZERO;
     //! set CTR mode = 0 channel b
     EPwm5Regs.CMPCTL.bit.LOADBMODE = CC_CTR_ZERO;
-    //! set incrementing (signal reset) to a low voltage state
-    EPwm5Regs.AQCTLA.bit.CAU = AQ_CLEAR;
-    //! set incrementing (signal reset) to high voltage state
-    EPwm5Regs.AQCTLA.bit.CAD = AQ_SET;
+    //! set incrementing (signal reset) to a high voltage state
+    EPwm5Regs.AQCTLA.bit.CAU = AQ_SET;
+    //! set incrementing (signal reset) to low voltage state
+    EPwm5Regs.AQCTLA.bit.CAD = AQ_CLEAR;
     //! output both complementary signals
     EPwm5Regs.DBCTL.bit.OUT_MODE = DB_FULL_ENABLE;
-    //! the active level is the lower state
-    EPwm5Regs.DBCTL.bit.POLSEL =  DB_ACTV_LOC;
+    //! the active level is the higher complimentary state
+    EPwm5Regs.DBCTL.bit.POLSEL = DB_ACTV_HIC;
     //! select delay on edge transition to high signal level
-    EPwm5Regs.DBFED = 50;
+    EPwm5Regs.DBFED = DEAD_BAND;
     //! set the effective value to low signal level
-    EPwm5Regs.DBRED = 50;
+    EPwm5Regs.DBRED = DEAD_BAND;
     //! set the effective value to low signal level
     EPwm5Regs.CMPA.half.CMPA = 0;
 
@@ -242,18 +242,18 @@ void InitEPwm_1_2_3_4_5_6_Timers(Uint16 prd_epwm_1_2_3_4_5_6) {
     EPwm6Regs.CMPCTL.bit.LOADAMODE = CC_CTR_ZERO;
     //! set CTR mode = 0 channel b
     EPwm6Regs.CMPCTL.bit.LOADBMODE = CC_CTR_ZERO;
-    //! set incrementing (signal reset) to a low voltage state
-    EPwm6Regs.AQCTLA.bit.CAU = AQ_CLEAR;
-    //! set incrementing (signal reset) to high voltage state
-    EPwm6Regs.AQCTLA.bit.CAD = AQ_SET;
+    //! set incrementing (signal reset) to a high voltage state
+    EPwm6Regs.AQCTLA.bit.CAU = AQ_SET;
+    //! set incrementing (signal reset) to low voltage state
+    EPwm6Regs.AQCTLA.bit.CAD = AQ_CLEAR;
     //! output both complementary signals
     EPwm6Regs.DBCTL.bit.OUT_MODE = DB_FULL_ENABLE;
-    //! the active level is the lower state
-    EPwm6Regs.DBCTL.bit.POLSEL =  DB_ACTV_LOC;
+    //! the active level is the higher complimentary state
+    EPwm6Regs.DBCTL.bit.POLSEL = DB_ACTV_HIC;
     //! select delay on edge transition to high signal level
-    EPwm6Regs.DBFED = 50;
+    EPwm6Regs.DBFED = DEAD_BAND;
     //! set the effective value to low signal level
-    EPwm6Regs.DBRED = 50;
+    EPwm6Regs.DBRED = DEAD_BAND;
     //! set the effective value to low signal level
     EPwm6Regs.CMPA.half.CMPA = 0;
 

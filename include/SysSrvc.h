@@ -11,8 +11,11 @@
 #ifndef SYSSRVC_H_
 #define SYSSRVC_H_
 
-//! inckude for file "debug.h"
+//! include for file "debug.h"
 #include "Debug.h"
+
+//! get mode, if not debug, please commented
+//#define DEBUG
 
 ////////////////////// DECLARATION OF NAMED CONSTANTS //////////////////////
 // processor frequency in Hz
@@ -67,6 +70,8 @@
 #define DO1_ACTIVATION DO1_ACTIVATION_IN_PERCENT * 0.001
 //! Addition part of the intensity setter
 #define ADD_PART_INTESNE_SETTER 0.0001
+//! deadband for pwm
+#define DEAD_BAND 450
 
 
 //////////////// DECLARATION OF EXTERNAL ACCESS TO FUNCTIONS /////////////////////
