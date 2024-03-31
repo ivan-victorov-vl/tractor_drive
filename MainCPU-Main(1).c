@@ -46,18 +46,27 @@ void Base_Cycle(void) {
 	HandlerExternalButtons(&flags_drive);
 	//! reset error drive
 	if (flags_drive.bits_reg2.bits.err_drv) {
+	    //! turn on led
 	    LED_ERROR_ON;
-	    LED_NET_OFF;
+	    //! reset value of drive
 	    PMSMotorFuncReset(&data_pmsm.md, &data_pmsm.sd, &flags_drive);
+	    //! if reset
 	    if (flags_drive.bits_reg2.bits.reset_drv) {
+	        //! reset err_drv
 	        flags_drive.bits_reg2.bits.err_drv = FALSE_VAL;
+	        //! turn off led
 	        LED_ERROR_OFF;
-	        LED_NET_ON;
 	    }
 	} else {
+#if defined(DEBUG)
 	    flags_drive.bits_reg2.bits.err_drv = !(GpioDataRegs.GPADAT.bit.GPIO12 && GpioDataRegs.GPADAT.bit.GPIO13 &&
 	                                         GpioDataRegs.GPADAT.bit.GPIO14 && GpioDataRegs.GPADAT.bit.GPIO15 &&
 	                                         GpioDataRegs.GPADAT.bit.GPIO16 && GpioDataRegs.GPADAT.bit.GPIO17);
+#else
+        flags_drive.bits_reg2.bits.err_drv = (GpioDataRegs.GPADAT.bit.GPIO12 || GpioDataRegs.GPADAT.bit.GPIO13 ||
+                                              GpioDataRegs.GPADAT.bit.GPIO14 || GpioDataRegs.GPADAT.bit.GPIO15 ||
+                                              GpioDataRegs.GPADAT.bit.GPIO16 || GpioDataRegs.GPADAT.bit.GPIO17);
+#endif
 	}
 }
 
@@ -66,7 +75,24 @@ void Base_Cycle(void) {
  */
 interrupt void TINT0_ISR(void) {
     static Uint16 current_count = 0;
-	//! First step
+
+    //! increment for current count
+    current_count++;
+    //! get condition for switch
+    if (HandlerSwitchProcessing(current_count, VAL_MAX_LED_NET))  {
+        //! on led net
+        LED_NET_ON;
+    } else {
+        //! off led net
+        LED_NET_OFF;
+        //! if bigger max value then reset current_count
+        if (current_count > VAL_MAX_LED_NET) {
+            //! reset current_count
+            current_count = 0;
+        }
+    }
+
+    //! First step
     //! extraction of ADC currents and external speed reference values
 	HandlrADC(&data_pmsm.md, &data_pmsm.sd);
 
@@ -75,21 +101,6 @@ interrupt void TINT0_ISR(void) {
 	CalcFastVarblsSttng(&data_pmsm);
 	//! if there is an error, the operation stops.
 	if (!flags_drive.bits_reg2.bits.err_drv) {
-	    //! increment for current count
-	    current_count++;
-	    //! get condition for switch
-	    if (HandlerSwitchProcessing(current_count, VAL_MAX_LED_NET))  {
-	        //! on led net
-	        LED_NET_ON;
-	    } else {
-	        //! off led net
-	        LED_NET_OFF;
-	        //! if bigger max value then reset current_count
-	        if (current_count > VAL_MAX_LED_NET) {
-	            //! reset current_count
-	            current_count = 0;
-	        }
-	    }
 	    //! frequency converter control
 	    CntrlDrive(&data_pmsm.md, &data_pmsm.sd, &flags_drive, &brwsr);
 	}
@@ -98,7 +109,7 @@ interrupt void TINT0_ISR(void) {
 
 	//! handler freeze protection
 	HandlerFreezeProtection();
-
+    //! acknowledge this interrupt to get more from group 7
     PieCtrlRegs.PIEACK.bit.ACK7 = PIEACK_GROUP7;
 }
 
@@ -108,6 +119,6 @@ interrupt void TINT0_ISR(void) {
 interrupt void XINT3_ISR(void) {
     //! set next value angle rotor
     flags_drive.bits_reg1.bits.ext_angle=TRUE_VAL;
-    //! acknowledge this interrupt to get more from group 1
+    //! acknowledge this interrupt to get more from group 12
     PieCtrlRegs.PIEACK.bit.ACK12 = PIEACK_GROUP12;
 }
