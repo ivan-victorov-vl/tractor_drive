@@ -15,7 +15,10 @@
 void InitEPwm_1_2_3_4_5_6_Timers(Uint16 prd_epwm_1_2_3_4_5_6);
 // function declaration Handlr_ePwm
 void Handlr_ePwm(Flg_Cntrl_Drive_S *mf_l, Uint16 prd_div_2_epwm_u_v_w_l, Model_Data_PMSM_S *md_motor_l);
-
+// function declaration Set_Pwm_Complimentary_State
+void Set_Pwm_Complimentary_State();
+// function declaration Set_Pwm_Low_State
+void Set_Pwm_Low_State();
 
 /*!
      \brief Initialization timer for 1,2,3,4,5,6 ePWM value
@@ -284,6 +287,8 @@ void Handlr_ePwm(Flg_Cntrl_Drive_S *mf_l, Uint16 prd_div_2_epwm_u_v_w_l, Model_D
         //! set the PWM value for phase w1
         EPwm6Regs.CMPA.half.CMPA = (Uint16)(( (md_motor_l->uw1.fl) * (prd_div_2_epwm_u_v_w_l) ) + prd_div_2_epwm_u_v_w_l);
     } else {
+        //! set pwm low state
+        Set_Pwm_Low_State();
         //! set 0 the PWM value for the phase u
         EPwm1Regs.CMPA.half.CMPA = (Uint16)(0);
         //! set 0 the PWM'a value for phase v
@@ -297,4 +302,41 @@ void Handlr_ePwm(Flg_Cntrl_Drive_S *mf_l, Uint16 prd_div_2_epwm_u_v_w_l, Model_D
         //! set 0 the PWM value for phase w1
         EPwm6Regs.CMPA.half.CMPA = (Uint16)(0);
     }
+}
+
+
+/*!
+     \brief Set complimentary PWM state
+ */
+void Set_Pwm_Complimentary_State() {
+    //! EPwm1 the active level is the higher complimentary state
+    EPwm1Regs.DBCTL.bit.POLSEL = DB_ACTV_HIC;
+    //! EPwm2 the active level is the higher complimentary state
+    EPwm2Regs.DBCTL.bit.POLSEL = DB_ACTV_HIC;
+    //! EPwm3 the active level is the higher complimentary state
+    EPwm3Regs.DBCTL.bit.POLSEL = DB_ACTV_HIC;
+    //! EPwm4 the active level is the higher complimentary state
+    EPwm4Regs.DBCTL.bit.POLSEL = DB_ACTV_HIC;
+    //! EPwm5 the active level is the higher complimentary state
+    EPwm5Regs.DBCTL.bit.POLSEL = DB_ACTV_HIC;
+    //! EPwm6 the active level is the higher complimentary state
+    EPwm6Regs.DBCTL.bit.POLSEL = DB_ACTV_HIC;
+}
+
+/*!
+     \brief Set low PWM state
+ */
+void Set_Pwm_Low_State() {
+    //! EPwm1 the active level is the low state
+    EPwm1Regs.DBCTL.bit.POLSEL = DB_ACTV_LO;
+    //! EPwm2 the active level is the low state
+    EPwm2Regs.DBCTL.bit.POLSEL = DB_ACTV_LO;
+    //! EPwm3 the active level is the low state
+    EPwm3Regs.DBCTL.bit.POLSEL = DB_ACTV_LO;
+    //! EPwm4 the active level is the low state
+    EPwm4Regs.DBCTL.bit.POLSEL = DB_ACTV_LO;
+    //! EPwm5 the active level is the low state
+    EPwm5Regs.DBCTL.bit.POLSEL = DB_ACTV_LO;
+    //! EPwm6 the active level is the low state
+    EPwm6Regs.DBCTL.bit.POLSEL = DB_ACTV_LO;
 }
