@@ -204,6 +204,8 @@ void CntrlDrive(Model_Data_PMSM_S *md_l, Settng_Data_PMSM_S *sd_l, Flg_Cntrl_Dri
             mf_l->bits_reg2.bits.wrk_drv = TRUE_VAL;
             //! set "start" bit
             LED_START_ON;
+            //! set PWM complimentary state
+            Set_Pwm_Complimentary_State();
         }
     }
 }
