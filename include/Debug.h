@@ -10,17 +10,17 @@
 #define DEBUG_H_
 
 //! Нулевая точка тока фазы U
-#define ZERO_VALUE_I_PHASE_U 2048
+#define ZERO_VALUE_I_PHASE_U 2048-109
 //! Нулевая точка тока фазы V
-#define ZERO_VALUE_I_PHASE_V 2048
+#define ZERO_VALUE_I_PHASE_V 2048-97
 //! Нулевая точка тока фазы W
-#define ZERO_VALUE_I_PHASE_W 2048
+#define ZERO_VALUE_I_PHASE_W 2048-103
 //! Нулевая точка тока фазы U1
-#define ZERO_VALUE_I_PHASE_U1 2048
+#define ZERO_VALUE_I_PHASE_U1 2048-101
 //! Нулевая точка тока фазы V1
-#define ZERO_VALUE_I_PHASE_V1 2048
+#define ZERO_VALUE_I_PHASE_V1 2048-104
 //! Нулевая точка тока фазы W1
-#define ZERO_VALUE_I_PHASE_W1 2048
+#define ZERO_VALUE_I_PHASE_W1 2048-98
 
 //! Нулевая точка напряжения фазы U
 #define ZERO_VALUE_U_PHASE_U 2048
