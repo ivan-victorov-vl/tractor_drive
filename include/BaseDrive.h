@@ -160,6 +160,18 @@ typedef struct {
 	B32_Numb_S uac_os_2_1;
     //! voltage  phase B second invertor
 	B32_Numb_S uac_os_3_1;
+    //! voltage  phase u first invertor
+    B32_Numb_S uu_os;
+    //! voltage  phase v first invertor
+    B32_Numb_S uv_os;
+    //! voltage  phase w first invertor
+    B32_Numb_S uw_os;
+    //! voltage  phase u1 second invertor
+    B32_Numb_S uu1_os;
+    //! voltage  phase v1 second invertor
+    B32_Numb_S uv1_os;
+    //! voltage  phase w1 second invertor
+    B32_Numb_S uw1_os;
     //! level voltage DC
 	B32_Numb_S udc;
     //! level temperature

@@ -100,13 +100,6 @@ void PMSMotorFuncTechSpec(Model_Data_PMSM_S *md_la, Flg_Cntrl_Drive_S *mf_la, Br
 
     // TODO Now kk_f_mul amplitude is not regulator. Please to do regulator to voltage or current
     md_la->k_reg_mul.fl = md_la->k_f_mul.fl;
-    //! calculate phase with amplitude
-    md_la->uu.fl =  md_la->uu.fl * md_la->k_f_mul.fl;
-    md_la->uv.fl =  md_la->uv.fl * md_la->k_f_mul.fl;
-    md_la->uw.fl =  md_la->uw.fl * md_la->k_f_mul.fl;
-    md_la->uu1.fl =  md_la->uu1.fl * md_la->k_f_mul.fl;
-    md_la->uv1.fl =  md_la->uv1.fl * md_la->k_f_mul.fl;
-    md_la->uv1.fl =  md_la->uw1.fl * md_la->k_f_mul.fl;
 }
 
 /*!
@@ -119,7 +112,7 @@ void PMSMotorFuncTechSpecWithoutIntenstCntrllr(Model_Data_PMSM_S *md_la, Flg_Cnt
     Calc3To2(md_la->iu.fl, md_la->iv.fl, md_la->iw.fl, &i_alpha_la, &i_beta_la);
     //! calculation of the measured current in scalar coordinate system
     md_la->is.fl = CalcLengthVect2In(i_alpha_la, i_beta_la);
-    //!
+    //! increment angle
     md_la->theta.fl += MIN_CROSS_ANGLE;
     //! when it reaches less than 0 degrees
     if (md_la->theta.fl <= 0) {
@@ -131,17 +124,8 @@ void PMSMotorFuncTechSpecWithoutIntenstCntrllr(Model_Data_PMSM_S *md_la, Flg_Cnt
         //! reset the angle to zero
         md_la->theta.fl -= FULL_DSKRT;
     }
-
     //! calculate current phase
     CalculateConditionPMS(md_la);
-
-    //! calculate phase with amplitude
-    md_la->uu.fl =  md_la->uu.fl * md_la->k_f_mul.fl;
-    md_la->uv.fl =  md_la->uv.fl * md_la->k_f_mul.fl;
-    md_la->uw.fl =  md_la->uw.fl * md_la->k_f_mul.fl;
-    md_la->uu1.fl =  md_la->uu1.fl * md_la->k_f_mul.fl;
-    md_la->uv1.fl =  md_la->uv1.fl * md_la->k_f_mul.fl;
-    md_la->uv1.fl =  md_la->uw1.fl * md_la->k_f_mul.fl;
 }
 
 void PMSMotorFuncSensorless(Model_Data_PMSM_S *md_la, Flg_Cntrl_Drive_S *mf_la, Brws_Param_Drive *bpd_la) {
@@ -153,10 +137,12 @@ void PMSMotorFuncSensorless(Model_Data_PMSM_S *md_la, Flg_Cntrl_Drive_S *mf_la, 
 void CntrlDrive(Model_Data_PMSM_S *md_l, Settng_Data_PMSM_S *sd_l, Flg_Cntrl_Drive_S *mf_l, Brws_Param_Drive *bpd_l) {
     //! set external reference
     md_l->k_f_mul_ref.fl = sd_l->k_mul_ext_ref;
-
+    //! if UDC more value cutoffs
     if (md_l->udc.fl > DO1_ACTIVATION) {
+        //! switch on DO1
         DISCRETE_OUT_1_ON;
     } else {
+        //! switch off DO1
         DISCRETE_OUT_1_OFF;
     }
 
@@ -230,16 +216,16 @@ void HandlerFreezeProtection() {
     freezeCondition = freezeCondition ? FALSE_VAL : TRUE_VAL;
 }
 
-
 /*!
  * \brief handler for switch processing
  */
 Uint16 HandlerSwitchProcessing(Uint16 current_count, Uint16 maxCount) {
-    // get value current count
+    //! get value current count
     if (current_count < (maxCount>>1)) {
+        //! set true value
         return TRUE_VAL;
     } else {
+        //! set false value
         return FALSE_VAL;
     }
 }
-
