@@ -133,18 +133,18 @@ void HandlrADC(Model_Data_PMSM_S *md_motor_l, Settng_Data_PMSM_S *sd_motor_l) {
     //! shift for current phase w1
     md_motor_l->iw1.fl = md_motor_l->i_os_3_1.fl - ZERO_VALUE_I_PHASE_W1;
 
-//    //! shift for voltage phase u
-//    md_motor_l->uu.fl = md_motor_l->uac_os_1_0.fl - ZERO_VALUE_U_PHASE_U;
-//    //! shift for voltage phase v
-//    md_motor_l->uv.fl = md_motor_l->uac_os_2_0.fl - ZERO_VALUE_U_PHASE_V;
-//    //! shift for voltage phase w
-//    md_motor_l->uw.fl = md_motor_l->uac_os_3_0.fl - ZERO_VALUE_U_PHASE_W;
-//    //! shift for voltage phase u1
-//    md_motor_l->uu1.fl = md_motor_l->uac_os_1_1.fl - ZERO_VALUE_U_PHASE_U1;
-//    //! shift for voltage phase v1
-//    md_motor_l->uv1.fl = md_motor_l->uac_os_2_1.fl - ZERO_VALUE_U_PHASE_V1;
-//    //! shift for voltage phase w1
-//    md_motor_l->uw1.fl = md_motor_l->uac_os_3_1.fl - ZERO_VALUE_U_PHASE_W1;
+    //! shift for sensor voltage phase u
+    md_motor_l->uu_os.fl = md_motor_l->uac_os_1_0.fl - ZERO_VALUE_U_PHASE_U;
+    //! shift for sensor voltage phase v
+    md_motor_l->uv_os.fl = md_motor_l->uac_os_2_0.fl - ZERO_VALUE_U_PHASE_V;
+    //! shift for sensor voltage phase w
+    md_motor_l->uw_os.fl = md_motor_l->uac_os_3_0.fl - ZERO_VALUE_U_PHASE_W;
+    //! shift for sensor voltage phase u1
+    md_motor_l->uu1_os.fl = md_motor_l->uac_os_1_1.fl - ZERO_VALUE_U_PHASE_U1;
+    //! shift for sensor voltage phase v1
+    md_motor_l->uv1_os.fl = md_motor_l->uac_os_2_1.fl - ZERO_VALUE_U_PHASE_V1;
+    //! shift for sensor voltage phase w1
+    md_motor_l->uw1_os.fl = md_motor_l->uac_os_3_1.fl - ZERO_VALUE_U_PHASE_W1;
 
     //! bringing the voltage set point to unity
     sd_motor_l->k_mul_ext_ref = DIV_1_4096 * md_motor_l->fzad_20_ma.fl;
