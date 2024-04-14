@@ -10,8 +10,6 @@
 #include "PeripheralHeaderIncludes.h"
 #include "MainCpuSpi.h"
 
-
-Uint16 RXRotorPostnSPI(void);
 void InitSPIA(void);
 
 
@@ -37,21 +35,4 @@ void InitSPIA(void)
 	SpiaRegs.SPIBRR = 74;
 	SpiaRegs.SPICCR.bit.SPISWRESET = 1;
     SpiaRegs.SPIPRI.bit.FREE = 1;
-}
-
-
-Uint16 RXRotorPostnSPI(void) {
-	Uint16 meas_positn_l, i;
-	if(SpiaRegs.SPISTS.bit.INT_FLAG) {
-		CS_AD2S90_OFF;
-
-		for(i = 0; i < 5; i++) {
-			asm ("NOP");
-		};
-
-		meas_positn_l = (SpiaRegs.SPIRXBUF);
-		CS_AD2S90_ON;
-		SpiaRegs.SPITXBUF = 0;
-	}
-	return meas_positn_l;
 }
