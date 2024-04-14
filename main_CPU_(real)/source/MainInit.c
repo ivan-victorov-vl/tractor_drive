@@ -56,6 +56,8 @@ void MainInit(void)
 	EALLOW;
 	//! setting the cpu_timer_0 interrupt
 	PieVectTable.TINT0 = &TINT0_ISR;
+    //! setting the cpu_timer_2 interrupt
+    PieVectTable.TINT2 = &INT14_ISR;
     //! setting the xint3 (external interrupt for pin) interrupt
 	PieVectTable.XINT3 = &XINT3_ISR;
 	//! unmodify forbidden registers
@@ -75,6 +77,8 @@ void MainInit(void)
 	InitCpuTimers();
 	//! Set configuration for cpu_timer_0
 	ConfigCpuTimer(&CpuTimer0, 100, 900);
+	//! Set configuration for cpu_timer_2
+	ConfigCpuTimer(&CpuTimer2, 100, 900);
 	//! setting of modules ePWM 1 to ePWM 3 for output PWM to motor,
 	//! ePWM to set the basic cycle
 	InitEPwm_1_2_3_4_5_6_Timers(PWM_OUT_PHASE);
@@ -82,12 +86,21 @@ void MainInit(void)
 	//! ADC initialization
 	AdcInitDrive();
 
-	//! CPU interrupt resolution
+	//! CPU interrupt resolution for CpuTimer 0
 	CpuTimer0Regs.TCR.all = 0x4000;
+
+    //! CPU interrupt resolution for CpuTimer 2
+	CpuTimer2Regs.TCR.all = 0x4000;
+
 	//! set interrupt M_INT1
+	//! Add CPU timer 0 interrupt
 	IER |= M_INT1;
+    //! Add XINT interrupt
     IER |= M_INT12;
-	//! CPU_TIMER_0
+    //! Add CPU timer 2 interrupt
+    IER |= M_INT14;
+
+    //! CPU_TIMER_0
 	PieCtrlRegs.PIEIER1.bit.INTx7 = 1;
     //! Enable PIE Group 1 INT4
 	PieCtrlRegs.PIEIER12.bit.INTx1 = 1;

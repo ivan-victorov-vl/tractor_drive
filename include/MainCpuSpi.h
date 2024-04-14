@@ -10,14 +10,8 @@
 #ifndef MAINCPUSPI_H
 #define MAINCPUSPI_H
 
-//////////////// ОБЪЯВЛЕНИЕ ВНЕШНЕГО ДОСТУПА К ФУНКЦИЯМ /////////////////////
-// объявление внешнего доступа к функции RXRotorPostnSPI
-extern Uint16 RXRotorPostnSPI(void);
-// объявление внешнего доступа к функции InitSPIA
+//////////////// FUNCTION EXTERNAL ACCESS DECLARATION /////////////////////
+// declaration of external access to the InitSPIA
 extern void InitSPIA(void);
 
 #endif  // end of MAIN_CPU_SPI_H definition
-
-//===========================================================================
-// End of file.
-//===========================================================================

@@ -7,15 +7,15 @@
 //###########################################################################
 
 //! HEADER FILE CONNECTION
-//! include header file "PeripheralHeaderIncludes.h"
+//! Include header file "PeripheralHeaderIncludes.h"
 #include "PeripheralHeaderIncludes.h"
-//! include header file "MainCPU-Main.h"
+//! Include header file "MainCPU-Main.h"
 #include "MainCPU-Main.h"
-//! include header file "ProtectnDrive.h"
+//! Include header file "ProtectnDrive.h"
 #include "ProtectnDrive.h"
-//! include header file "BaseDrive.h"
+//! Include header file "BaseDrive.h"
 #include "BaseDrive.h"
-//!	include header file "SysSrvc.h"
+//!	Include header file "SysSrvc.h"
 #include "SysSrvc.h"
 
 //! Base_Cycle
@@ -25,13 +25,13 @@ void Base_Cycle(void);
     \brief: Main
  */
 void main(void) {
-    //! program initialization before entering the execution loop
+    //! Program initialization before entering the execution loop
     MainInit();
-    //! light up the LED with the value "net"
+    //! Light up the LED with the value "net"
     LED_NET_ON;
-	//! entering the main program cycle
+	//! Entering the main program cycle
 	for(;;) {
-		//! entering the cycle of operations execution in the external background
+		//! Entering the cycle of operations execution in the external background
 		Base_Cycle();
 	}
 }
@@ -40,21 +40,21 @@ void main(void) {
     \brief: Main program cycle
  */
 void Base_Cycle(void) {
-    //! configuration variable calculation
+    //! Configuration variable calculation
 	CalcVarblsSttng(&data_pmsm);
-    //! receiving data from external control signals
+    //! Receiving data from external control signals
 	HandlerExternalButtons(&flags_drive);
-	//! reset error drive
+	//! Reset error drive
 	if (flags_drive.bits_reg2.bits.err_drv) {
-	    //! turn on led
+	    //! Turn on led
 	    LED_ERROR_ON;
-	    //! reset value of drive
+	    //! Reset value of drive
 	    PMSMotorFuncReset(&data_pmsm.md, &data_pmsm.sd, &flags_drive);
-	    //! if reset
+	    //! If reset
 	    if (flags_drive.bits_reg2.bits.reset_drv) {
-	        //! reset err_drv
+	        //! Reset err_drv
 	        flags_drive.bits_reg2.bits.err_drv = FALSE_VAL;
-	        //! turn off led
+	        //! Turn off led
 	        LED_ERROR_OFF;
 	    }
 	} else {
@@ -76,49 +76,61 @@ void Base_Cycle(void) {
 interrupt void TINT0_ISR(void) {
     static Uint16 current_count = 0;
 
-    //! increment for current count
+    //! Increment for current count
     current_count++;
-    //! get condition for switch
+    //! Get condition for switch
     if (HandlerSwitchProcessing(current_count, VAL_MAX_LED_NET))  {
-        //! on led net
+        //! On led net
         LED_NET_ON;
     } else {
-        //! off led net
+        //! Off led net
         LED_NET_OFF;
-        //! if bigger max value then reset current_count
+        //! If bigger max value then reset current_count
         if (current_count > VAL_MAX_LED_NET) {
-            //! reset current_count
+            //! Reset current_count
             current_count = 0;
         }
     }
 
     //! First step
-    //! extraction of ADC currents and external speed reference values
+    //! Extraction of ADC currents and external speed reference values
 	HandlrADC(&data_pmsm.md, &data_pmsm.sd);
 
 	//! Second step
-	//! computing fast variables
+	//! Computing fast variables
 	CalcFastVarblsSttng(&data_pmsm);
-	//! if there is an error, the operation stops.
+	//! If there is an error, the operation stops.
 	if (!flags_drive.bits_reg2.bits.err_drv) {
-	    //! frequency converter control
+	    //! Frequency converter control
 	    CntrlDrive(&data_pmsm.md, &data_pmsm.sd, &flags_drive, &brwsr);
 	}
-	//! conversion of phase ePwm from relative view to processor PWM view
+	//! Conversion of phase ePwm from relative view to processor PWM view
 	Handlr_ePwm(&flags_drive, PWM_OUT_PHASE_DIV_2, &data_pmsm.md);
 
-	//! handler freeze protection
+	//! Handler freeze protection
 	HandlerFreezeProtection();
-    //! acknowledge this interrupt to get more from group 7
+    //! Acknowledge this interrupt to get more from group 7
     PieCtrlRegs.PIEACK.bit.ACK7 = PIEACK_GROUP7;
+}
+
+/*!
+    \brief: Interrupt from the CPU2 timer (enters the cycle when an interrupt is triggered)
+ */
+interrupt void INT14_ISR(void) {
+    //! configuring interrupt handling functions:
+    //! allow changes to forbidden registers
+    EALLOW;
+
+    //! unmodify forbidden registers
+    EDIS;
 }
 
 /*!
     \brief: Interrupt from the GPIO62
  */
 interrupt void XINT3_ISR(void) {
-    //! set next value angle rotor
+    //! Set next value angle rotor
     flags_drive.bits_reg1.bits.ext_angle=TRUE_VAL;
-    //! acknowledge this interrupt to get more from group 12
+    //! Acknowledge this interrupt to get more from group 12
     PieCtrlRegs.PIEACK.bit.ACK12 = PIEACK_GROUP12;
 }

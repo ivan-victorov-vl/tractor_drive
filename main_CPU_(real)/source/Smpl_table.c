@@ -6,11 +6,9 @@
 //
 //###########################################################################
 
-
 ////////////////////// INCLUDE OF HEADER FILES //////////////////////
 // header file include "PeripheralHeaderIncludes.h"
 #include "PeripheralHeaderIncludes.h"
-
 
 /*
     \brief Sine from 0 to 90 degrees

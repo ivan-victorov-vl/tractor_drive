@@ -36,16 +36,16 @@ interrupt void INT13_ISR(void)     // INT13 or CPU-Timer1
   for(;;);
 }
 
-// Note CPU-Timer2 is reserved for TI use.
-interrupt void INT14_ISR(void)     // CPU-Timer2
-{
-  // Insert ISR Code here
-
-  // Next two lines for debug only to halt the processor here
-  // Remove after inserting ISR Code
-  asm ("      ESTOP0");
-  for(;;);
-}
+//// Note CPU-Timer2 is reserved for TI use.
+//interrupt void INT14_ISR(void)     // CPU-Timer2
+//{
+//  // Insert ISR Code here
+//
+//  // Next two lines for debug only to halt the processor here
+//  // Remove after inserting ISR Code
+//  asm ("      ESTOP0");
+//  for(;;);
+//}
 
 interrupt void DATALOG_ISR(void)   // Datalogging interrupt
 {

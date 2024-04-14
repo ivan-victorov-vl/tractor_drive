@@ -7,11 +7,11 @@
 //###########################################################################
 
 ////////////////////// HEADER FILE INCLUDE //////////////////////
-//! include header "PeripheralHeaderIncludes.h"
+//! Include header "PeripheralHeaderIncludes.h"
 #include "PeripheralHeaderIncludes.h"
-//! header file include "BaseDrive.h"
+//! Header file include "BaseDrive.h"
 #include "BaseDrive.h"
-//! header file include"SysSrvc.h"
+//! Header file include"SysSrvc.h"
 #include "FuncDrive.h"
 
 void PMSMotorFuncInit(Model_Data_PMSM_S *md_l, Settng_Data_PMSM_S *sd_l, Flg_Cntrl_Drive_S *mf_l);
@@ -24,10 +24,10 @@ void CntrlDrive(Model_Data_PMSM_S *md_l, Settng_Data_PMSM_S *sd_l, Flg_Cntrl_Dri
 void HandlerExternalButtons(Flg_Cntrl_Drive_S *mf_l);
 
 /*!
- * \brief initialization PMSM motor control
+ * \brief Initialization PMSM motor control
  */
 void PMSMotorFuncInit(Model_Data_PMSM_S *md_l, Settng_Data_PMSM_S *sd_l, Flg_Cntrl_Drive_S *mf_l) {
-    //! initialization setting the frequency inverter data
+    //! Initialization setting the frequency inverter data
     md_l->k_f_mul_ref.fl = 0;
     md_l->k_f_mul.fl = 0;
     md_l->k_f_mul_plus.fl = 0;
@@ -48,10 +48,10 @@ void PMSMotorFuncInit(Model_Data_PMSM_S *md_l, Settng_Data_PMSM_S *sd_l, Flg_Cnt
 }
 
 /*!
- * \brief reset PMSM motor control
+ * \brief Reset PMSM motor control
  */
 void PMSMotorFuncReset(Model_Data_PMSM_S *md_l, Settng_Data_PMSM_S *sd_l, Flg_Cntrl_Drive_S *mf_l) {
-    //! resetting the frequency inverter data
+    //! Resetting the frequency inverter data
     md_l->k_f_mul_ref.fl = 0;
     md_l->k_f_mul.fl = 0;
     md_l->k_f_mul_plus.fl = ADD_PART_INTESNE_SETTER;
@@ -78,28 +78,25 @@ void PMSMotorFuncScal(Model_Data_PMSM_S *md_la, Flg_Cntrl_Drive_S *mf_la, Brws_P
 void PMSMotorFuncTechSpec(Model_Data_PMSM_S *md_la, Flg_Cntrl_Drive_S *mf_la, Brws_Param_Drive *bpd_la) {
     static float32 i_alpha_la, i_beta_la;
 
-    //! conversion of currents from three-phase to two-phase reference frame
+    //! Conversion of currents from three-phase to two-phase reference frame
     Calc3To2(md_la->iu.fl, md_la->iv.fl, md_la->iw.fl, &i_alpha_la, &i_beta_la);
-    //! calculation of the measured current in scalar coordinate system
+    //! Calculation of the measured current in scalar coordinate system
     md_la->is.fl = CalcLengthVect2In(i_alpha_la, i_beta_la);
-    //! calculation degree
+    //! Calculation degree
     md_la->theta.fl += md_la->k_f_mul.fl;
-    //! when it reaches less than 0 degrees
+    //! When it reaches less than 0 degrees
     if (md_la->theta.fl <= 0) {
-        //! update the angle
+        //! Update the angle
         md_la->theta.fl += FULL_DSKRT;
     }
-    //! if it more than 360 degrees
+    //! If it more than 360 degrees
     if (md_la->theta.fl >= FULL_DSKRT) {
-        //! reset the angle to zero
+        //! Reset the angle to zero
         md_la->theta.fl -= FULL_DSKRT;
     }
 
-    //! calculate current phase
+    //! Calculate current phase
     CalculateConditionPMS(md_la);
-
-    // TODO Now kk_f_mul amplitude is not regulator. Please to do regulator to voltage or current
-    md_la->k_reg_mul.fl = md_la->k_f_mul.fl;
 }
 
 /*!
