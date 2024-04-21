@@ -1,6 +1,6 @@
 //###########################################################################
 //
-// File:    	    MainCpu-Main(1).c
+// File:    	    MainCpu-Main.c
 //
 // Description:   	Main program execution file
 //
@@ -94,7 +94,7 @@ interrupt void TINT0_ISR(void) {
 
     //! First step
     //! Extraction of ADC currents and external speed reference values
-	HandlrADC(&data_pmsm.md, &data_pmsm.sd);
+	HandlrAdc(&data_pmsm.md, &data_pmsm.sd);
 
 	//! Second step
 	//! Computing fast variables
@@ -120,8 +120,19 @@ interrupt void INT14_ISR(void) {
     //! configuring interrupt handling functions:
     //! allow changes to forbidden registers
     EALLOW;
+    //! Get voltage and current value
+    HandlrFastAdc(&data_pmsm.md);
 
-    //! unmodify forbidden registers
+    #if defined(CURRENT_REF)
+    //! declaration local variable integral_ref_current
+    static float32 integral_ref_current = 0;
+
+    data_pmsm.md.k_f_mul = I_Regltr(data_pmsm.md.k_f_mul_ref.fl - CalculateScalarCurrentFrom6Phase(&data_pmsm.md),
+              K_PROP,
+              K_INTEGR,
+              &integral_ref_current);
+    #endif
+    //! unchanging forbidden registers
     EDIS;
 }
 

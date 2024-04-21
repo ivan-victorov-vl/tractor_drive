@@ -16,6 +16,8 @@
 
 //! get mode, if not debug, please commented
 //#define DEBUG
+//! get mode, if not current reference, please commented
+//#define CURRENT_REF
 
 ////////////////////// DECLARATION OF NAMED CONSTANTS //////////////////////
 // processor frequency in Hz
@@ -30,6 +32,8 @@
 #define DIV_1_4096 0.000244140625
 //! format: DIV_divider; named constant equal to 1/2048
 #define DIV_1_2048 0.00048828125
+//! format: DIV_divider; named constant equal to SQRT(3)/3
+#define DIV_SQRT3_3 0.5773502691896258
 //! TRUE value for compilation
 #define TRUE_VAL 1
 //! FALSE value for compilation

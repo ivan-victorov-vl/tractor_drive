@@ -41,7 +41,7 @@
 			<locationURI>SRC_ROOT/F2833x_nonBIOS_flash.cmd</locationURI>
 		</link>
 		<link>
-			<name>MainCPU-Main(1).c</name>
+			<name>MainCPU-Main.c</name>
 			<type>1</type>
 			<locationURI>SRC_ROOT/MainCPU-Main(1).c</locationURI>
 		</link>
