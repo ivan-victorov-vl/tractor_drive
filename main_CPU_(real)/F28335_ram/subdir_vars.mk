@@ -13,7 +13,7 @@ C_SRCS += \
 C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/MainCPU-Main(1).c 
 
 C_DEPS += \
-./MainCPU-Main(1).d 
+./MainCPU-Main.d 
 
 OBJS += \
 C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/RAM/MainCPU-Main(1).obj 
@@ -22,7 +22,7 @@ OBJS__QUOTED += \
 "C:\Users\Lenovo\programs\TMS320F28335\tractor_drive\RAM\MainCPU-Main(1).obj" 
 
 C_DEPS__QUOTED += \
-"MainCPU-Main(1).d" 
+"MainCPU-Main.d" 
 
 C_SRCS__QUOTED += \
 "C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/MainCPU-Main(1).c" 
