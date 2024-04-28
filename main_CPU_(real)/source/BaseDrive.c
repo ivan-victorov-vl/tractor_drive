@@ -105,23 +105,32 @@ void PMSMotorFuncTechSpec(Model_Data_PMSM_S *md_la, Flg_Cntrl_Drive_S *mf_la, Br
 void PMSMotorFuncTechSpecWithoutIntenstCntrllr(Model_Data_PMSM_S *md_la, Flg_Cntrl_Drive_S *mf_la, Brws_Param_Drive *bpd_la) {
     static float32 i_alpha_la, i_beta_la;
 
-    //! conversion of currents from three-phase to two-phase reference frame
+    //! Conversion of currents from three-phase to two-phase reference frame
     Calc3To2(md_la->iu.fl, md_la->iv.fl, md_la->iw.fl, &i_alpha_la, &i_beta_la);
-    //! calculation of the measured current in scalar coordinate system
+    //! Calculation of the measured current in scalar coordinate system
     md_la->is.fl = CalcLengthVect2In(i_alpha_la, i_beta_la);
-    //! increment angle
-    md_la->theta.fl += MIN_CROSS_ANGLE;
-    //! when it reaches less than 0 degrees
+
+    //! Compilation when forward of rotation
+    #if FORWARD==TRUE_VAL
+       //! Increment angle
+       md_la->theta.fl += MIN_CROSS_ANGLE;
+    //! Compilation when backward of rotation
+    #else
+       //! Decrement angle
+       md_la->theta.fl -= MIN_CROSS_ANGLE;
+    #endif
+
+    //! When it reaches less than 0 degrees
     if (md_la->theta.fl <= 0) {
-        //! update the angle
+        //! Update the angle
         md_la->theta.fl += FULL_DSKRT;
     }
-    //! if it more than 360 degrees
+    //! If it more than 360 degrees
     if (md_la->theta.fl >= FULL_DSKRT) {
-        //! reset the angle to zero
+        //! Reset the angle to zero
         md_la->theta.fl -= FULL_DSKRT;
     }
-    //! calculate current phase
+    //! Calculate current phase
     CalculateConditionPMS(md_la);
 }
 
