@@ -12,8 +12,8 @@
 //////////////// DECLARATION OF EXTERNAL ACCESS TO ARRAY ELEMENTS/////////////////////
 //! declaration of external access to a variable Tabl_sin_90
 extern const float32 Tabl_sin_90[91];
-//! declaration of external access to a variable SQRT175
-extern const float32 SQRT175[177];
+//! declaration of external access to a variable SQRT350
+extern const float32 SQRT350[352];
 //! declaration of external access to a variable Tabl_Im
 extern const float32 Tabl_Im[18];
 //! declaration of external access to a variable TABL_UU

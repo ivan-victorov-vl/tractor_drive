@@ -204,7 +204,7 @@ float32 CalcLengthVect2In(float32 first_lb, float32 secnd_lb) {
     //! calculation of the additive variable for vector length calculation
     add_len_vect_lb = len_vect_diskrf_lb - (float32)len_vect_diskri_lb;
     //! specify array address
-    len_vect_tablf_lb = &SQRT175[len_vect_diskri_lb];
+    len_vect_tablf_lb = &SQRT350[len_vect_diskri_lb];
 
     //! calculate the return value of the function
     return (*len_vect_tablf_lb + (add_len_vect_lb * (*(len_vect_tablf_lb + 1) - *len_vect_tablf_lb)));
@@ -217,29 +217,31 @@ float32 CalculateScalarCurrentFrom6Phase(Model_Data_PMSM_S *md_l) {
     //! Get value for calculate in square table
     float32 len_diskr_float_lb;
     //! Declaration of the variable len_vect_diskri_lb
-    Uint16 len_diskr_int_lb;
+    Uint32 len_diskr_int_lb;
     //! Declaration of vector length calculation variable
     float32 add_len_vect_lb;
     //! Declaration of the variable of vector length table calculation
     const float32 *len_vect_tabl_float_lb;
 
     //! Get value current for calculation in square
-    len_diskr_float_lb = (md_l->iu.fl * md_l->iu.fl) + (md_l->iv.fl * md_l->iv.fl) + (md_l->iw.fl * md_l->iw.fl)
-            + (md_l->iu1.fl * md_l->iu1.fl) + (md_l->iv1.fl * md_l->iv1.fl) + (md_l->iw1.fl * md_l->iw1.fl) * 100;
+    len_diskr_float_lb = ((md_l->iu.fl * md_l->iu.fl) + (md_l->iv.fl * md_l->iv.fl)
+            + (md_l->iw.fl * md_l->iw.fl) + (md_l->iu1.fl * md_l->iu1.fl)
+            + (md_l->iv1.fl * md_l->iv1.fl) + (md_l->iw1.fl * md_l->iw1.fl)) * 100;
     //! Conversion from floating point to integer type
-    len_diskr_int_lb = (Uint16)len_diskr_float_lb;
+    len_diskr_int_lb = (Uint32)len_diskr_float_lb;
     //! Calculation of the additive variable for vector length calculation
     add_len_vect_lb = len_diskr_float_lb - (float32)len_diskr_int_lb;
     //! Specify array address
-    len_vect_tabl_float_lb = &SQRT175[len_diskr_int_lb];
+    len_vect_tabl_float_lb = &SQRT350[len_diskr_int_lb];
     //! Calculate the return value of the function
     return DIV_SQRT3_3 * (*len_vect_tabl_float_lb + (add_len_vect_lb * (*(len_vect_tabl_float_lb + 1) - *len_vect_tabl_float_lb)));
 }
 
 /*!
-    \brief calculate condition of PMSM
+    \brief Ñalculate condition of PMSM
  */
 void CalculateConditionPMS(Model_Data_PMSM_S *md_l) {
+    //! Calculation
     int32 calc_theta = ((int32)md_l->theta.fl%120)/10;
 
     md_l->uu.fl = TABL_UU[calc_theta];

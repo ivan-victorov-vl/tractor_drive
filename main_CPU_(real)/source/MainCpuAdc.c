@@ -133,17 +133,17 @@ void HandlrVoltageAdc(Model_Data_PMSM_S *md_motor_l) {
     md_motor_l->uac_os_3_0.fl = (float32)(AdcRegs.ADCRESULT5 >> 4);
 
     //! Shift for sensor voltage phase u
-    md_motor_l->uu_os.fl = md_motor_l->uac_os_1_0.fl - ZERO_VALUE_U_PHASE_U;
+    md_motor_l->uu_os.fl = md_motor_l->uac_os_1_0.fl - (float32)ZERO_VALUE_U_PHASE_U;
     //! Shift for sensor voltage phase v
-    md_motor_l->uv_os.fl = md_motor_l->uac_os_2_0.fl - ZERO_VALUE_U_PHASE_V;
+    md_motor_l->uv_os.fl = md_motor_l->uac_os_2_0.fl - (float32)ZERO_VALUE_U_PHASE_V;
     //! Shift for sensor voltage phase w
-    md_motor_l->uw_os.fl = md_motor_l->uac_os_3_0.fl - ZERO_VALUE_U_PHASE_W;
+    md_motor_l->uw_os.fl = md_motor_l->uac_os_3_0.fl - (float32)ZERO_VALUE_U_PHASE_W;
     //! Shift for sensor voltage phase u1
-    md_motor_l->uu1_os.fl = md_motor_l->uac_os_1_1.fl - ZERO_VALUE_U_PHASE_U1;
+    md_motor_l->uu1_os.fl = md_motor_l->uac_os_1_1.fl - (float32)ZERO_VALUE_U_PHASE_U1;
     //! Shift for sensor voltage phase v1
-    md_motor_l->uv1_os.fl = md_motor_l->uac_os_2_1.fl - ZERO_VALUE_U_PHASE_V1;
+    md_motor_l->uv1_os.fl = md_motor_l->uac_os_2_1.fl - (float32)ZERO_VALUE_U_PHASE_V1;
     //! Shift for sensor voltage phase w1
-    md_motor_l->uw1_os.fl = md_motor_l->uac_os_3_1.fl - ZERO_VALUE_U_PHASE_W1;
+    md_motor_l->uw1_os.fl = md_motor_l->uac_os_3_1.fl - (float32)ZERO_VALUE_U_PHASE_W1;
 }
 
 /*!
