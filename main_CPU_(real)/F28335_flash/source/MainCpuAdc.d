@@ -27,6 +27,7 @@ source/MainCpuAdc.obj: C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/inclu
 source/MainCpuAdc.obj: C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/include/MainCpuAdc.h
 source/MainCpuAdc.obj: C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/include/BaseDrive.h
 source/MainCpuAdc.obj: C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/include/SysSrvc.h
+source/MainCpuAdc.obj: C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/include/Debug.h
 source/MainCpuAdc.obj: C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/include/FlagParamDrive.h
 source/MainCpuAdc.obj: C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/include/RegParamDrive.h
 source/MainCpuAdc.obj: C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/include/MainCpuSpi.h
@@ -39,7 +40,6 @@ source/MainCpuAdc.obj: C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/inclu
 source/MainCpuAdc.obj: C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/include/MainInit.h
 source/MainCpuAdc.obj: C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/include/MainSetting.h
 source/MainCpuAdc.obj: C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/include/MeasExtrnlDevice.h
-source/MainCpuAdc.obj: C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/include/Debug.h
 
 ../source/MainCpuAdc.c: 
 C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/include/PeripheralHeaderIncludes.h: 
@@ -68,6 +68,7 @@ C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/include/MainCPU-GPIO_defines
 C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/include/MainCpuAdc.h: 
 C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/include/BaseDrive.h: 
 C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/include/SysSrvc.h: 
+C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/include/Debug.h: 
 C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/include/FlagParamDrive.h: 
 C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/include/RegParamDrive.h: 
 C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/include/MainCpuSpi.h: 
@@ -80,4 +81,3 @@ C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/include/MenuModbus.h:
 C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/include/MainInit.h: 
 C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/include/MainSetting.h: 
 C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/include/MeasExtrnlDevice.h: 
-C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/include/Debug.h: 

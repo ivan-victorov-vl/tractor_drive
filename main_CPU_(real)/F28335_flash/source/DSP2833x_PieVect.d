@@ -27,6 +27,7 @@ source/DSP2833x_PieVect.obj: C:/Users/Lenovo/programs/TMS320F28335/tractor_drive
 source/DSP2833x_PieVect.obj: C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/include/MainCpuAdc.h
 source/DSP2833x_PieVect.obj: C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/include/BaseDrive.h
 source/DSP2833x_PieVect.obj: C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/include/SysSrvc.h
+source/DSP2833x_PieVect.obj: C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/include/Debug.h
 source/DSP2833x_PieVect.obj: C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/include/FlagParamDrive.h
 source/DSP2833x_PieVect.obj: C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/include/RegParamDrive.h
 source/DSP2833x_PieVect.obj: C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/include/MainCpuSpi.h
@@ -67,6 +68,7 @@ C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/include/MainCPU-GPIO_defines
 C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/include/MainCpuAdc.h: 
 C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/include/BaseDrive.h: 
 C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/include/SysSrvc.h: 
+C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/include/Debug.h: 
 C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/include/FlagParamDrive.h: 
 C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/include/RegParamDrive.h: 
 C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/include/MainCpuSpi.h: 
