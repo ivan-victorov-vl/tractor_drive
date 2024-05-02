@@ -71,7 +71,7 @@
 //! define discrete out 1 off
 #define DISCRETE_OUT_1_OFF GpioDataRegs.GPCCLEAR.bit.GPIO67 = 1
 //! DO1 when when switch "on"
-#define DO1_ACTIVATION DO1_ACTIVATION_IN_PERCENT * 0.001
+#define DO1_ACTIVATION DO1_ACTIVATION_IN_PERCENT * (35/600)
 //! Addition part of the intensity setter
 #define ADD_PART_INTESNE_SETTER 0.0001
 //! deadband for pwm
