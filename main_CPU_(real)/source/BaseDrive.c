@@ -146,10 +146,12 @@ void CntrlDrive(Model_Data_PMSM_S *md_l, Settng_Data_PMSM_S *sd_l, Flg_Cntrl_Dri
     //! if UDC more value cutoffs
     if (md_l->udc.fl > DO1_ACTIVATION) {
         //! switch on DO1
-        DISCRETE_OUT_1_ON;
+        DISCRETE_OUT_CLEAR_1_OFF;
+        DISCRETE_OUT_SET_1_ON;
     } else {
         //! switch off DO1
-        DISCRETE_OUT_1_OFF;
+        DISCRETE_OUT_SET_1_OFF;
+        DISCRETE_OUT_CLEAR_1_ON;
     }
 
     //! work frequency control
