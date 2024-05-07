@@ -32,8 +32,9 @@
 #define T_INTGRL_PSTN	7
 //! time constant of the diffrential coefficient of the rotor position controller pid
 #define T_DFRNTNL_PSTN	99999999999
+// TODO Now for debug set to (20) default value (10)
 //! Minimum transition angle
-#define MIN_CROSS_ANGLE 10
+#define MIN_CROSS_ANGLE 20
 
 
 ///////////////////////////  MACROSUBSTITUTION ///////////////////////////////
