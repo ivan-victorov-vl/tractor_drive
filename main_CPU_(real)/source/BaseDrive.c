@@ -22,6 +22,7 @@ void PMSMotorFuncTechSpecWithoutIntenstCntrllr(Model_Data_PMSM_S *md_la, Flg_Cnt
 void PMSMotorFuncSensorless(Model_Data_PMSM_S *md_la, Flg_Cntrl_Drive_S *mf_la, Brws_Param_Drive *bpd_la);
 void CntrlDrive(Model_Data_PMSM_S *md_l, Settng_Data_PMSM_S *sd_l, Flg_Cntrl_Drive_S *mf_l, Brws_Param_Drive *bpd_l);
 void HandlerExternalButtons(Flg_Cntrl_Drive_S *mf_l);
+void HandlerSwitchDO1(float32 udc);
 
 /*!
  * \brief Initialization PMSM motor control
@@ -45,6 +46,12 @@ void PMSMotorFuncInit(Model_Data_PMSM_S *md_l, Settng_Data_PMSM_S *sd_l, Flg_Cnt
     mf_l->bits_reg2.bits.wrk_drv=FALSE_VAL;
     mf_l->bits_reg2.bits.strt_drv=FALSE_VAL;
     mf_l->bits_reg2.bits.stp_drv=FALSE_VAL;
+    md_l->theta.fl = 0;
+    //! Get voltage and current value
+    HandlrFastAdc(&data_pmsm.md);
+    //! switch off DO1
+    DISCRETE_OUT_SET_1_OFF;
+    DISCRETE_OUT_CLEAR_1_ON;
 }
 
 /*!
@@ -54,8 +61,8 @@ void PMSMotorFuncReset(Model_Data_PMSM_S *md_l, Settng_Data_PMSM_S *sd_l, Flg_Cn
     //! Resetting the frequency inverter data
     md_l->k_f_mul_ref.fl = 0;
     md_l->k_f_mul.fl = 0;
-    md_l->k_f_mul_plus.fl = ADD_PART_INTESNE_SETTER;
-    md_l->k_f_mul_minus.fl = ADD_PART_INTESNE_SETTER;
+    md_l->k_f_mul_plus.fl = ADD_PART_INTENSE_SETTER;
+    md_l->k_f_mul_minus.fl = ADD_PART_INTENSE_SETTER;
     md_l->uu.fl = 0;
     md_l->uv.fl = 0;
     md_l->uw.fl = 0;
@@ -141,18 +148,12 @@ void PMSMotorFuncSensorless(Model_Data_PMSM_S *md_la, Flg_Cntrl_Drive_S *mf_la, 
  * \brief PMSM motor control function
  */
 void CntrlDrive(Model_Data_PMSM_S *md_l, Settng_Data_PMSM_S *sd_l, Flg_Cntrl_Drive_S *mf_l, Brws_Param_Drive *bpd_l) {
+    static int32 delay_start_value = 0;
+
     //! set external reference
     md_l->k_f_mul_ref.fl = sd_l->k_mul_ext_ref;
-    //! if UDC more value cutoffs
-    if (md_l->udc.fl > DO1_ACTIVATION) {
-        //! switch on DO1
-        DISCRETE_OUT_CLEAR_1_OFF;
-        DISCRETE_OUT_SET_1_ON;
-    } else {
-        //! switch off DO1
-        DISCRETE_OUT_SET_1_OFF;
-        DISCRETE_OUT_CLEAR_1_ON;
-    }
+
+    HandlerSwitchDO1(md_l->udc.fl);
 
     //! work frequency control
     if (mf_l->bits_reg2.bits.wrk_drv) {
@@ -170,10 +171,15 @@ void CntrlDrive(Model_Data_PMSM_S *md_l, Settng_Data_PMSM_S *sd_l, Flg_Cntrl_Dri
                 mf_l->bits_reg2.bits.stp_drv = FALSE_VAL;
             }
         } else {
-            //! getting "stop" data button
+            //! Getting "stop" data button
             mf_l->bits_reg2.bits.stp_drv = GET_DIN_3_STOP_BUTTON;
-            //! set value speed motor with reference control
+            //! Set value speed motor with reference control
             SpeedRef(md_l->k_f_mul_ref.fl, md_l->k_f_mul_plus.fl, md_l->k_f_mul_minus.fl, &md_l->k_f_mul.fl);
+
+            //! If less minimal value k_f_mul then value = minimal value k_f_mul
+            if (md_l->k_f_mul.fl < MIN_VALUE_K_F_MUL) {
+                md_l->k_f_mul.fl = MIN_VALUE_K_F_MUL;
+            }
         }
     #if defined(MODEL_INTENSITY_SET) && MODEL_INTENSITY_SET == TRUE_VAL
         //! processing intensity generator values
@@ -181,10 +187,17 @@ void CntrlDrive(Model_Data_PMSM_S *md_l, Settng_Data_PMSM_S *sd_l, Flg_Cntrl_Dri
         // Calculate U,V,W for PMSM control
         PMSMotorFuncTechSpec(md_l, mf_l, bpd_l);
     #else
-        //! Running the model without intensity setter
-        if (mf_l->bits_reg1.bits.ext_angle) {
-            PMSMotorFuncTechSpecWithoutIntenstCntrllr(md_l, mf_l, bpd_l);
-            mf_l->bits_reg1.bits.ext_angle = FALSE_VAL;
+        if (delay_start_value > DELAY_START_VALUE) {
+            //! Running the model without intensity setter
+            if (mf_l->bits_reg1.bits.ext_angle) {
+                PMSMotorFuncTechSpecWithoutIntenstCntrllr(md_l, mf_l, bpd_l);
+                mf_l->bits_reg1.bits.ext_angle = FALSE_VAL;
+            }
+        } else {
+            //! Increment delay
+            delay_start_value++;
+            //! Set start value theta
+            md_l->theta.fl = GET_DIN_HALL_VALUE ? 0 : 30;
         }
     #endif
     } else {
@@ -201,6 +214,7 @@ void CntrlDrive(Model_Data_PMSM_S *md_l, Settng_Data_PMSM_S *sd_l, Flg_Cntrl_Dri
             //! set PWM complimentary state
             Set_Pwm_Complimentary_State();
         }
+        delay_start_value = 0;
     }
 }
 
@@ -235,5 +249,28 @@ Uint16 HandlerSwitchProcessing(Uint16 current_count, Uint16 maxCount) {
     } else {
         //! set false value
         return FALSE_VAL;
+    }
+}
+
+/*!
+ * \brief handler for switch DO1 processing
+ */
+void HandlerSwitchDO1(float32 udc) {
+    static int32 enable_timer = 0;
+
+    //! Delay for DO1
+    if (enable_timer > 3000) {
+        //! if UDC more value cutoffs
+        if (udc > DO1_ACTIVATION) {
+            //! switch on DO1
+            DISCRETE_OUT_CLEAR_1_OFF;
+            DISCRETE_OUT_SET_1_ON;
+        } else {
+            //! switch off DO1
+            DISCRETE_OUT_SET_1_OFF;
+            DISCRETE_OUT_CLEAR_1_ON;
+        }
+    } else {
+        enable_timer++;
     }
 }
