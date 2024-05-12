@@ -78,7 +78,7 @@ void MainInit(void)
 	//! Set configuration for cpu_timer_0
 	ConfigCpuTimer(&CpuTimer0, 100, 900);
 	//! Set configuration for cpu_timer_2
-	ConfigCpuTimer(&CpuTimer2, 100, 900);
+	ConfigCpuTimer(&CpuTimer2, 100, 400);
 	//! setting of modules ePWM 1 to ePWM 3 for output PWM to motor,
 	//! ePWM to set the basic cycle
 	InitEPwm_1_2_3_4_5_6_Timers(PWM_OUT_PHASE);
@@ -120,7 +120,6 @@ void MainInit(void)
 	//! ADC data update
 	AdcRegs.ADCTRL2.bit.SOC_SEQ1 = 1;
     AdcRegs.ADCTRL2.bit.SOC_SEQ2 = 1;
-
 
     //! configuring interrupt handling functions:
     //! allow changes to forbidden registers

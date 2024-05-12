@@ -75,12 +75,17 @@
 //! Define discrete out CLEAR 1 off
 #define DISCRETE_OUT_CLEAR_1_OFF GpioDataRegs.GPCCLEAR.bit.GPIO67 = 0
 //! DO1 value when switch "on"
-#define DO1_ACTIVATION DO1_ACTIVATION_IN_PERCENT * (35/600) * 0.01
-//! Addition part of the intensity setter (1/500) / 0.0000333 = 60 sec
-#define ADD_PART_INTESNE_SETTER 0.0000333
+#define DO1_ACTIVATION ((float32)ENABLE_UDC_VOLTAGE/(float32)600)
+//! Addition part of the intensity setter (1/1000) / 0.0001 = 10 sec
+#define ADD_PART_INTENSE_SETTER 0.0001
 //! Deadband for pwm
 #define DEAD_BAND 450
-
+//! Minimal value k_f_mul
+#define MIN_VALUE_K_F_MUL 0.05
+//! Get data hall sensor input value
+#define GET_DIN_HALL_VALUE GpioDataRegs.GPBDAT.bit.GPIO62
+//! Delay value (now set 2 sec. 2/(1/1000)=2000)
+#define DELAY_START_VALUE 2000
 
 //////////////// DECLARATION OF EXTERNAL ACCESS TO FUNCTIONS /////////////////////
 //! Declaration of external access to the TimeDelay function
