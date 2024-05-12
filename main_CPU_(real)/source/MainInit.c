@@ -131,7 +131,7 @@ void MainInit(void)
     EDIS;
 
     // Configure XINT3 (Falling edge interrupt)
-    XIntruptRegs.XINT3CR.bit.POLARITY = 0;
+    XIntruptRegs.XINT3CR.bit.POLARITY = 3;
 
     //! Enable XINT3
     XIntruptRegs.XINT3CR.bit.ENABLE = 1;
