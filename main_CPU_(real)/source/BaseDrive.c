@@ -137,8 +137,6 @@ void PMSMotorFuncTechSpecWithoutIntenstCntrllr(Model_Data_PMSM_S *md_la, Flg_Cnt
         //! Reset the angle to zero
         md_la->theta.fl -= FULL_DSKRT;
     }
-    //! Calculate current phase
-    CalculateConditionPMS(md_la);
 }
 
 void PMSMotorFuncSensorless(Model_Data_PMSM_S *md_la, Flg_Cntrl_Drive_S *mf_la, Brws_Param_Drive *bpd_la) {
@@ -193,6 +191,8 @@ void CntrlDrive(Model_Data_PMSM_S *md_l, Settng_Data_PMSM_S *sd_l, Flg_Cntrl_Dri
                 PMSMotorFuncTechSpecWithoutIntenstCntrllr(md_l, mf_l, bpd_l);
                 mf_l->bits_reg1.bits.ext_angle = FALSE_VAL;
             }
+            //! Calculate current phase
+            CalculateConditionPMS(md_l);
         } else {
             //! Increment delay
             delay_start_value++;

@@ -1,7 +1,7 @@
 ******************************************************************************
              TMS320C2000 Linker PC v18.1.2                     
 ******************************************************************************
->> Linked Mon May 13 09:32:13 2024
+>> Linked Mon May 13 10:23:16 2024
 
 OUTPUT FILE NAME:   <C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/main_CPU_(real)/../FLASH/MainCPU.out>
 ENTRY POINT SYMBOL: "_c_int00"  address: 00009538
@@ -598,7 +598,7 @@ page  address   name
 0     00009655  _CalcVarblsSttng                          
 0     0000835a  _CalculateConditionPMS                    
 0     000082c8  _CalculateScalarCurrentFrom6Phase         
-0     00008bd6  _CntrlDrive                               
+0     00008bd3  _CntrlDrive                               
 0     000094b6  _ConfigCpuTimer                           
 1     0000c222  _CpuTimer0                                
 1     00000c00  _CpuTimer0Regs                            
@@ -719,7 +719,7 @@ page  address   name
 0     00008a57  _PMSMotorFuncInit                         
 0     00008ab4  _PMSMotorFuncReset                        
 0     00008aff  _PMSMotorFuncScal                         
-0     00008bd1  _PMSMotorFuncSensorless                   
+0     00008bce  _PMSMotorFuncSensorless                   
 0     00008b04  _PMSMotorFuncTechSpec                     
 0     00008b6c  _PMSMotorFuncTechSpecWithoutIntenstCntrllr
 1     00000ce0  _PieCtrlRegs                              
@@ -960,8 +960,8 @@ page  address   name
 0     00008aff  _PMSMotorFuncScal                         
 0     00008b04  _PMSMotorFuncTechSpec                     
 0     00008b6c  _PMSMotorFuncTechSpecWithoutIntenstCntrllr
-0     00008bd1  _PMSMotorFuncSensorless                   
-0     00008bd6  _CntrlDrive                               
+0     00008bce  _PMSMotorFuncSensorless                   
+0     00008bd3  _CntrlDrive                               
 0     00008c96  _HandlerExternalButtons                   
 0     00008caa  _HandlerFreezeProtection                  
 0     00008cc0  _HandlerSwitchProcessing                  
