@@ -242,7 +242,7 @@ float32 CalculateScalarCurrentFrom6Phase(Model_Data_PMSM_S *md_l) {
  */
 void CalculateConditionPMS(Model_Data_PMSM_S *md_l) {
     //! Calculation
-    int32 calc_theta = ((int32)md_l->theta.fl%120)/10;
+    int32 calc_theta = ((int32)md_l->theta.fl)/(int32)30;
 
     md_l->uu.fl = TABL_UU[calc_theta];
     md_l->uv.fl = TABL_UV[calc_theta];
