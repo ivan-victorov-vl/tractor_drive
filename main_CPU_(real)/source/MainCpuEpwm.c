@@ -271,20 +271,19 @@ void InitEPwm_1_2_3_4_5_6_Timers(Uint16 prd_epwm_1_2_3_4_5_6) {
  */
 void Handlr_ePwm(Flg_Cntrl_Drive_S *mf_l, Uint16 prd_div_2_epwm_u_v_w_l, Model_Data_PMSM_S *md_motor_l) {
     //! Check work drive
-    if (mf_l->bits_reg2.bits.wrk_drv)
-    {
-        //! Set the PWM value for the phase u
-	    EPwm1Regs.CMPA.half.CMPA = (Uint16)(( (md_motor_l->uu.fl * md_motor_l->k_f_mul.fl) * (prd_div_2_epwm_u_v_w_l) ) + prd_div_2_epwm_u_v_w_l);
+    if (mf_l->bits_reg2.bits.wrk_drv) {
+        //! Set the PWM value for the phase w
+	    EPwm1Regs.CMPA.half.CMPA = (Uint16)(( (md_motor_l->uw.fl * md_motor_l->k_f_mul.fl) * (prd_div_2_epwm_u_v_w_l) ) + prd_div_2_epwm_u_v_w_l);
 	    //! Set the PWM'a value for phase v
 	    EPwm2Regs.CMPA.half.CMPA = (Uint16)(( (md_motor_l->uv.fl * md_motor_l->k_f_mul.fl) * (prd_div_2_epwm_u_v_w_l) ) + prd_div_2_epwm_u_v_w_l);
-	    //! Set the PWM value for phase w
-	    EPwm3Regs.CMPA.half.CMPA = (Uint16)(( (md_motor_l->uw.fl * md_motor_l->k_f_mul.fl) * (prd_div_2_epwm_u_v_w_l) ) + prd_div_2_epwm_u_v_w_l);
+	    //! Set the PWM value for phase u
+	    EPwm3Regs.CMPA.half.CMPA = (Uint16)(( (md_motor_l->uu.fl * md_motor_l->k_f_mul.fl) * (prd_div_2_epwm_u_v_w_l) ) + prd_div_2_epwm_u_v_w_l);
         //! Set the PWM value for the phase u1
         EPwm4Regs.CMPA.half.CMPA = (Uint16)(( (md_motor_l->uu1.fl * md_motor_l->k_f_mul.fl) * (prd_div_2_epwm_u_v_w_l) ) + prd_div_2_epwm_u_v_w_l);
-        //! Set the PWM'a value for phase v1
-        EPwm5Regs.CMPA.half.CMPA = (Uint16)(( (md_motor_l->uv1.fl * md_motor_l->k_f_mul.fl) * (prd_div_2_epwm_u_v_w_l) ) + prd_div_2_epwm_u_v_w_l);
-        //! Set the PWM value for phase w1
-        EPwm6Regs.CMPA.half.CMPA = (Uint16)(( (md_motor_l->uw1.fl * md_motor_l->k_f_mul.fl) * (prd_div_2_epwm_u_v_w_l) ) + prd_div_2_epwm_u_v_w_l);
+        //! Set the PWM'a value for phase w1
+        EPwm5Regs.CMPA.half.CMPA = (Uint16)(( (md_motor_l->uw1.fl * md_motor_l->k_f_mul.fl) * (prd_div_2_epwm_u_v_w_l) ) + prd_div_2_epwm_u_v_w_l);
+        //! Set the PWM value for phase v1
+        EPwm6Regs.CMPA.half.CMPA = (Uint16)(( (md_motor_l->uv1.fl * md_motor_l->k_f_mul.fl) * (prd_div_2_epwm_u_v_w_l) ) + prd_div_2_epwm_u_v_w_l);
     } else {
         //! Set PWM low state
         Set_Pwm_Low_State();
