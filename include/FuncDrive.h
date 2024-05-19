@@ -21,7 +21,7 @@
 
 ////////////////////// DECLARATION OF NAMED CONSTANTS //////////////////////
 //! number of samples per complete revolution
-#define	FULL_DSKRT			359.999
+#define	FULL_DSKRT			360.00
 //! time constant for calculating the second (1 / (cycle time * 2 )))
 #define CONST_ACCEL 		18181.81818181818
 //! format: DIV_separate_divider; named constant equal to 1/SQRT(3)

@@ -56,16 +56,18 @@ typedef struct
 	Uint16 strt_drv : 1;
 	// 4 frequency inverter stop: 0 - off, 1 - on
 	Uint16 stp_drv : 1;
-	// 5 inverter error reset: 0 - off, 1 - on
+	// 5 direction drive: 0 - forward, 1 - backward
+	Uint16 dir_drv : 1;
+	// 6 inverter error reset: 0 - off, 1 - on
     Uint16 reset_drv : 1;
-	// 6 frequency converter fault:  0 - no fault, 1 - fault occurred
+	// 7 frequency converter fault:  0 - no fault, 1 - fault occurred
 	Uint16 err_drv : 1;
-	// 7 frequency converter fault by overcurrent protection: 0 - no fault, 1 - fault occurred
+	// 8 frequency converter fault by overcurrent protection: 0 - no fault, 1 - fault occurred
 	Uint16 err_mi_drv : 1;
-	// 8 frequency converter fault by driver protection: 0 - no fault, 1 - fault occurred
+	// 9 frequency converter fault by driver protection: 0 - no fault, 1 - fault occurred
 	Uint16 err_trnstr_drv : 1;
-	// 15:9 reserved
-	Uint16 rsvd : 8;
+	// 15:10 reserved
+	Uint16 rsvd : 7;
 } Flg_Adr02_Bits_S;
 
 /*!

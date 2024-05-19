@@ -46,6 +46,7 @@ void PMSMotorFuncInit(Model_Data_PMSM_S *md_l, Settng_Data_PMSM_S *sd_l, Flg_Cnt
     mf_l->bits_reg2.bits.wrk_drv=FALSE_VAL;
     mf_l->bits_reg2.bits.strt_drv=FALSE_VAL;
     mf_l->bits_reg2.bits.stp_drv=FALSE_VAL;
+    mf_l->bits_reg2.bits.dir_drv=FALSE_VAL;
     md_l->theta.fl = 0;
     //! Get voltage and current value
     HandlrFastAdc(&data_pmsm.md);
@@ -70,7 +71,6 @@ void PMSMotorFuncReset(Model_Data_PMSM_S *md_l, Settng_Data_PMSM_S *sd_l, Flg_Cn
     md_l->uv1.fl = 0;
     md_l->uw1.fl = 0;
     LED_START_OFF;
-    LED_STOP_OFF;
     mf_l->bits_reg2.bits.wrk_drv=FALSE_VAL;
     mf_l->bits_reg2.bits.strt_drv=FALSE_VAL;
     mf_l->bits_reg2.bits.stp_drv=FALSE_VAL;
@@ -119,16 +119,28 @@ void PMSMotorFuncTechSpecWithoutIntenstCntrllr(Model_Data_PMSM_S *md_la, Flg_Cnt
 
     //! Compilation when forward of rotation
     #if FORWARD==TRUE_VAL
-       //! Increment angle
-       md_la->theta.fl += MIN_CROSS_ANGLE;
+       //! Check direction drive
+       if (mf_la->bits_reg2.bits.dir_drv) {
+           //! Set backward direction for drive
+           md_la->theta.fl -= MIN_CROSS_ANGLE;
+       } else {
+           //! Increment angle
+           md_la->theta.fl += MIN_CROSS_ANGLE;
+       }
     //! Compilation when backward of rotation
     #else
-       //! Decrement angle
-       md_la->theta.fl -= MIN_CROSS_ANGLE;
-    #endif
+       //! Check direction drive
+       if (mf_la->bits_reg2.bits.dir_drv) {
+           //! Set forward direction for drive
+           md_la->theta.fl += MIN_CROSS_ANGLE;
+       } else {
+           //! Decrement angle
+           md_la->theta.fl -= MIN_CROSS_ANGLE;
+       }
+       #endif
 
     //! When it reaches less than 0 degrees
-    if (md_la->theta.fl <= 0) {
+    if (md_la->theta.fl < 0) {
         //! Update the angle
         md_la->theta.fl += FULL_DSKRT;
     }
@@ -147,18 +159,17 @@ void PMSMotorFuncSensorless(Model_Data_PMSM_S *md_la, Flg_Cntrl_Drive_S *mf_la, 
  */
 void CntrlDrive(Model_Data_PMSM_S *md_l, Settng_Data_PMSM_S *sd_l, Flg_Cntrl_Drive_S *mf_l, Brws_Param_Drive *bpd_l) {
     static int32 delay_start_value = 0;
+    static int16 filter_direction = FALSE_VAL;
 
     //! set external reference
     md_l->k_f_mul_ref.fl = sd_l->k_mul_ext_ref;
-
+    //! handle switch do1
     HandlerSwitchDO1(md_l->udc.fl);
 
     //! work frequency control
     if (mf_l->bits_reg2.bits.wrk_drv) {
         //! if a stop command has been received
         if (mf_l->bits_reg2.bits.stp_drv) {
-            //! light the stop LED
-            LED_STOP_ON;
             //! TODO added for current regulator reduction (now for debug)
             SpeedRef(0, md_l->k_f_mul_plus.fl, md_l->k_f_mul_minus.fl, &md_l->k_f_mul.fl);
             //! if the speed is stopped
@@ -196,25 +207,39 @@ void CntrlDrive(Model_Data_PMSM_S *md_l, Settng_Data_PMSM_S *sd_l, Flg_Cntrl_Dri
         } else {
             //! Increment delay
             delay_start_value++;
-            //! Set start value theta
+            //! Set start value angle
             md_l->theta.fl = GET_DIN_HALL_VALUE ? 0 : 30;
         }
     #endif
     } else {
-        //! reset variable PMSM-Motor
+        //! Reset variable PMSM-Motor
         PMSMotorFuncReset(md_l, sd_l, mf_l);
-        //! step with non-working condition of the frequency converter
-        //! start drive converter
+        //! Step with non-working condition of the frequency converter
+        //! Start drive converter
         mf_l->bits_reg2.bits.strt_drv = GET_DIN_2_START_BUTTON;
         if (mf_l->bits_reg2.bits.strt_drv) {
-            //! set "work" bit
+            //! Set "work" bit
             mf_l->bits_reg2.bits.wrk_drv = TRUE_VAL;
-            //! set "start" bit
+            //! Set "start" bit
             LED_START_ON;
-            //! set PWM complimentary state
+            //! Set PWM complimentary state
             Set_Pwm_Complimentary_State();
         }
+        //! Reset delay start value
         delay_start_value = 0;
+        //! Check direction motor
+        if (!GpioDataRegs.GPCDAT.bit.GPIO75) {
+            // Check first switch
+            if (!filter_direction) {
+                //! Change direction to inverse
+                mf_l->bits_reg2.bits.dir_drv = !mf_l->bits_reg2.bits.dir_drv;
+                //! Block for second switch
+                filter_direction = TRUE_VAL;
+            }
+        } else {
+            // Reset filter switch
+            filter_direction = FALSE_VAL;
+        }
     }
 }
 

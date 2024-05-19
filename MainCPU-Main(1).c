@@ -92,6 +92,15 @@ interrupt void TINT0_ISR(void) {
         }
     }
 
+   //! Check direction motor
+   if (flags_drive.bits_reg2.bits.dir_drv) {
+       //! If inverse set led direction on
+       LED_DIR_ON;
+    } else {
+        //! If not inverse set led direction off
+        LED_DIR_OFF;
+    }
+
     //! First step
     //! Extraction of ADC currents and external speed reference values
 	HandlrAdc(&data_pmsm.md, &data_pmsm.sd);

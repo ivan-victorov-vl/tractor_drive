@@ -20,7 +20,7 @@
 //#define CURRENT_REF
 
 ////////////////////// DECLARATION OF NAMED CONSTANTS //////////////////////
-// Processor frequency in Hz
+//! Processor frequency in Hz
 #define FRQ_HZ_PRCSR	150000000
 //! Maximum number of inputs to the button filter
 #define N_CNT_FLTR_MAX 32000
@@ -48,14 +48,16 @@
 #define LED_START_ON GpioDataRegs.GPCCLEAR.bit.GPIO80 = 1
 //! Define led START off
 #define LED_START_OFF GpioDataRegs.GPCSET.bit.GPIO80 = 1
-//! Define led STOP on
-#define LED_STOP_ON GpioDataRegs.GPCCLEAR.bit.GPIO81 = 1
-//! Define led STOP off
-#define LED_STOP_OFF GpioDataRegs.GPCSET.bit.GPIO81 = 1
+//! Define led direction on
+#define LED_DIR_ON GpioDataRegs.GPCCLEAR.bit.GPIO81 = 1
+//! Define led direction off
+#define LED_DIR_OFF GpioDataRegs.GPCSET.bit.GPIO81 = 1
 //! Define led STOP on
 #define LED_ERROR_ON GpioDataRegs.GPCCLEAR.bit.GPIO82 = 1
 //! Define led ERROR off
 #define LED_ERROR_OFF GpioDataRegs.GPCSET.bit.GPIO82 = 1
+//! Define D_in_1 "CHANGE_DIRECTION" button
+#define GET_DIN_1_CHANGE_DIRECTION_BUTTON !GpioDataRegs.GPCDAT.bit.GPIO75
 //! Define D_in_2 "START" button
 #define GET_DIN_2_START_BUTTON !GpioDataRegs.GPCDAT.bit.GPIO74
 //! Define D_in_3 "STOP" button
@@ -81,7 +83,7 @@
 //! Deadband for pwm
 #define DEAD_BAND 450
 //! Minimal value k_f_mul
-#define MIN_VALUE_K_F_MUL 0.05
+#define MIN_VALUE_K_F_MUL 0.1
 //! Get data hall sensor input value
 #define GET_DIN_HALL_VALUE GpioDataRegs.GPBDAT.bit.GPIO62
 //! Delay value (now set 2 sec. 2/(1/1000)=2000)
