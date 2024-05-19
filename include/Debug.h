@@ -40,7 +40,7 @@
 #define ZERO_VALUE_U_PHASE_W1 2048
 
 //! Разрешённое напряжение UDC,Вольт (напряжкние при котором включается DO1)
-#define ENABLE_UDC_VOLTAGE 42
+#define ENABLE_UDC_VOLTAGE 50
 
 //! Коэффициент для пропорциональной составляющей токового задания
 #define K_PROP 0.1
