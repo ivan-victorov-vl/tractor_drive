@@ -97,8 +97,8 @@ interrupt void TINT0_ISR(void) {
        //! If inverse set led direction on
        LED_DIR_ON;
     } else {
-        //! If not inverse set led direction off
-        LED_DIR_OFF;
+       //! If not inverse set led direction off
+       LED_DIR_OFF;
     }
 
     //! First step
