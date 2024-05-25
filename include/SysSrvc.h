@@ -83,7 +83,7 @@
 //! Deadband for pwm
 #define DEAD_BAND 450
 //! Minimal value k_f_mul
-#define MIN_VALUE_K_F_MUL 0.1
+#define MIN_VALUE_K_F_MUL 0.15
 //! Get data hall sensor input value
 #define GET_DIN_HALL_VALUE GpioDataRegs.GPBDAT.bit.GPIO62
 //! Delay value (now set 2 sec. 2/(1/1000)=2000)

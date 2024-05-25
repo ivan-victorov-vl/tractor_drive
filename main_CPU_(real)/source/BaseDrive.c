@@ -202,14 +202,14 @@ void CntrlDrive(Model_Data_PMSM_S *md_l, Settng_Data_PMSM_S *sd_l, Flg_Cntrl_Dri
                 PMSMotorFuncTechSpecWithoutIntenstCntrllr(md_l, mf_l, bpd_l);
                 mf_l->bits_reg1.bits.ext_angle = FALSE_VAL;
             }
-            //! Calculate current phase
-            CalculateConditionPMS(md_l);
         } else {
             //! Increment delay
             delay_start_value++;
             //! Set start value angle
-            md_l->theta.fl = GET_DIN_HALL_VALUE ? 0 : 30;
+            md_l->theta.fl = GET_DIN_HALL_VALUE ? 30 : 0;
         }
+        //! Calculate current phase
+        CalculateConditionPMS(md_l);
     #endif
     } else {
         //! Reset variable PMSM-Motor
