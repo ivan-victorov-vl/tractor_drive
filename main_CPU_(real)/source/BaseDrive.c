@@ -207,6 +207,8 @@ void CntrlDrive(Model_Data_PMSM_S *md_l, Settng_Data_PMSM_S *sd_l, Flg_Cntrl_Dri
             delay_start_value++;
             //! Set start value angle
             md_l->theta.fl = GET_DIN_HALL_VALUE ? 30 : 0;
+            //! Set next value angle rotor
+            mf_l->bits_reg1.bits.ext_angle=TRUE_VAL;
         }
         //! Calculate current phase
         CalculateConditionPMS(md_l);
