@@ -205,8 +205,26 @@ void CntrlDrive(Model_Data_PMSM_S *md_l, Settng_Data_PMSM_S *sd_l, Flg_Cntrl_Dri
         } else {
             //! Increment delay
             delay_start_value++;
-            //! Set start value angle
-            md_l->theta.fl = GET_DIN_HALL_VALUE ? 0 : 330;
+
+            //! Compilation when forward of rotation
+            #if FORWARD==TRUE_VAL
+            if (mf_l->bits_reg2.bits.dir_drv) {
+                //! Set start value angle for backward
+                md_l->theta.fl = GET_DIN_HALL_VALUE ? 0 : 30;
+            } else {
+                //! Set start value angle for forward
+                md_l->theta.fl = GET_DIN_HALL_VALUE ? 0 : 330;
+            }
+            //! Compilation when backward of rotation
+            #else
+            if (mf_l->bits_reg2.bits.dir_drv) {
+                //! Set start value angle for backward
+                md_l->theta.fl = GET_DIN_HALL_VALUE ? 0 : 330;
+            } else {
+                //! Set start value angle for forward
+                md_l->theta.fl = GET_DIN_HALL_VALUE ? 0 : 30;
+            }
+            #endif
             //! Set next value angle rotor
             mf_l->bits_reg1.bits.ext_angle=TRUE_VAL;
         }
