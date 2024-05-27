@@ -82,8 +82,10 @@
 #define ADD_PART_INTENSE_SETTER 0.0001
 //! Deadband for pwm
 #define DEAD_BAND 450
-//! Minimal value k_f_mul
-#define MIN_VALUE_K_F_MUL 0.12
+//! Minimal value k_f_mul when motor is run
+#define MIN_VALUE_K_F_MUL_IS_RUN 0.01
+//! Minimal value k_f_mul when motor is stop
+#define MIN_VALUE_K_F_MUL_IS_STOP 0.12
 //! Get data hall sensor input value
 #define GET_DIN_HALL_VALUE GpioDataRegs.GPBDAT.bit.GPIO62
 //! Delay value (now set 2 sec. 2/(1/1000)=2000)

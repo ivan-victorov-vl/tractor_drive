@@ -108,13 +108,6 @@ interrupt void TINT0_ISR(void) {
 	//! Second step
 	//! Computing fast variables
 	CalcFastVarblsSttng(&data_pmsm);
-	//! If there is an error, the operation stops.
-	if (!flags_drive.bits_reg2.bits.err_drv) {
-	    //! Frequency converter control
-	    CntrlDrive(&data_pmsm.md, &data_pmsm.sd, &flags_drive, &brwsr);
-	}
-	//! Conversion of phase ePwm from relative view to processor PWM view
-	Handlr_ePwm(&flags_drive, PWM_OUT_PHASE_DIV_2, &data_pmsm.md);
 
 	//! Handler freeze protection
 	HandlerFreezeProtection();
@@ -141,6 +134,14 @@ interrupt void INT14_ISR(void) {
               K_INTEGR,
               &integral_ref_current);
     #endif
+    //! If there is an error, the operation stops.
+    if (!flags_drive.bits_reg2.bits.err_drv) {
+        //! Frequency converter control
+        CntrlDrive(&data_pmsm.md, &data_pmsm.sd, &flags_drive, &brwsr);
+    }
+    //! Conversion of phase ePwm from relative view to processor PWM view
+    Handlr_ePwm(&flags_drive, PWM_OUT_PHASE_DIV_2, &data_pmsm.md);
+
     //! unchanging forbidden registers
     EDIS;
 }
