@@ -112,30 +112,31 @@ void PMSMotorFuncTechSpec(Model_Data_PMSM_S *md_la, Flg_Cntrl_Drive_S *mf_la, Br
 void PMSMotorFuncTechSpecWithoutIntenstCntrllr(Model_Data_PMSM_S *md_la, Flg_Cntrl_Drive_S *mf_la, Brws_Param_Drive *bpd_la) {
     static float32 i_alpha_la, i_beta_la;
 
-    //! Conversion of currents from three-phase to two-phase reference frame
-    Calc3To2(md_la->iu.fl, md_la->iv.fl, md_la->iw.fl, &i_alpha_la, &i_beta_la);
-    //! Calculation of the measured current in scalar coordinate system
-    md_la->is.fl = CalcLengthVect2In(i_alpha_la, i_beta_la);
+//    TODO Now for debug
+//    //! Conversion of currents from three-phase to two-phase reference frame
+//    Calc3To2(md_la->iu.fl, md_la->iv.fl, md_la->iw.fl, &i_alpha_la, &i_beta_la);
+//    //! Calculation of the measured current in scalar coordinate system
+//    md_la->is.fl = CalcLengthVect2In(i_alpha_la, i_beta_la);
 
     //! Compilation when forward of rotation
     #if FORWARD==TRUE_VAL
        //! Check direction drive
        if (mf_la->bits_reg2.bits.dir_drv) {
            //! Set backward direction for drive
-           md_la->theta.fl -= MIN_CROSS_ANGLE;
+           md_la->theta.fl -= (MIN_CROSS_ANGLE + (MIN_CROSS_ANGLE * md_la->k_f_mul.fl));
        } else {
            //! Increment angle
-           md_la->theta.fl += MIN_CROSS_ANGLE;
+           md_la->theta.fl += (MIN_CROSS_ANGLE + (MIN_CROSS_ANGLE * md_la->k_f_mul.fl));
        }
     //! Compilation when backward of rotation
     #else
        //! Check direction drive
        if (mf_la->bits_reg2.bits.dir_drv) {
            //! Set forward direction for drive
-           md_la->theta.fl += MIN_CROSS_ANGLE;
+           md_la->theta.fl += (MIN_CROSS_ANGLE + (MIN_CROSS_ANGLE * md_la->k_f_mul.fl));
        } else {
            //! Decrement angle
-           md_la->theta.fl -= MIN_CROSS_ANGLE;
+           md_la->theta.fl -= (MIN_CROSS_ANGLE + (MIN_CROSS_ANGLE * md_la->k_f_mul.fl));
        }
        #endif
 
@@ -185,10 +186,6 @@ void CntrlDrive(Model_Data_PMSM_S *md_l, Settng_Data_PMSM_S *sd_l, Flg_Cntrl_Dri
             //! Set value speed motor with reference control
             SpeedRef(md_l->k_f_mul_ref.fl, md_l->k_f_mul_plus.fl, md_l->k_f_mul_minus.fl, &md_l->k_f_mul.fl);
 
-            //! If less minimal value k_f_mul then value = minimal value k_f_mul
-            if (md_l->k_f_mul.fl < MIN_VALUE_K_F_MUL) {
-                md_l->k_f_mul.fl = MIN_VALUE_K_F_MUL;
-            }
         }
     #if defined(MODEL_INTENSITY_SET) && MODEL_INTENSITY_SET == TRUE_VAL
         //! processing intensity generator values
@@ -201,6 +198,11 @@ void CntrlDrive(Model_Data_PMSM_S *md_l, Settng_Data_PMSM_S *sd_l, Flg_Cntrl_Dri
             if (mf_l->bits_reg1.bits.ext_angle) {
                 PMSMotorFuncTechSpecWithoutIntenstCntrllr(md_l, mf_l, bpd_l);
                 mf_l->bits_reg1.bits.ext_angle = FALSE_VAL;
+            }
+
+            //! If less minimal value k_f_mul then value = minimal value k_f_mul
+            if (md_l->k_f_mul.fl < MIN_VALUE_K_F_MUL_IS_RUN) {
+                md_l->k_f_mul.fl = MIN_VALUE_K_F_MUL_IS_RUN;
             }
         } else {
             //! Increment delay
@@ -227,6 +229,10 @@ void CntrlDrive(Model_Data_PMSM_S *md_l, Settng_Data_PMSM_S *sd_l, Flg_Cntrl_Dri
             #endif
             //! Set next value angle rotor
             mf_l->bits_reg1.bits.ext_angle=TRUE_VAL;
+            //! If less minimal value k_f_mul then value = minimal value k_f_mul
+            if (md_l->k_f_mul.fl < MIN_VALUE_K_F_MUL_IS_STOP) {
+                md_l->k_f_mul.fl = MIN_VALUE_K_F_MUL_IS_STOP;
+            }
         }
         //! Calculate current phase
         CalculateConditionPMS(md_l);
