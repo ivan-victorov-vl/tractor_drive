@@ -174,7 +174,7 @@ void CntrlDrive(Model_Data_PMSM_S *md_l, Settng_Data_PMSM_S *sd_l, Flg_Cntrl_Dri
             //! TODO added for current regulator reduction (now for debug)
             SpeedRef(0, md_l->k_f_mul_plus.fl, md_l->k_f_mul_minus.fl, &md_l->k_f_mul.fl);
             //! if the speed is stopped
-            if (md_l->k_f_mul.fl < MIN_VALUE_K_F_MUL_IS_RUN) {
+            if (md_l->k_f_mul.fl < md_l->k_f_mul_minus.fl) {
                //! reset the wrk_drv reset flag
                 mf_l->bits_reg2.bits.wrk_drv = FALSE_VAL;
                //! set zero value flag stop
@@ -186,6 +186,10 @@ void CntrlDrive(Model_Data_PMSM_S *md_l, Settng_Data_PMSM_S *sd_l, Flg_Cntrl_Dri
             //! Set value speed motor with reference control
             SpeedRef(md_l->k_f_mul_ref.fl, md_l->k_f_mul_plus.fl, md_l->k_f_mul_minus.fl, &md_l->k_f_mul.fl);
 
+            //! If less minimal value k_f_mul then value = minimal value k_f_mul
+            if (md_l->k_f_mul.fl < MIN_VALUE_K_F_MUL_IS_RUN) {
+                md_l->k_f_mul.fl = MIN_VALUE_K_F_MUL_IS_RUN;
+            }
         }
     #if defined(MODEL_INTENSITY_SET) && MODEL_INTENSITY_SET == TRUE_VAL
         //! processing intensity generator values
@@ -198,11 +202,6 @@ void CntrlDrive(Model_Data_PMSM_S *md_l, Settng_Data_PMSM_S *sd_l, Flg_Cntrl_Dri
             if (mf_l->bits_reg1.bits.ext_angle) {
                 PMSMotorFuncTechSpecWithoutIntenstCntrllr(md_l, mf_l, bpd_l);
                 mf_l->bits_reg1.bits.ext_angle = FALSE_VAL;
-            }
-
-            //! If less minimal value k_f_mul then value = minimal value k_f_mul
-            if (md_l->k_f_mul.fl < MIN_VALUE_K_F_MUL_IS_RUN) {
-                md_l->k_f_mul.fl = MIN_VALUE_K_F_MUL_IS_RUN;
             }
         } else {
             //! Increment delay
