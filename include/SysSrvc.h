@@ -88,8 +88,8 @@
 #define MIN_VALUE_K_F_MUL_IS_STOP 0.12
 //! Get data hall sensor input value
 #define GET_DIN_HALL_VALUE GpioDataRegs.GPBDAT.bit.GPIO62
-//! Delay value (now set 2 sec. 2/(1/1000)=2000)
-#define DELAY_START_VALUE 2000
+//! Delay value (now set 0,5 sec. 0,5/(1/1000)=500)
+#define DELAY_START_VALUE 500
 
 //////////////// DECLARATION OF EXTERNAL ACCESS TO FUNCTIONS /////////////////////
 //! Declaration of external access to the TimeDelay function
