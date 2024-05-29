@@ -151,7 +151,7 @@ interrupt void INT14_ISR(void) {
  */
 interrupt void XINT3_ISR(void) {
     //! Set next value angle rotor
-    flags_drive.bits_reg1.bits.ext_angle=TRUE_VAL;
+    flags_drive.bits_reg1.bits.ext_angle = TRUE_VAL;
     //! Acknowledge this interrupt to get more from group 12
     PieCtrlRegs.PIEACK.bit.ACK12 = PIEACK_GROUP12;
 }

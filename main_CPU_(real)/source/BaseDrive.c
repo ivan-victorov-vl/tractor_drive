@@ -112,31 +112,25 @@ void PMSMotorFuncTechSpec(Model_Data_PMSM_S *md_la, Flg_Cntrl_Drive_S *mf_la, Br
 void PMSMotorFuncTechSpecWithoutIntenstCntrllr(Model_Data_PMSM_S *md_la, Flg_Cntrl_Drive_S *mf_la, Brws_Param_Drive *bpd_la) {
     static float32 i_alpha_la, i_beta_la;
 
-//    TODO Now for debug
-//    //! Conversion of currents from three-phase to two-phase reference frame
-//    Calc3To2(md_la->iu.fl, md_la->iv.fl, md_la->iw.fl, &i_alpha_la, &i_beta_la);
-//    //! Calculation of the measured current in scalar coordinate system
-//    md_la->is.fl = CalcLengthVect2In(i_alpha_la, i_beta_la);
-
     //! Compilation when forward of rotation
     #if FORWARD==TRUE_VAL
        //! Check direction drive
        if (mf_la->bits_reg2.bits.dir_drv) {
            //! Set backward direction for drive
-           md_la->theta.fl -= (MIN_CROSS_ANGLE + (MIN_CROSS_ANGLE * md_la->k_f_mul.fl));
+           md_la->theta.fl -= (MIN_CROSS_ANGLE);
        } else {
            //! Increment angle
-           md_la->theta.fl += (MIN_CROSS_ANGLE + (MIN_CROSS_ANGLE * md_la->k_f_mul.fl));
+           md_la->theta.fl += (MIN_CROSS_ANGLE);
        }
     //! Compilation when backward of rotation
     #else
        //! Check direction drive
        if (mf_la->bits_reg2.bits.dir_drv) {
            //! Set forward direction for drive
-           md_la->theta.fl += (MIN_CROSS_ANGLE + (MIN_CROSS_ANGLE * md_la->k_f_mul.fl));
+           md_la->theta.fl += (MIN_CROSS_ANGLE);
        } else {
            //! Decrement angle
-           md_la->theta.fl -= (MIN_CROSS_ANGLE + (MIN_CROSS_ANGLE * md_la->k_f_mul.fl));
+           md_la->theta.fl -= (MIN_CROSS_ANGLE);
        }
        #endif
 
