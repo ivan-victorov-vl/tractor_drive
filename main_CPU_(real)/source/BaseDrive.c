@@ -110,8 +110,6 @@ void PMSMotorFuncTechSpec(Model_Data_PMSM_S *md_la, Flg_Cntrl_Drive_S *mf_la, Br
  * \brief PMSM motor control function from technical specification without intensity controller
  */
 void PMSMotorFuncTechSpecWithoutIntenstCntrllr(Model_Data_PMSM_S *md_la, Flg_Cntrl_Drive_S *mf_la, Brws_Param_Drive *bpd_la) {
-    static float32 i_alpha_la, i_beta_la;
-
     //! Compilation when forward of rotation
     #if FORWARD==TRUE_VAL
        //! Check direction drive
@@ -155,6 +153,14 @@ void PMSMotorFuncSensorless(Model_Data_PMSM_S *md_la, Flg_Cntrl_Drive_S *mf_la, 
 void CntrlDrive(Model_Data_PMSM_S *md_l, Settng_Data_PMSM_S *sd_l, Flg_Cntrl_Drive_S *mf_l, Brws_Param_Drive *bpd_l) {
     static int32 delay_start_value = 0;
     static int16 filter_direction = FALSE_VAL;
+
+    Uint32 calc_theta = ((Uint32 )md_l->theta.fl)/(Uint32 )30;
+
+    if (GET_DIN_HALL_VALUE != TABL_CONDITION_FROM_SENSOR_HALL[calc_theta])  {
+            //! Set next value angle rotor
+            flags_drive.bits_reg1.bits.ext_angle = TRUE_VAL;
+        }
+
 
     //! set external reference
     md_l->k_f_mul_ref.fl = sd_l->k_mul_ext_ref;

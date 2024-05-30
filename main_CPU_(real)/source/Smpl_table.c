@@ -1087,3 +1087,34 @@ const float32 TABL_UW1[12] = {
     //! 11
     -1
 };
+
+
+/*!
+    \brief Table condition sensor Hall
+ */
+const Uint16 TABL_CONDITION_FROM_SENSOR_HALL[12] = {
+    //! 0
+    0,
+    //! 1
+    1,
+    //! 2
+    0,
+    //! 3
+    1,
+    //! 4
+    0,
+    //! 5
+    1,
+    //! 6
+    0,
+    //! 7
+    1,
+    //! 8
+    0,
+    //! 9
+    1,
+    //! 10
+    0,
+    //! 11
+    1
+};

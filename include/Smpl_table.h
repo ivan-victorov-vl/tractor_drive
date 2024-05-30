@@ -28,5 +28,7 @@ extern const float32 TABL_UU1[12];
 extern const float32 TABL_UV1[12];
 //! declaration of external access to a variable TABL_UW1
 extern const float32 TABL_UW1[12];
+//! declaration of external access to a variable TABL_CONDITION_FROM_SENSOR_HALL
+extern const Uint16 TABL_CONDITION_FROM_SENSOR_HALL[12];
 
 #endif

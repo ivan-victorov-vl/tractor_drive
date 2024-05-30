@@ -122,6 +122,7 @@ interrupt void INT14_ISR(void) {
     //! configuring interrupt handling functions:
     //! allow changes to forbidden registers
     EALLOW;
+
     //! Get voltage and current value
     HandlrFastAdc(&data_pmsm.md);
 
@@ -150,8 +151,6 @@ interrupt void INT14_ISR(void) {
     \brief: Interrupt from the GPIO62
  */
 interrupt void XINT3_ISR(void) {
-    //! Set next value angle rotor
-    flags_drive.bits_reg1.bits.ext_angle = TRUE_VAL;
     //! Acknowledge this interrupt to get more from group 12
     PieCtrlRegs.PIEACK.bit.ACK12 = PIEACK_GROUP12;
 }
