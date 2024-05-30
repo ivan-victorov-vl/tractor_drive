@@ -78,12 +78,12 @@
 #define DISCRETE_OUT_CLEAR_1_OFF GpioDataRegs.GPCCLEAR.bit.GPIO67 = 0
 //! DO1 value when switch "on"
 #define DO1_ACTIVATION ((float32)ENABLE_UDC_VOLTAGE/(float32)600)
-//! Addition part of the intensity setter (1/1000) / 0.0001 = 10 sec
-#define ADD_PART_INTENSE_SETTER 0.0001
+//! Addition part of the intensity setter (1/20000) / 0.0001 = 10 sec
+#define ADD_PART_INTENSE_SETTER 0.000005
 //! Deadband for pwm
 #define DEAD_BAND 450
 //! Minimal value k_f_mul when motor is run
-#define MIN_VALUE_K_F_MUL_IS_RUN 0.01
+#define MIN_VALUE_K_F_MUL_IS_RUN 0.07
 //! Minimal value k_f_mul when motor is stop
 #define MIN_VALUE_K_F_MUL_IS_STOP 0.12
 //! Get data hall sensor input value
