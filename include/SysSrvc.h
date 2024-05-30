@@ -15,7 +15,7 @@
 #include "Debug.h"
 
 //! Get mode, if not debug, please commented
-//#define DEBUG
+// #define DEBUG
 //! Get mode, if not current reference, please commented
 //#define CURRENT_REF
 
@@ -78,12 +78,12 @@
 #define DISCRETE_OUT_CLEAR_1_OFF GpioDataRegs.GPCCLEAR.bit.GPIO67 = 0
 //! DO1 value when switch "on"
 #define DO1_ACTIVATION ((float32)ENABLE_UDC_VOLTAGE/(float32)600)
-//! Addition part of the intensity setter (1/20000) / 0.0001 = 10 sec
-#define ADD_PART_INTENSE_SETTER 0.000005
+//! Addition part of the intensity setter (1/10000) / 0.00001 = 10 sec
+#define ADD_PART_INTENSE_SETTER 0.00001
 //! Deadband for pwm
 #define DEAD_BAND 450
 //! Minimal value k_f_mul when motor is run
-#define MIN_VALUE_K_F_MUL_IS_RUN 0.11
+#define MIN_VALUE_K_F_MUL_IS_RUN 0.5
 //! Minimal value k_f_mul when motor is stop
 #define MIN_VALUE_K_F_MUL_IS_STOP 0.12
 //! Get data hall sensor input value

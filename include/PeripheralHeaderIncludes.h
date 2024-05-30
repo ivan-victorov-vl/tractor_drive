@@ -190,6 +190,8 @@ typedef unsigned short 	Ushort;
 #include "MainSetting.h"
 //! include header file "MeasExtrnlDevice.h"
 #include "MeasExtrnlDevice.h"
+//! include header file "Smpl_table.h"
+#include "Smpl_table.h"
 
 #ifdef __cplusplus
 }

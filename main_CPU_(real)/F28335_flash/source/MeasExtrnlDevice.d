@@ -40,6 +40,7 @@ source/MeasExtrnlDevice.obj: C:/Users/Lenovo/programs/TMS320F28335/tractor_drive
 source/MeasExtrnlDevice.obj: C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/include/MainInit.h
 source/MeasExtrnlDevice.obj: C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/include/MainSetting.h
 source/MeasExtrnlDevice.obj: C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/include/MeasExtrnlDevice.h
+source/MeasExtrnlDevice.obj: C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/include/Smpl_table.h
 
 ../source/MeasExtrnlDevice.c: 
 C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/include/PeripheralHeaderIncludes.h: 
@@ -81,3 +82,4 @@ C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/include/MenuModbus.h:
 C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/include/MainInit.h: 
 C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/include/MainSetting.h: 
 C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/include/MeasExtrnlDevice.h: 
+C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/include/Smpl_table.h: 
