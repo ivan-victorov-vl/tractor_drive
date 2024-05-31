@@ -38,7 +38,7 @@ void main(void) {
 
 /*!
     \brief: Main program cycle
- */
+  */
 void Base_Cycle(void) {
     //! Configuration variable calculation
 	CalcVarblsSttng(&data_pmsm);
