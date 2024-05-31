@@ -59,7 +59,7 @@ void MainInit(void)
     //! setting the cpu_timer_2 interrupt
     PieVectTable.TINT2 = &INT14_ISR;
     //! setting the xint3 (external interrupt for pin) interrupt
-	PieVectTable.XINT3 = &XINT3_ISR;
+	//PieVectTable.XINT3 = &XINT3_ISR;
 	//! unmodify forbidden registers
 	EDIS;
 
@@ -96,7 +96,7 @@ void MainInit(void)
 	//! Add CPU timer 0 interrupt
 	IER |= M_INT1;
     //! Add XINT interrupt
-    IER |= M_INT12;
+    //IER |= M_INT12;
     //! Add CPU timer 2 interrupt
     IER |= M_INT14;
 
@@ -123,15 +123,15 @@ void MainInit(void)
 
     //! configuring interrupt handling functions:
     //! allow changes to forbidden registers
-    EALLOW;
+    //EALLOW;
     //! Xint3 is GPIO62
-    GpioIntRegs.GPIOXINT3SEL.bit.GPIOSEL = 30;
+    //GpioIntRegs.GPIOXINT3SEL.bit.GPIOSEL = 30;
     //! unmodify forbidden registers
-    EDIS;
+    //EDIS;
 
     // Configure XINT3 (Falling edge interrupt)
-    XIntruptRegs.XINT3CR.bit.POLARITY = 3;
+    //XIntruptRegs.XINT3CR.bit.POLARITY = 3;
 
     //! Enable XINT3
-    XIntruptRegs.XINT3CR.bit.ENABLE = 1;
+    //XIntruptRegs.XINT3CR.bit.ENABLE = 1;
 }
