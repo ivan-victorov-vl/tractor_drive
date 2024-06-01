@@ -48,6 +48,7 @@ void PMSMotorFuncInit(Model_Data_PMSM_S *md_l, Settng_Data_PMSM_S *sd_l, Flg_Cnt
     mf_l->bits_reg2.bits.stp_drv=FALSE_VAL;
     mf_l->bits_reg2.bits.dir_drv=FALSE_VAL;
     md_l->theta.fl = 0;
+    md_l->integral_ref_current.fl = 0;
     //! Get voltage and current value
     HandlrFastAdc(&data_pmsm.md);
     //! switch off DO1
@@ -74,6 +75,7 @@ void PMSMotorFuncReset(Model_Data_PMSM_S *md_l, Settng_Data_PMSM_S *sd_l, Flg_Cn
     mf_l->bits_reg2.bits.wrk_drv=FALSE_VAL;
     mf_l->bits_reg2.bits.strt_drv=FALSE_VAL;
     mf_l->bits_reg2.bits.stp_drv=FALSE_VAL;
+    md_l->integral_ref_current.fl = 0;
 }
 
 void PMSMotorFuncScal(Model_Data_PMSM_S *md_la, Flg_Cntrl_Drive_S *mf_la, Brws_Param_Drive *bpd_la) {
@@ -161,9 +163,6 @@ void CntrlDrive(Model_Data_PMSM_S *md_l, Settng_Data_PMSM_S *sd_l, Flg_Cntrl_Dri
             flags_drive.bits_reg1.bits.ext_angle = TRUE_VAL;
         }
 
-
-    //! set external reference
-    md_l->k_f_mul_ref.fl = sd_l->k_mul_ext_ref;
     //! handle switch do1
     HandlerSwitchDO1(md_l->udc.fl);
 
@@ -172,9 +171,9 @@ void CntrlDrive(Model_Data_PMSM_S *md_l, Settng_Data_PMSM_S *sd_l, Flg_Cntrl_Dri
         //! if a stop command has been received
         if (mf_l->bits_reg2.bits.stp_drv) {
             //! TODO added for current regulator reduction (now for debug)
-            SpeedRef(0, md_l->k_f_mul_plus.fl, md_l->k_f_mul_minus.fl, &md_l->k_f_mul.fl);
+            SpeedRef(0,  md_l->k_f_mul_plus.fl, md_l->k_f_mul_minus.fl, &md_l->k_f_mul_ref.fl);
             //! if the speed is stopped
-            if (md_l->k_f_mul.fl < md_l->k_f_mul_minus.fl) {
+            if (md_l->k_f_mul_ref.fl < md_l->k_f_mul_minus.fl) {
                //! reset the wrk_drv reset flag
                 mf_l->bits_reg2.bits.wrk_drv = FALSE_VAL;
                //! set zero value flag stop
@@ -184,11 +183,11 @@ void CntrlDrive(Model_Data_PMSM_S *md_l, Settng_Data_PMSM_S *sd_l, Flg_Cntrl_Dri
             //! Getting "stop" data button
             mf_l->bits_reg2.bits.stp_drv = GET_DIN_3_STOP_BUTTON;
             //! Set value speed motor with reference control
-            SpeedRef(md_l->k_f_mul_ref.fl, md_l->k_f_mul_plus.fl, md_l->k_f_mul_minus.fl, &md_l->k_f_mul.fl);
+            SpeedRef(sd_l->k_mul_ext_ref, md_l->k_f_mul_plus.fl, md_l->k_f_mul_minus.fl, &md_l->k_f_mul_ref.fl);
 
             //! If less minimal value k_f_mul then value = minimal value k_f_mul
-            if (md_l->k_f_mul.fl < MIN_VALUE_K_F_MUL_IS_RUN) {
-                md_l->k_f_mul.fl = MIN_VALUE_K_F_MUL_IS_RUN;
+            if (md_l->k_f_mul_ref.fl < MIN_VALUE_K_F_MUL_IS_RUN) {
+                md_l->k_f_mul_ref.fl = MIN_VALUE_K_F_MUL_IS_RUN;
             }
         }
     #if defined(MODEL_INTENSITY_SET) && MODEL_INTENSITY_SET == TRUE_VAL
@@ -206,7 +205,6 @@ void CntrlDrive(Model_Data_PMSM_S *md_l, Settng_Data_PMSM_S *sd_l, Flg_Cntrl_Dri
         } else {
             //! Increment delay
             delay_start_value++;
-
             //! Compilation when forward of rotation
             #if FORWARD==TRUE_VAL
             if (mf_l->bits_reg2.bits.dir_drv) {
@@ -229,8 +227,8 @@ void CntrlDrive(Model_Data_PMSM_S *md_l, Settng_Data_PMSM_S *sd_l, Flg_Cntrl_Dri
             //! Set next value angle rotor
             mf_l->bits_reg1.bits.ext_angle=TRUE_VAL;
             //! If less minimal value k_f_mul then value = minimal value k_f_mul
-            if (md_l->k_f_mul.fl < MIN_VALUE_K_F_MUL_IS_STOP) {
-                md_l->k_f_mul.fl = MIN_VALUE_K_F_MUL_IS_STOP;
+            if (md_l->k_f_mul_ref.fl < MIN_VALUE_K_F_MUL_IS_STOP) {
+                md_l->k_f_mul_ref.fl = MIN_VALUE_K_F_MUL_IS_STOP;
             }
         }
         //! Calculate current phase

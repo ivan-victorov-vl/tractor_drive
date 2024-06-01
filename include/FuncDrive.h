@@ -72,6 +72,8 @@ extern void Calc3To2(float32 first_var_lb, float32 sec_var_lb, float32 third_var
 extern void SpeedRef(float32 k_f_mul_ref_lb, float32 k_f_mul_plus_lb, float32 k_f_mul_minus_lb, float32 *k_f_mul_lb);
 //! declaration of external access to a function CalcLengthVect2In
 extern float32 CalcLengthVect2In(float32 first_lb, float32 secnd_lb);
+//! declaration of external access to a function PiRegltr
+extern float32 PiRegltr(float32 cur_var_lb, float32 k_prprnl_lb, float32 k_integral_lb, float32 *integral_lb);
 //! declaration of external access to a function PID_Regltr
 extern float32 PID_Regltr(PID_Rgltr_S *v_pid_r_lb);
 //! declaration of external access to a function CalculateConditionPMS

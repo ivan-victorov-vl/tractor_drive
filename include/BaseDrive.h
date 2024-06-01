@@ -192,6 +192,8 @@ typedef struct {
 	B32_Numb_S i_os_2_1;
     //! current phase B third invertor
 	B32_Numb_S i_os_3_1;
+    //! integral reference current
+	B32_Numb_S integral_ref_current;
 } Model_Data_PMSM_S;
 
 /*

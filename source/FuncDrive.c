@@ -37,7 +37,7 @@ void SpeedRef(float32 k_f_mul_ref_lb, float32 k_f_mul_plus_lb, float32 k_f_mul_m
 // Function declaration CalcLengthVect2In
 float32 CalcLengthVect2In(float32 first_lb, float32 secnd_lb);
 // Function declaration PI_Regltr
-float32 PI_Regltr(float32 cur_var_lb, float32 k_prprnl_lb, float32 k_integral_lb, float32 *integral_lb);
+float32 PiRegltr(float32 cur_var_lb, float32 k_prprnl_lb, float32 k_integral_lb, float32 *integral_lb);
 // Function declaration PID_Regltr
 float32 PID_Regltr(PID_Rgltr_S *v_pid_r_lb);
 // Function declaration CalculateConditionPMS
@@ -140,9 +140,9 @@ float32 ApprdFltr(float32 first_var_lb, float32  Ti_apprd_lb, float32 *integr_lb
 }
 
 /*!
- *  \brief calculation of variable value after PI regulator
+ *  \brief Calculation of variable value after PI regulator
  */
-float32 PI_Regltr(float32 cur_var_lb, float32 k_prprnl_lb, float32 k_integral_lb, float32 *integral_lb) {
+float32 PiRegltr(float32 cur_var_lb, float32 k_prprnl_lb, float32 k_integral_lb, float32 *integral_lb) {
     //! calculation of the integral component of the pi controller
     *integral_lb +=  cur_var_lb;
     //! calculation of the return value of the pi regulator function
