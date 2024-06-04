@@ -76,6 +76,7 @@ void PMSMotorFuncReset(Model_Data_PMSM_S *md_l, Settng_Data_PMSM_S *sd_l, Flg_Cn
     mf_l->bits_reg2.bits.strt_drv=FALSE_VAL;
     mf_l->bits_reg2.bits.stp_drv=FALSE_VAL;
     md_l->integral_ref_current.fl = 0;
+    md_l->theta.fl = 0;
 }
 
 void PMSMotorFuncScal(Model_Data_PMSM_S *md_la, Flg_Cntrl_Drive_S *mf_la, Brws_Param_Drive *bpd_la) {
@@ -156,12 +157,12 @@ void CntrlDrive(Model_Data_PMSM_S *md_l, Settng_Data_PMSM_S *sd_l, Flg_Cntrl_Dri
     static int32 delay_start_value = 0;
     static int16 filter_direction = FALSE_VAL;
 
-    Uint32 calc_theta = ((Uint32 )md_l->theta.fl)/(Uint32 )30;
+    int32 calc_theta = (int32)((int32)md_l->theta.fl/(int32)30);
 
     if (GET_DIN_HALL_VALUE != TABL_CONDITION_FROM_SENSOR_HALL[calc_theta])  {
             //! Set next value angle rotor
             flags_drive.bits_reg1.bits.ext_angle = TRUE_VAL;
-        }
+    }
 
     //! handle switch do1
     HandlerSwitchDO1(md_l->udc.fl);
