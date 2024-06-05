@@ -126,24 +126,6 @@ interrupt void INT14_ISR(void) {
     //! Get voltage and current value
     HandlrFastAdc(&data_pmsm.md);
 
-    data_pmsm.md.k_f_mul.fl = PiRegltr(data_pmsm.md.k_f_mul_ref.fl - CalculateScalarCurrentFrom6Phase(&data_pmsm.md),
-              K_PROP,
-              K_INTEGR,
-              &data_pmsm.md.integral_ref_current.fl);
-
-    //! Integral current limitation
-    if (data_pmsm.md.integral_ref_current.fl > K_LIMIT_INTEGR) {
-        data_pmsm.md.integral_ref_current.fl = K_LIMIT_INTEGR;
-    } else if (data_pmsm.md.integral_ref_current.fl < -K_LIMIT_INTEGR) {
-        data_pmsm.md.integral_ref_current.fl = -K_LIMIT_INTEGR;
-    }
-    //! Voltage limitation
-    if (data_pmsm.md.k_f_mul.fl > 1) {
-        data_pmsm.md.k_f_mul.fl = 1;
-    } else if (data_pmsm.md.k_f_mul.fl < 0) {
-        data_pmsm.md.k_f_mul.fl = 0;
-    }
-
     //! If there is an error, the operation stops.
     if (!flags_drive.bits_reg2.bits.err_drv) {
         //! Frequency converter control

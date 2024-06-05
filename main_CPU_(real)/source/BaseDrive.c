@@ -169,6 +169,26 @@ void CntrlDrive(Model_Data_PMSM_S *md_l, Settng_Data_PMSM_S *sd_l, Flg_Cntrl_Dri
 
     //! work frequency control
     if (mf_l->bits_reg2.bits.wrk_drv) {
+
+        //! Get current value
+        data_pmsm.md.k_f_mul.fl = PiRegltr(data_pmsm.md.k_f_mul_ref.fl - CalculateScalarCurrentFrom6Phase(&data_pmsm.md),
+                  K_PROP,
+                  K_INTEGR,
+                  &data_pmsm.md.integral_ref_current.fl);
+
+        //! Integral current limitation
+        if (data_pmsm.md.integral_ref_current.fl > K_LIMIT_INTEGR) {
+            data_pmsm.md.integral_ref_current.fl = K_LIMIT_INTEGR;
+        } else if (data_pmsm.md.integral_ref_current.fl < -K_LIMIT_INTEGR) {
+            data_pmsm.md.integral_ref_current.fl = -K_LIMIT_INTEGR;
+        }
+        //! Voltage limitation
+        if (data_pmsm.md.k_f_mul.fl > 1) {
+            data_pmsm.md.k_f_mul.fl = 1;
+        } else if (data_pmsm.md.k_f_mul.fl < 0) {
+            data_pmsm.md.k_f_mul.fl = 0;
+        }
+
         //! if a stop command has been received
         if (mf_l->bits_reg2.bits.stp_drv) {
             //! TODO added for current regulator reduction (now for debug)
