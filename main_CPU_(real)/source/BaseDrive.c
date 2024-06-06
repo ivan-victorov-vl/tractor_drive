@@ -106,34 +106,15 @@ void PMSMotorFuncTechSpec(Model_Data_PMSM_S *md_la, Flg_Cntrl_Drive_S *mf_la, Br
     }
 
     //! Calculate current phase
-    CalculateConditionPMS(md_la);
+    CalculateConditionPMSForward(md_la);
 }
 
 /*!
  * \brief PMSM motor control function from technical specification without intensity controller
  */
 void PMSMotorFuncTechSpecWithoutIntenstCntrllr(Model_Data_PMSM_S *md_la, Flg_Cntrl_Drive_S *mf_la, Brws_Param_Drive *bpd_la) {
-    //! Compilation when forward of rotation
-    #if FORWARD==TRUE_VAL
-       //! Check direction drive
-       if (mf_la->bits_reg2.bits.dir_drv) {
-           //! Set backward direction for drive
-           md_la->theta.fl -= (MIN_CROSS_ANGLE);
-       } else {
-           //! Increment angle
-           md_la->theta.fl += (MIN_CROSS_ANGLE);
-       }
-    //! Compilation when backward of rotation
-    #else
-       //! Check direction drive
-       if (mf_la->bits_reg2.bits.dir_drv) {
-           //! Set forward direction for drive
-           md_la->theta.fl += (MIN_CROSS_ANGLE);
-       } else {
-           //! Decrement angle
-           md_la->theta.fl -= (MIN_CROSS_ANGLE);
-       }
-       #endif
+    //! Increment angle
+    md_la->theta.fl += (MIN_CROSS_ANGLE);
 
     //! When it reaches less than 0 degrees
     if (md_la->theta.fl < 0) {
@@ -229,20 +210,20 @@ void CntrlDrive(Model_Data_PMSM_S *md_l, Settng_Data_PMSM_S *sd_l, Flg_Cntrl_Dri
             //! Compilation when forward of rotation
             #if FORWARD==TRUE_VAL
             if (mf_l->bits_reg2.bits.dir_drv) {
-                //! Set start value angle for backward
-                md_l->theta.fl = GET_DIN_HALL_VALUE ? 0 : 30;
-            } else {
                 //! Set start value angle for forward
                 md_l->theta.fl = GET_DIN_HALL_VALUE ? 0 : 330;
+            } else {
+                //! Set start value angle for backward
+                md_l->theta.fl = GET_DIN_HALL_VALUE ? 0 : 30;
             }
             //! Compilation when backward of rotation
             #else
             if (mf_l->bits_reg2.bits.dir_drv) {
-                //! Set start value angle for backward
-                md_l->theta.fl = GET_DIN_HALL_VALUE ? 0 : 330;
-            } else {
                 //! Set start value angle for forward
                 md_l->theta.fl = GET_DIN_HALL_VALUE ? 0 : 30;
+            } else {
+                //! Set start value angle for backward
+                md_l->theta.fl = GET_DIN_HALL_VALUE ? 0 : 330;
             }
             #endif
             //! Set next value angle rotor
@@ -252,9 +233,28 @@ void CntrlDrive(Model_Data_PMSM_S *md_l, Settng_Data_PMSM_S *sd_l, Flg_Cntrl_Dri
                 md_l->k_f_mul_ref.fl = MIN_VALUE_K_F_MUL_IS_STOP;
             }
         }
-        //! Calculate current phase
-        CalculateConditionPMS(md_l);
+        //! Compilation when forward of rotation
+        #if FORWARD==TRUE_VAL
+           //! Check direction drive
+           if (mf_l->bits_reg2.bits.dir_drv) {
+               //! Calculate current phase
+               CalculateConditionPMSBackward(md_l);
+           } else {
+               //! Calculate current phase
+               CalculateConditionPMSForward(md_l);
+           }
+        //! Compilation when backward of rotation
+        #else
+           //! Check direction drive
+           if (mf_l->bits_reg2.bits.dir_drv) {
+               //! Calculate current phase
+               CalculateConditionPMSForward(md_l);
+           } else {
+               //! Calculate current phase
+               CalculateConditionPMSBackward(md_l);
+           }
     #endif
+#endif
     } else {
         //! Reset variable PMSM-Motor
         PMSMotorFuncReset(md_l, sd_l, mf_l);

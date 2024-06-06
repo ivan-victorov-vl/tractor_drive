@@ -1,10 +1,10 @@
 ******************************************************************************
              TMS320C2000 Linker PC v18.1.2                     
 ******************************************************************************
->> Linked Thu Jun  6 16:10:13 2024
+>> Linked Fri Jun  7 02:50:41 2024
 
 OUTPUT FILE NAME:   <C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/main_CPU_(real)/../FLASH/MainCPU.out>
-ENTRY POINT SYMBOL: "_c_int00"  address: 000095c2
+ENTRY POINT SYMBOL: "_c_int00"  address: 00009610
 
 
 MEMORY CONFIGURATION
@@ -13,7 +13,7 @@ MEMORY CONFIGURATION
 ----------------------  --------  ---------  --------  --------  ----  --------
 PAGE 0:
   ZONE0                 00004000   00001000  00000000  00001000  RWIX
-  RAM_L0L1L2L3          00008000   00004000  00001c66  0000239a  RWIX
+  RAM_L0L1L2L3          00008000   00004000  00001cb4  0000234c  RWIX
   ZONE6                 00100000   00100000  00000000  00100000  RWIX
   ZONE7A                00200000   0000fc00  00000000  0000fc00  RWIX
   FLASHH                00300000   00008000  00000000  00008000  RWIX
@@ -22,7 +22,7 @@ PAGE 0:
   FLASHE                00318000   00008000  00000000  00008000  RWIX
   FLASHD                00320000   00008000  00000000  00008000  RWIX
   FLASHC                00328000   00008000  00000000  00008000  RWIX
-  FLASHA                00338000   00007f80  00001caa  000062d6  RWIX
+  FLASHA                00338000   00007f80  00001cf8  00006288  RWIX
   CSM_RSVD              0033ff80   00000076  00000000  00000076  RWIX
   BEGIN_FLASH           0033fff6   00000002  00000002  00000000  RWIX
   CSM_PWL               0033fff8   00000008  00000000  00000008  RWIX
@@ -101,12 +101,12 @@ SECTION ALLOCATION MAP
 section   page    origin      length       input sections
 --------  ----  ----------  ----------   ----------------
 copysections 
-*          0    00339c67    0000003c     
-                  00339c67    0000003c     DSP28xxx_SectionCopy_nonBIOS.obj (copysections)
+*          0    00339cb5    0000003c     
+                  00339cb5    0000003c     DSP28xxx_SectionCopy_nonBIOS.obj (copysections)
 
 wddisable 
-*          0    00339ca3    00000008     
-                  00339ca3    00000008     DSP28xxx_CodeStartBranch_for_flash.obj (wddisable)
+*          0    00339cf1    00000008     
+                  00339cf1    00000008     DSP28xxx_CodeStartBranch_for_flash.obj (wddisable)
 
 codestart 
 *          0    0033fff6    00000002     
@@ -126,41 +126,41 @@ vectors    0    003fffc2    00000000     DSECT
 
 .switch    0    00008000    00000000     UNINITIALIZED
 
-.text      0    00338000    000016e7     RUN ADDR = 00008000
-                  00338000    000003af     FuncDrive.obj (.text)
-                  003383af    000003aa     DSP2833x_SysCtrl.obj (.text)
-                  00338759    00000325     BaseDrive.obj (.text)
-                  00338a7e    000002f8     DSP2833x_DefaultIsr.obj (.text:retain)
-                  00338d76    0000022e     MainCpuAdc.obj (.text)
-                  00338fa4    0000021a     MainCpuEpwm.obj (.text)
-                  003391be    00000102     ProtectnDrive.obj (.text)
-                  003392c0    000000ba     MainCPU-Main(1).obj (.text:retain)
-                  0033937a    0000008f     SysSrvc.obj (.text)
-                  00339409    00000088     rts2800_fpu32.lib : fs_div.obj (.text)
-                  00339491    0000007b     Main_CPU_CpuTimers.obj (.text)
-                  0033950c    0000006e     MainInit.obj (.text)
-                  0033957a    00000048     MainCPU-Main(1).obj (.text)
-                  003395c2    00000046     rts2800_fpu32.lib : boot.obj (.text)
-                  00339608    0000002a                       : l_div.obj (.text)
-                  00339632    00000028     DSP2833x_PieCtrl.obj (.text)
-                  0033965a    00000028     MainCpuSpi.obj (.text)
-                  00339682    00000020     DSP2833x_PieVect.obj (.text)
-                  003396a2    0000001b     rts2800_fpu32.lib : args_main.obj (.text)
-                  003396bd    00000019                       : exit.obj (.text)
-                  003396d6    00000009                       : _lock.obj (.text)
-                  003396df    00000008     MainSetting.obj (.text)
+.text      0    00338000    00001735     RUN ADDR = 00008000
+                  00338000    00000404     FuncDrive.obj (.text)
+                  00338404    000003aa     DSP2833x_SysCtrl.obj (.text)
+                  003387ae    0000031e     BaseDrive.obj (.text)
+                  00338acc    000002f8     DSP2833x_DefaultIsr.obj (.text:retain)
+                  00338dc4    0000022e     MainCpuAdc.obj (.text)
+                  00338ff2    0000021a     MainCpuEpwm.obj (.text)
+                  0033920c    00000102     ProtectnDrive.obj (.text)
+                  0033930e    000000ba     MainCPU-Main(1).obj (.text:retain)
+                  003393c8    0000008f     SysSrvc.obj (.text)
+                  00339457    00000088     rts2800_fpu32.lib : fs_div.obj (.text)
+                  003394df    0000007b     Main_CPU_CpuTimers.obj (.text)
+                  0033955a    0000006e     MainInit.obj (.text)
+                  003395c8    00000048     MainCPU-Main(1).obj (.text)
+                  00339610    00000046     rts2800_fpu32.lib : boot.obj (.text)
+                  00339656    0000002a                       : l_div.obj (.text)
+                  00339680    00000028     DSP2833x_PieCtrl.obj (.text)
+                  003396a8    00000028     MainCpuSpi.obj (.text)
+                  003396d0    00000020     DSP2833x_PieVect.obj (.text)
+                  003396f0    0000001b     rts2800_fpu32.lib : args_main.obj (.text)
+                  0033970b    00000019                       : exit.obj (.text)
+                  00339724    00000009                       : _lock.obj (.text)
+                  0033972d    00000008     MainSetting.obj (.text)
 
-.econst    0    003396e8    00000512     RUN ADDR = 000096e8
-                  003396e8    000002c0     Smpl_table.obj (.econst:_SQRT350)
-                  003399a8    00000100     DSP2833x_PieVect.obj (.econst:_PieVectTableInit)
-                  00339aa8    000000b6     Smpl_table.obj (.econst:_Tabl_sin_90)
-                  00339b5e    00000018     Smpl_table.obj (.econst:_TABL_UU1)
-                  00339b76    00000018     Smpl_table.obj (.econst:_TABL_UU)
-                  00339b8e    00000018     Smpl_table.obj (.econst:_TABL_UV1)
-                  00339ba6    00000018     Smpl_table.obj (.econst:_TABL_UV)
-                  00339bbe    00000018     Smpl_table.obj (.econst:_TABL_UW1)
-                  00339bd6    00000018     Smpl_table.obj (.econst:_TABL_UW)
-                  00339bee    0000000c     Smpl_table.obj (.econst:_TABL_CONDITION_FROM_SENSOR_HALL)
+.econst    0    00339736    00000512     RUN ADDR = 00009736
+                  00339736    000002c0     Smpl_table.obj (.econst:_SQRT350)
+                  003399f6    00000100     DSP2833x_PieVect.obj (.econst:_PieVectTableInit)
+                  00339af6    000000b6     Smpl_table.obj (.econst:_Tabl_sin_90)
+                  00339bac    00000018     Smpl_table.obj (.econst:_TABL_UU1)
+                  00339bc4    00000018     Smpl_table.obj (.econst:_TABL_UU)
+                  00339bdc    00000018     Smpl_table.obj (.econst:_TABL_UV1)
+                  00339bf4    00000018     Smpl_table.obj (.econst:_TABL_UV)
+                  00339c0c    00000018     Smpl_table.obj (.econst:_TABL_UW1)
+                  00339c24    00000018     Smpl_table.obj (.econst:_TABL_UW)
+                  00339c3c    0000000c     Smpl_table.obj (.econst:_TABL_CONDITION_FROM_SENSOR_HALL)
 
 .stack     1    00000000    00000380     UNINITIALIZED
                   00000000    00000380     --HOLE--
@@ -176,15 +176,15 @@ vectors    0    003fffc2    00000000     DSECT
                   0000c24c    0000000a     BaseDrive.obj (.ebss)
                   0000c256    00000004     rts2800_fpu32.lib : exit.obj (.ebss)
 
-.cinit     0    00339bfa    0000006d     RUN ADDR = 00009bfa
-                  00339bfa    0000001f     FuncDrive.obj (.cinit)
-                  00339c19    0000001e     ProtectnDrive.obj (.cinit)
-                  00339c37    00000012     BaseDrive.obj (.cinit)
-                  00339c49    0000000a     rts2800_fpu32.lib : _lock.obj (.cinit)
-                  00339c53    0000000a                       : exit.obj (.cinit)
-                  00339c5d    00000004     MainCPU-Main(1).obj (.cinit)
-                  00339c61    00000004     SysSrvc.obj (.cinit)
-                  00339c65    00000002     --HOLE-- [fill = 0]
+.cinit     0    00339c48    0000006d     RUN ADDR = 00009c48
+                  00339c48    0000001f     FuncDrive.obj (.cinit)
+                  00339c67    0000001e     ProtectnDrive.obj (.cinit)
+                  00339c85    00000012     BaseDrive.obj (.cinit)
+                  00339c97    0000000a     rts2800_fpu32.lib : _lock.obj (.cinit)
+                  00339ca1    0000000a                       : exit.obj (.cinit)
+                  00339cab    00000004     MainCPU-Main(1).obj (.cinit)
+                  00339caf    00000004     SysSrvc.obj (.cinit)
+                  00339cb3    00000002     --HOLE-- [fill = 0]
 
 DevEmuRegsFile 
 *          1    00000880    000000d0     UNINITIALIZED
@@ -393,10 +393,10 @@ MODULE SUMMARY
                                                                                              
     .\source\
        DSP2833x_GlobalVariableDefs.obj          0       0                  2678              
+       FuncDrive.obj                            2056    62                 16                
        Smpl_table.obj                           0       2084               0                 
-       FuncDrive.obj                            1886    62                 16                
        DSP2833x_SysCtrl.obj                     1876    0                  0                 
-       BaseDrive.obj                            1610    36                 10                
+       BaseDrive.obj                            1596    36                 10                
        DSP2833x_DefaultIsr.obj                  1520    0                  0                 
        MainCpuAdc.obj                           1116    0                  0                 
        MainCpuEpwm.obj                          1076    0                  0                 
@@ -413,7 +413,7 @@ MODULE SUMMARY
        DSP2833x_ADC_cal.obj                     7       0                  0                 
        MainModbus.obj                           0       0                  1                 
     +--+----------------------------------------+-------+------------------+--------------------+
-       Total:                                   10669   2762               2742              
+       Total:                                   10825   2762               2742              
                                                                                              
     C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/lib/rts2800_fpu32.lib
        fs_div.obj                               272     0                  0                 
@@ -427,7 +427,7 @@ MODULE SUMMARY
                                                                                              
        Stack:                                   0       0                  896               
     +--+----------------------------------------+-------+------------------+--------------------+
-       Grand Total:                             11803   2810               4176              
+       Grand Total:                             11959   2810               4176              
 
 
 GLOBAL DATA SYMBOLS: SORTED BY DATA PAGE
@@ -522,21 +522,21 @@ address     data page           name
 
 00007900     1e4 (00007900)     _I2caRegs
 
-000096e8     25b (000096c0)     _SQRT350
+00009736     25c (00009700)     _SQRT350
 
-000099a8     266 (00009980)     _PieVectTableInit
+000099f6     267 (000099c0)     _PieVectTableInit
 
-00009aa8     26a (00009a80)     _Tabl_sin_90
+00009af6     26b (00009ac0)     _Tabl_sin_90
 
-00009b5e     26d (00009b40)     _TABL_UU1
-00009b76     26d (00009b40)     _TABL_UU
+00009bac     26e (00009b80)     _TABL_UU1
 
-00009b8e     26e (00009b80)     _TABL_UV1
-00009ba6     26e (00009b80)     _TABL_UV
-00009bbe     26e (00009b80)     _TABL_UW1
+00009bc4     26f (00009bc0)     _TABL_UU
+00009bdc     26f (00009bc0)     _TABL_UV1
+00009bf4     26f (00009bc0)     _TABL_UV
 
-00009bd6     26f (00009bc0)     _TABL_UW
-00009bee     26f (00009bc0)     _TABL_CONDITION_FROM_SENSOR_HALL
+00009c0c     270 (00009c00)     _TABL_UW1
+00009c24     270 (00009c00)     _TABL_UW
+00009c3c     270 (00009c00)     _TABL_CONDITION_FROM_SENSOR_HALL
 
 0000c001     300 (0000c000)     _cnt_vdhl
 0000c002     300 (0000c000)     _pMBmemory
@@ -574,34 +574,35 @@ GLOBAL SYMBOLS: SORTED ALPHABETICALLY BY Name
 page  address   name                                      
 ----  -------   ----                                      
 0     00008000  .text                                     
-0     000096bd  C$$EXIT                                   
-0     00009409  FS$$DIV                                   
-0     00009608  L$$DIV                                    
-0     00009617  L$$MOD                                    
-0     00009625  UL$$DIV                                   
-0     0000962c  UL$$MOD                                   
-0     00008b5a  _ADCINT_ISR                               
+0     0000970b  C$$EXIT                                   
+0     00009457  FS$$DIV                                   
+0     00009656  L$$DIV                                    
+0     00009665  L$$MOD                                    
+0     00009673  UL$$DIV                                   
+0     0000967a  UL$$MOD                                   
+0     00008ba8  _ADCINT_ISR                               
 0     00380080  _ADC_cal                                  
-0     00008d76  _AdcInitDrive                             
+0     00008dc4  _AdcInitDrive                             
 1     00000b00  _AdcMirror                                
 1     00007100  _AdcRegs                                  
 0     000081a9  _ApprdFltr                                
-0     00009583  _Base_Cycle                               
-0     0000922a  _BreakPhasePrtctn                         
+0     000095d1  _Base_Cycle                               
+0     00009278  _BreakPhasePrtctn                         
 0     00008259  _Calc2To3Cos                              
 0     0000823d  _Calc3To2                                 
-0     000096e3  _CalcFastVarblsSttng                      
+0     00009731  _CalcFastVarblsSttng                      
 0     00008288  _CalcLengthVect2In                        
 1     0000c232  _CalcSinCos                               
 0     00008005  _CalcSinCos_0_90                          
 0     000080ba  _CalcSinCos_180_270                       
 0     0000811d  _CalcSinCos_270_360                       
 0     0000805e  _CalcSinCos_90_180                        
-0     000096df  _CalcVarblsSttng                          
-0     0000835a  _CalculateConditionPMS                    
+0     0000972d  _CalcVarblsSttng                          
+0     000083af  _CalculateConditionPMSBackward            
+0     0000835a  _CalculateConditionPMSForward             
 0     000082c8  _CalculateScalarCurrentFrom6Phase         
-0     000088b9  _CntrlDrive                               
-0     000094d2  _ConfigCpuTimer                           
+0     00008900  _CntrlDrive                               
+0     00009520  _ConfigCpuTimer                           
 1     0000c222  _CpuTimer0                                
 1     00000c00  _CpuTimer0Regs                            
 1     0000c212  _CpuTimer1                                
@@ -610,26 +611,26 @@ page  address   name
 1     00000c10  _CpuTimer2Regs                            
 1     0033fff8  _CsmPwl                                   
 1     00000ae0  _CsmRegs                                  
-0     00008a88  _DATALOG_ISR                              
-0     00008c72  _DINTCH1_ISR                              
-0     00008c7c  _DINTCH2_ISR                              
-0     00008c86  _DINTCH3_ISR                              
-0     00008c90  _DINTCH4_ISR                              
-0     00008c9a  _DINTCH5_ISR                              
-0     00008ca4  _DINTCH6_ISR                              
+0     00008ad6  _DATALOG_ISR                              
+0     00008cc0  _DINTCH1_ISR                              
+0     00008cca  _DINTCH2_ISR                              
+0     00008cd4  _DINTCH3_ISR                              
+0     00008cde  _DINTCH4_ISR                              
+0     00008ce8  _DINTCH5_ISR                              
+0     00008cf2  _DINTCH6_ISR                              
 1     00000880  _DevEmuRegs                               
-0     000083d5  _DisableDog                               
+0     0000842a  _DisableDog                               
 1     00001000  _DmaRegs                                  
-0     00008cfe  _ECAN0INTA_ISR                            
-0     00008d12  _ECAN0INTB_ISR                            
-0     00008d08  _ECAN1INTA_ISR                            
-0     00008d1c  _ECAN1INTB_ISR                            
-0     00008be6  _ECAP1_INT_ISR                            
-0     00008bf0  _ECAP2_INT_ISR                            
-0     00008bfa  _ECAP3_INT_ISR                            
-0     00008c04  _ECAP4_INT_ISR                            
-0     00008c0e  _ECAP5_INT_ISR                            
-0     00008c18  _ECAP6_INT_ISR                            
+0     00008d4c  _ECAN0INTA_ISR                            
+0     00008d60  _ECAN0INTB_ISR                            
+0     00008d56  _ECAN1INTA_ISR                            
+0     00008d6a  _ECAN1INTB_ISR                            
+0     00008c34  _ECAP1_INT_ISR                            
+0     00008c3e  _ECAP2_INT_ISR                            
+0     00008c48  _ECAP3_INT_ISR                            
+0     00008c52  _ECAP4_INT_ISR                            
+0     00008c5c  _ECAP5_INT_ISR                            
+0     00008c66  _ECAP6_INT_ISR                            
 1     00006040  _ECanaLAMRegs                             
 1     000060c0  _ECanaMOTORegs                            
 1     00006080  _ECanaMOTSRegs                            
@@ -646,140 +647,140 @@ page  address   name
 1     00006a60  _ECap4Regs                                
 1     00006a80  _ECap5Regs                                
 1     00006aa0  _ECap6Regs                                
-0     00008a9c  _EMUINT_ISR                               
-0     00008baa  _EPWM1_INT_ISR                            
-0     00008b6e  _EPWM1_TZINT_ISR                          
-0     00008bb4  _EPWM2_INT_ISR                            
-0     00008b78  _EPWM2_TZINT_ISR                          
-0     00008bbe  _EPWM3_INT_ISR                            
-0     00008b82  _EPWM3_TZINT_ISR                          
-0     00008bc8  _EPWM4_INT_ISR                            
-0     00008b8c  _EPWM4_TZINT_ISR                          
-0     00008bd2  _EPWM5_INT_ISR                            
-0     00008b96  _EPWM5_TZINT_ISR                          
-0     00008bdc  _EPWM6_INT_ISR                            
-0     00008ba0  _EPWM6_TZINT_ISR                          
+0     00008aea  _EMUINT_ISR                               
+0     00008bf8  _EPWM1_INT_ISR                            
+0     00008bbc  _EPWM1_TZINT_ISR                          
+0     00008c02  _EPWM2_INT_ISR                            
+0     00008bc6  _EPWM2_TZINT_ISR                          
+0     00008c0c  _EPWM3_INT_ISR                            
+0     00008bd0  _EPWM3_TZINT_ISR                          
+0     00008c16  _EPWM4_INT_ISR                            
+0     00008bda  _EPWM4_TZINT_ISR                          
+0     00008c20  _EPWM5_INT_ISR                            
+0     00008be4  _EPWM5_TZINT_ISR                          
+0     00008c2a  _EPWM6_INT_ISR                            
+0     00008bee  _EPWM6_TZINT_ISR                          
 1     00006800  _EPwm1Regs                                
 1     00006840  _EPwm2Regs                                
 1     00006880  _EPwm3Regs                                
 1     000068c0  _EPwm4Regs                                
 1     00006900  _EPwm5Regs                                
 1     00006940  _EPwm6Regs                                
-0     00008c22  _EQEP1_INT_ISR                            
-0     00008c2c  _EQEP2_INT_ISR                            
+0     00008c70  _EQEP1_INT_ISR                            
+0     00008c7a  _EQEP2_INT_ISR                            
 1     00006b00  _EQep1Regs                                
 1     00006b40  _EQep2Regs                                
-0     00009651  _EnableInterrupts                         
+0     0000969f  _EnableInterrupts                         
 1     00000a80  _FlashRegs                                
-0     000093d5  _FltrMas6Var                              
-0     00008453  _GpioConf                                 
+0     00009423  _FltrMas6Var                              
+0     000084a8  _GpioConf                                 
 1     00006f80  _GpioCtrlRegs                             
 1     00006fc0  _GpioDataRegs                             
 1     00006fe0  _GpioIntRegs                              
-0     00008a21  _HandlerExternalButtons                   
-0     00008a35  _HandlerFreezeProtection                  
-0     00008a57  _HandlerSwitchDO1                         
-0     00008a4b  _HandlerSwitchProcessing                  
-0     00008dd8  _HandlrAdc                                
-0     00009399  _HandlrBttn                               
-0     00008ee7  _HandlrCurrentAdc                         
-0     00008e29  _HandlrFastAdc                            
-0     00008e36  _HandlrVoltageAdc                         
-0     000090c0  _Handlr_ePwm                              
-0     00008cae  _I2CINT1A_ISR                             
-0     00008cb8  _I2CINT2A_ISR                             
+0     00008a6f  _HandlerExternalButtons                   
+0     00008a83  _HandlerFreezeProtection                  
+0     00008aa5  _HandlerSwitchDO1                         
+0     00008a99  _HandlerSwitchProcessing                  
+0     00008e26  _HandlrAdc                                
+0     000093e7  _HandlrBttn                               
+0     00008f35  _HandlrCurrentAdc                         
+0     00008e77  _HandlrFastAdc                            
+0     00008e84  _HandlrVoltageAdc                         
+0     0000910e  _Handlr_ePwm                              
+0     00008cfc  _I2CINT1A_ISR                             
+0     00008d06  _I2CINT2A_ISR                             
 1     00007900  _I2caRegs                                 
-0     00008ab0  _ILLEGAL_ISR                              
-0     00008a7e  _INT13_ISR                                
-0     00009321  _INT14_ISR                                
-0     00009491  _InitCpuTimers                            
-0     00008fa4  _InitEPwm_1_2_3_4_5_6_Timers              
-0     000083ba  _InitFlash                                
-0     0000841a  _InitPeripheralClocks                     
-0     00009632  _InitPieCtrl                              
-0     00009682  _InitPieVectTable                         
-0     000083dd  _InitPll                                  
-0     0000965a  _InitSPIA                                 
-0     000083af  _InitSysCtrl                              
-0     00008d58  _LUF_ISR                                  
-0     00008d4e  _LVF_ISR                                  
-0     000093b6  _LimitVar                                 
-0     00008c5e  _MRINTA_ISR                               
-0     00008c4a  _MRINTB_ISR                               
-0     00008c68  _MXINTA_ISR                               
-0     00008c54  _MXINTB_ISR                               
-0     0000950c  _MainInit                                 
-0     000091be  _MaxMotorIPrtctn                          
-0     00009288  _MaxUDCMotorPrtctn                        
+0     00008afe  _ILLEGAL_ISR                              
+0     00008acc  _INT13_ISR                                
+0     0000936f  _INT14_ISR                                
+0     000094df  _InitCpuTimers                            
+0     00008ff2  _InitEPwm_1_2_3_4_5_6_Timers              
+0     0000840f  _InitFlash                                
+0     0000846f  _InitPeripheralClocks                     
+0     00009680  _InitPieCtrl                              
+0     000096d0  _InitPieVectTable                         
+0     00008432  _InitPll                                  
+0     000096a8  _InitSPIA                                 
+0     00008404  _InitSysCtrl                              
+0     00008da6  _LUF_ISR                                  
+0     00008d9c  _LVF_ISR                                  
+0     00009404  _LimitVar                                 
+0     00008cac  _MRINTA_ISR                               
+0     00008c98  _MRINTB_ISR                               
+0     00008cb6  _MXINTA_ISR                               
+0     00008ca2  _MXINTB_ISR                               
+0     0000955a  _MainInit                                 
+0     0000920c  _MaxMotorIPrtctn                          
+0     000092d6  _MaxUDCMotorPrtctn                        
 1     00005000  _McbspaRegs                               
 1     00005040  _McbspbRegs                               
-0     0000929f  _MinUDCMotorPrtctn                        
-0     00008aa6  _NMI_ISR                                  
+0     000092ed  _MinUDCMotorPrtctn                        
+0     00008af4  _NMI_ISR                                  
 0     000081e7  _PID_Regltr                               
-0     00008d62  _PIE_RESERVED                             
-0     00008759  _PMSMotorFuncInit                         
-0     000087be  _PMSMotorFuncReset                        
-0     00008811  _PMSMotorFuncScal                         
-0     000088b4  _PMSMotorFuncSensorless                   
-0     00008816  _PMSMotorFuncTechSpec                     
-0     00008872  _PMSMotorFuncTechSpecWithoutIntenstCntrllr
+0     00008db0  _PIE_RESERVED                             
+0     000087ae  _PMSMotorFuncInit                         
+0     00008813  _PMSMotorFuncReset                        
+0     00008866  _PMSMotorFuncScal                         
+0     000088fb  _PMSMotorFuncSensorless                   
+0     0000886b  _PMSMotorFuncTechSpec                     
+0     000088c7  _PMSMotorFuncTechSpecWithoutIntenstCntrllr
 0     000081c6  _PiRegltr                                 
 1     00000ce0  _PieCtrlRegs                              
 1     00000d00  _PieVectTable                             
-0     000099a8  _PieVectTableInit                         
-0     000092b6  _PressFaultMotorPrtctn                    
-0     00008a92  _RTOSINT_ISR                              
-0     00008cd6  _SCIRXINTA_ISR                            
-0     00008cea  _SCIRXINTB_ISR                            
-0     00008cc2  _SCIRXINTC_ISR                            
-0     00008ce0  _SCITXINTA_ISR                            
-0     00008cf4  _SCITXINTB_ISR                            
-0     00008ccc  _SCITXINTC_ISR                            
-0     00008b32  _SEQ1INT_ISR                              
-0     00008b3c  _SEQ2INT_ISR                              
-0     00008c36  _SPIRXINTA_ISR                            
-0     00008c40  _SPITXINTA_ISR                            
-0     000096e8  _SQRT350                                  
+0     000099f6  _PieVectTableInit                         
+0     00009304  _PressFaultMotorPrtctn                    
+0     00008ae0  _RTOSINT_ISR                              
+0     00008d24  _SCIRXINTA_ISR                            
+0     00008d38  _SCIRXINTB_ISR                            
+0     00008d10  _SCIRXINTC_ISR                            
+0     00008d2e  _SCITXINTA_ISR                            
+0     00008d42  _SCITXINTB_ISR                            
+0     00008d1a  _SCITXINTC_ISR                            
+0     00008b80  _SEQ1INT_ISR                              
+0     00008b8a  _SEQ2INT_ISR                              
+0     00008c84  _SPIRXINTA_ISR                            
+0     00008c8e  _SPITXINTA_ISR                            
+0     00009736  _SQRT350                                  
 1     00007050  _SciaRegs                                 
 1     00007750  _ScibRegs                                 
 1     00007770  _ScicRegs                                 
-0     00009180  _Set_Pwm_Complimentary_State              
-0     000091a5  _Set_Pwm_Low_State                        
+0     000091ce  _Set_Pwm_Complimentary_State              
+0     000091f3  _Set_Pwm_Low_State                        
 0     0000817e  _SpeedRef                                 
 1     00007040  _SpiaRegs                                 
 0     00008000  _Stop                                     
 1     00007010  _SysCtrlRegs                              
-0     00009bee  _TABL_CONDITION_FROM_SENSOR_HALL          
-0     00009b76  _TABL_UU                                  
-0     00009b5e  _TABL_UU1                                 
-0     00009ba6  _TABL_UV                                  
-0     00009b8e  _TABL_UV1                                 
-0     00009bd6  _TABL_UW                                  
-0     00009bbe  _TABL_UW1                                 
-0     000092c0  _TINT0_ISR                                
-0     00009aa8  _Tabl_sin_90                              
-0     0000937a  _TimeDelaySys                             
-0     000091f9  _TimeIMotorPrtctn                         
-0     00008b14  _USER10_ISR                               
-0     00008b1e  _USER11_ISR                               
-0     00008b28  _USER12_ISR                               
-0     00008aba  _USER1_ISR                                
-0     00008ac4  _USER2_ISR                                
-0     00008ace  _USER3_ISR                                
-0     00008ad8  _USER4_ISR                                
-0     00008ae2  _USER5_ISR                                
-0     00008aec  _USER6_ISR                                
-0     00008af6  _USER7_ISR                                
-0     00008b00  _USER8_ISR                                
-0     00008b0a  _USER9_ISR                                
-0     00008b64  _WAKEINT_ISR                              
-0     00008b46  _XINT1_ISR                                
-0     00008b50  _XINT2_ISR                                
-0     0000936d  _XINT3_ISR                                
-0     00008d26  _XINT4_ISR                                
-0     00008d30  _XINT5_ISR                                
-0     00008d3a  _XINT6_ISR                                
-0     00008d44  _XINT7_ISR                                
+0     00009c3c  _TABL_CONDITION_FROM_SENSOR_HALL          
+0     00009bc4  _TABL_UU                                  
+0     00009bac  _TABL_UU1                                 
+0     00009bf4  _TABL_UV                                  
+0     00009bdc  _TABL_UV1                                 
+0     00009c24  _TABL_UW                                  
+0     00009c0c  _TABL_UW1                                 
+0     0000930e  _TINT0_ISR                                
+0     00009af6  _Tabl_sin_90                              
+0     000093c8  _TimeDelaySys                             
+0     00009247  _TimeIMotorPrtctn                         
+0     00008b62  _USER10_ISR                               
+0     00008b6c  _USER11_ISR                               
+0     00008b76  _USER12_ISR                               
+0     00008b08  _USER1_ISR                                
+0     00008b12  _USER2_ISR                                
+0     00008b1c  _USER3_ISR                                
+0     00008b26  _USER4_ISR                                
+0     00008b30  _USER5_ISR                                
+0     00008b3a  _USER6_ISR                                
+0     00008b44  _USER7_ISR                                
+0     00008b4e  _USER8_ISR                                
+0     00008b58  _USER9_ISR                                
+0     00008bb2  _WAKEINT_ISR                              
+0     00008b94  _XINT1_ISR                                
+0     00008b9e  _XINT2_ISR                                
+0     000093bb  _XINT3_ISR                                
+0     00008d74  _XINT4_ISR                                
+0     00008d7e  _XINT5_ISR                                
+0     00008d88  _XINT6_ISR                                
+0     00008d92  _XINT7_ISR                                
 1     00007070  _XIntruptRegs                             
 1     00000b20  _XintfRegs                                
 1     00000380  __STACK_END                               
@@ -790,36 +791,36 @@ abs   ffffffff  ___TI_prof_data_size
 abs   ffffffff  ___TI_prof_data_start                     
 abs   ffffffff  ___binit__                                
 abs   ffffffff  ___c_args__                               
-0     00009bfa  ___cinit__                                
-0     000096e7  ___etext__                                
+0     00009c48  ___cinit__                                
+0     00009735  ___etext__                                
 abs   ffffffff  ___pinit__                                
 0     00008000  ___text__                                 
-0     000096a2  __args_main                               
+0     000096f0  __args_main                               
 1     0000c256  __cleanup_ptr                             
 1     0000c258  __dtors_ptr                               
 1     0000c23c  __lock                                    
-0     000096de  __nop                                     
-0     000096da  __register_lock                           
-0     000096d6  __register_unlock                         
+0     0000972c  __nop                                     
+0     00009728  __register_lock                           
+0     00009724  __register_unlock                         
 1     00000000  __stack                                   
 1     0000c23a  __unlock                                  
-0     000096bd  _abort                                    
+0     0000970b  _abort                                    
 1     0000c008  _brwsr                                    
-0     000095c2  _c_int00                                  
-0     00339bfa  _cinit_loadstart                          
-0     00009bfa  _cinit_runstart                           
+0     00009610  _c_int00                                  
+0     00339c48  _cinit_loadstart                          
+0     00009c48  _cinit_runstart                           
 abs   0000006d  _cinit_size                               
 1     0000c001  _cnt_vdhl                                 
 0     00008000  _const_loadstart                          
 0     00008000  _const_runstart                           
 abs   00000000  _const_size                               
 1     0000c040  _data_pmsm                                
-0     003396e8  _econst_loadstart                         
-0     000096e8  _econst_runstart                          
+0     00339736  _econst_loadstart                         
+0     00009736  _econst_runstart                          
 abs   00000512  _econst_size                              
-0     000096bf  _exit                                     
+0     0000970d  _exit                                     
 1     0000c004  _flags_drive                              
-0     0000957a  _main                                     
+0     000095c8  _main                                     
 1     0000c100  _mb_servc                                 
 1     0000c248  _pBreakPhasePrtctn                        
 1     0000c230  _pCalcSinCos                              
@@ -833,19 +834,19 @@ abs   00000512  _econst_size
 0     00008000  _pinit_runstart                           
 abs   00000000  _pinit_size                               
 1     0000c00e  _rpd_ctrl_regs                            
-0     00008d6c  _rsvd_ISR                                 
+0     00008dba  _rsvd_ISR                                 
 0     00008000  _switch_loadstart                         
 0     00008000  _switch_runstart                          
 abs   00000000  _switch_size                              
 0     00338000  _text_loadstart                           
 0     00008000  _text_runstart                            
-abs   000016e7  _text_size                                
+abs   00001735  _text_size                                
 1     0000c23e  _usCRC16                                  
 abs   ffffffff  binit                                     
-0     00009bfa  cinit                                     
+0     00009c48  cinit                                     
 0     0033fff6  code_start                                
-0     00339c67  copy_sections                             
-0     000096e7  etext                                     
+0     00339cb5  copy_sections                             
+0     00009735  etext                                     
 abs   ffffffff  pinit                                     
 
 
@@ -875,166 +876,167 @@ page  address   name
 0     00008259  _Calc2To3Cos                              
 0     00008288  _CalcLengthVect2In                        
 0     000082c8  _CalculateScalarCurrentFrom6Phase         
-0     0000835a  _CalculateConditionPMS                    
-0     000083af  _InitSysCtrl                              
-0     000083ba  _InitFlash                                
-0     000083d5  _DisableDog                               
-0     000083dd  _InitPll                                  
-0     0000841a  _InitPeripheralClocks                     
-0     00008453  _GpioConf                                 
-0     00008759  _PMSMotorFuncInit                         
-0     000087be  _PMSMotorFuncReset                        
-0     00008811  _PMSMotorFuncScal                         
-0     00008816  _PMSMotorFuncTechSpec                     
-0     00008872  _PMSMotorFuncTechSpecWithoutIntenstCntrllr
-0     000088b4  _PMSMotorFuncSensorless                   
-0     000088b9  _CntrlDrive                               
-0     00008a21  _HandlerExternalButtons                   
-0     00008a35  _HandlerFreezeProtection                  
-0     00008a4b  _HandlerSwitchProcessing                  
-0     00008a57  _HandlerSwitchDO1                         
-0     00008a7e  _INT13_ISR                                
-0     00008a88  _DATALOG_ISR                              
-0     00008a92  _RTOSINT_ISR                              
-0     00008a9c  _EMUINT_ISR                               
-0     00008aa6  _NMI_ISR                                  
-0     00008ab0  _ILLEGAL_ISR                              
-0     00008aba  _USER1_ISR                                
-0     00008ac4  _USER2_ISR                                
-0     00008ace  _USER3_ISR                                
-0     00008ad8  _USER4_ISR                                
-0     00008ae2  _USER5_ISR                                
-0     00008aec  _USER6_ISR                                
-0     00008af6  _USER7_ISR                                
-0     00008b00  _USER8_ISR                                
-0     00008b0a  _USER9_ISR                                
-0     00008b14  _USER10_ISR                               
-0     00008b1e  _USER11_ISR                               
-0     00008b28  _USER12_ISR                               
-0     00008b32  _SEQ1INT_ISR                              
-0     00008b3c  _SEQ2INT_ISR                              
-0     00008b46  _XINT1_ISR                                
-0     00008b50  _XINT2_ISR                                
-0     00008b5a  _ADCINT_ISR                               
-0     00008b64  _WAKEINT_ISR                              
-0     00008b6e  _EPWM1_TZINT_ISR                          
-0     00008b78  _EPWM2_TZINT_ISR                          
-0     00008b82  _EPWM3_TZINT_ISR                          
-0     00008b8c  _EPWM4_TZINT_ISR                          
-0     00008b96  _EPWM5_TZINT_ISR                          
-0     00008ba0  _EPWM6_TZINT_ISR                          
-0     00008baa  _EPWM1_INT_ISR                            
-0     00008bb4  _EPWM2_INT_ISR                            
-0     00008bbe  _EPWM3_INT_ISR                            
-0     00008bc8  _EPWM4_INT_ISR                            
-0     00008bd2  _EPWM5_INT_ISR                            
-0     00008bdc  _EPWM6_INT_ISR                            
-0     00008be6  _ECAP1_INT_ISR                            
-0     00008bf0  _ECAP2_INT_ISR                            
-0     00008bfa  _ECAP3_INT_ISR                            
-0     00008c04  _ECAP4_INT_ISR                            
-0     00008c0e  _ECAP5_INT_ISR                            
-0     00008c18  _ECAP6_INT_ISR                            
-0     00008c22  _EQEP1_INT_ISR                            
-0     00008c2c  _EQEP2_INT_ISR                            
-0     00008c36  _SPIRXINTA_ISR                            
-0     00008c40  _SPITXINTA_ISR                            
-0     00008c4a  _MRINTB_ISR                               
-0     00008c54  _MXINTB_ISR                               
-0     00008c5e  _MRINTA_ISR                               
-0     00008c68  _MXINTA_ISR                               
-0     00008c72  _DINTCH1_ISR                              
-0     00008c7c  _DINTCH2_ISR                              
-0     00008c86  _DINTCH3_ISR                              
-0     00008c90  _DINTCH4_ISR                              
-0     00008c9a  _DINTCH5_ISR                              
-0     00008ca4  _DINTCH6_ISR                              
-0     00008cae  _I2CINT1A_ISR                             
-0     00008cb8  _I2CINT2A_ISR                             
-0     00008cc2  _SCIRXINTC_ISR                            
-0     00008ccc  _SCITXINTC_ISR                            
-0     00008cd6  _SCIRXINTA_ISR                            
-0     00008ce0  _SCITXINTA_ISR                            
-0     00008cea  _SCIRXINTB_ISR                            
-0     00008cf4  _SCITXINTB_ISR                            
-0     00008cfe  _ECAN0INTA_ISR                            
-0     00008d08  _ECAN1INTA_ISR                            
-0     00008d12  _ECAN0INTB_ISR                            
-0     00008d1c  _ECAN1INTB_ISR                            
-0     00008d26  _XINT4_ISR                                
-0     00008d30  _XINT5_ISR                                
-0     00008d3a  _XINT6_ISR                                
-0     00008d44  _XINT7_ISR                                
-0     00008d4e  _LVF_ISR                                  
-0     00008d58  _LUF_ISR                                  
-0     00008d62  _PIE_RESERVED                             
-0     00008d6c  _rsvd_ISR                                 
-0     00008d76  _AdcInitDrive                             
-0     00008dd8  _HandlrAdc                                
-0     00008e29  _HandlrFastAdc                            
-0     00008e36  _HandlrVoltageAdc                         
-0     00008ee7  _HandlrCurrentAdc                         
-0     00008fa4  _InitEPwm_1_2_3_4_5_6_Timers              
-0     000090c0  _Handlr_ePwm                              
-0     00009180  _Set_Pwm_Complimentary_State              
-0     000091a5  _Set_Pwm_Low_State                        
-0     000091be  _MaxMotorIPrtctn                          
-0     000091f9  _TimeIMotorPrtctn                         
-0     0000922a  _BreakPhasePrtctn                         
-0     00009288  _MaxUDCMotorPrtctn                        
-0     0000929f  _MinUDCMotorPrtctn                        
-0     000092b6  _PressFaultMotorPrtctn                    
-0     000092c0  _TINT0_ISR                                
-0     00009321  _INT14_ISR                                
-0     0000936d  _XINT3_ISR                                
-0     0000937a  _TimeDelaySys                             
-0     00009399  _HandlrBttn                               
-0     000093b6  _LimitVar                                 
-0     000093d5  _FltrMas6Var                              
-0     00009409  FS$$DIV                                   
-0     00009491  _InitCpuTimers                            
-0     000094d2  _ConfigCpuTimer                           
-0     0000950c  _MainInit                                 
-0     0000957a  _main                                     
-0     00009583  _Base_Cycle                               
-0     000095c2  _c_int00                                  
-0     00009608  L$$DIV                                    
-0     00009617  L$$MOD                                    
-0     00009625  UL$$DIV                                   
-0     0000962c  UL$$MOD                                   
-0     00009632  _InitPieCtrl                              
-0     00009651  _EnableInterrupts                         
-0     0000965a  _InitSPIA                                 
-0     00009682  _InitPieVectTable                         
-0     000096a2  __args_main                               
-0     000096bd  C$$EXIT                                   
-0     000096bd  _abort                                    
-0     000096bf  _exit                                     
-0     000096d6  __register_unlock                         
-0     000096da  __register_lock                           
-0     000096de  __nop                                     
-0     000096df  _CalcVarblsSttng                          
-0     000096e3  _CalcFastVarblsSttng                      
-0     000096e7  ___etext__                                
-0     000096e7  etext                                     
-0     000096e8  _SQRT350                                  
-0     000096e8  _econst_runstart                          
-0     000099a8  _PieVectTableInit                         
-0     00009aa8  _Tabl_sin_90                              
-0     00009b5e  _TABL_UU1                                 
-0     00009b76  _TABL_UU                                  
-0     00009b8e  _TABL_UV1                                 
-0     00009ba6  _TABL_UV                                  
-0     00009bbe  _TABL_UW1                                 
-0     00009bd6  _TABL_UW                                  
-0     00009bee  _TABL_CONDITION_FROM_SENSOR_HALL          
-0     00009bfa  ___cinit__                                
-0     00009bfa  _cinit_runstart                           
-0     00009bfa  cinit                                     
+0     0000835a  _CalculateConditionPMSForward             
+0     000083af  _CalculateConditionPMSBackward            
+0     00008404  _InitSysCtrl                              
+0     0000840f  _InitFlash                                
+0     0000842a  _DisableDog                               
+0     00008432  _InitPll                                  
+0     0000846f  _InitPeripheralClocks                     
+0     000084a8  _GpioConf                                 
+0     000087ae  _PMSMotorFuncInit                         
+0     00008813  _PMSMotorFuncReset                        
+0     00008866  _PMSMotorFuncScal                         
+0     0000886b  _PMSMotorFuncTechSpec                     
+0     000088c7  _PMSMotorFuncTechSpecWithoutIntenstCntrllr
+0     000088fb  _PMSMotorFuncSensorless                   
+0     00008900  _CntrlDrive                               
+0     00008a6f  _HandlerExternalButtons                   
+0     00008a83  _HandlerFreezeProtection                  
+0     00008a99  _HandlerSwitchProcessing                  
+0     00008aa5  _HandlerSwitchDO1                         
+0     00008acc  _INT13_ISR                                
+0     00008ad6  _DATALOG_ISR                              
+0     00008ae0  _RTOSINT_ISR                              
+0     00008aea  _EMUINT_ISR                               
+0     00008af4  _NMI_ISR                                  
+0     00008afe  _ILLEGAL_ISR                              
+0     00008b08  _USER1_ISR                                
+0     00008b12  _USER2_ISR                                
+0     00008b1c  _USER3_ISR                                
+0     00008b26  _USER4_ISR                                
+0     00008b30  _USER5_ISR                                
+0     00008b3a  _USER6_ISR                                
+0     00008b44  _USER7_ISR                                
+0     00008b4e  _USER8_ISR                                
+0     00008b58  _USER9_ISR                                
+0     00008b62  _USER10_ISR                               
+0     00008b6c  _USER11_ISR                               
+0     00008b76  _USER12_ISR                               
+0     00008b80  _SEQ1INT_ISR                              
+0     00008b8a  _SEQ2INT_ISR                              
+0     00008b94  _XINT1_ISR                                
+0     00008b9e  _XINT2_ISR                                
+0     00008ba8  _ADCINT_ISR                               
+0     00008bb2  _WAKEINT_ISR                              
+0     00008bbc  _EPWM1_TZINT_ISR                          
+0     00008bc6  _EPWM2_TZINT_ISR                          
+0     00008bd0  _EPWM3_TZINT_ISR                          
+0     00008bda  _EPWM4_TZINT_ISR                          
+0     00008be4  _EPWM5_TZINT_ISR                          
+0     00008bee  _EPWM6_TZINT_ISR                          
+0     00008bf8  _EPWM1_INT_ISR                            
+0     00008c02  _EPWM2_INT_ISR                            
+0     00008c0c  _EPWM3_INT_ISR                            
+0     00008c16  _EPWM4_INT_ISR                            
+0     00008c20  _EPWM5_INT_ISR                            
+0     00008c2a  _EPWM6_INT_ISR                            
+0     00008c34  _ECAP1_INT_ISR                            
+0     00008c3e  _ECAP2_INT_ISR                            
+0     00008c48  _ECAP3_INT_ISR                            
+0     00008c52  _ECAP4_INT_ISR                            
+0     00008c5c  _ECAP5_INT_ISR                            
+0     00008c66  _ECAP6_INT_ISR                            
+0     00008c70  _EQEP1_INT_ISR                            
+0     00008c7a  _EQEP2_INT_ISR                            
+0     00008c84  _SPIRXINTA_ISR                            
+0     00008c8e  _SPITXINTA_ISR                            
+0     00008c98  _MRINTB_ISR                               
+0     00008ca2  _MXINTB_ISR                               
+0     00008cac  _MRINTA_ISR                               
+0     00008cb6  _MXINTA_ISR                               
+0     00008cc0  _DINTCH1_ISR                              
+0     00008cca  _DINTCH2_ISR                              
+0     00008cd4  _DINTCH3_ISR                              
+0     00008cde  _DINTCH4_ISR                              
+0     00008ce8  _DINTCH5_ISR                              
+0     00008cf2  _DINTCH6_ISR                              
+0     00008cfc  _I2CINT1A_ISR                             
+0     00008d06  _I2CINT2A_ISR                             
+0     00008d10  _SCIRXINTC_ISR                            
+0     00008d1a  _SCITXINTC_ISR                            
+0     00008d24  _SCIRXINTA_ISR                            
+0     00008d2e  _SCITXINTA_ISR                            
+0     00008d38  _SCIRXINTB_ISR                            
+0     00008d42  _SCITXINTB_ISR                            
+0     00008d4c  _ECAN0INTA_ISR                            
+0     00008d56  _ECAN1INTA_ISR                            
+0     00008d60  _ECAN0INTB_ISR                            
+0     00008d6a  _ECAN1INTB_ISR                            
+0     00008d74  _XINT4_ISR                                
+0     00008d7e  _XINT5_ISR                                
+0     00008d88  _XINT6_ISR                                
+0     00008d92  _XINT7_ISR                                
+0     00008d9c  _LVF_ISR                                  
+0     00008da6  _LUF_ISR                                  
+0     00008db0  _PIE_RESERVED                             
+0     00008dba  _rsvd_ISR                                 
+0     00008dc4  _AdcInitDrive                             
+0     00008e26  _HandlrAdc                                
+0     00008e77  _HandlrFastAdc                            
+0     00008e84  _HandlrVoltageAdc                         
+0     00008f35  _HandlrCurrentAdc                         
+0     00008ff2  _InitEPwm_1_2_3_4_5_6_Timers              
+0     0000910e  _Handlr_ePwm                              
+0     000091ce  _Set_Pwm_Complimentary_State              
+0     000091f3  _Set_Pwm_Low_State                        
+0     0000920c  _MaxMotorIPrtctn                          
+0     00009247  _TimeIMotorPrtctn                         
+0     00009278  _BreakPhasePrtctn                         
+0     000092d6  _MaxUDCMotorPrtctn                        
+0     000092ed  _MinUDCMotorPrtctn                        
+0     00009304  _PressFaultMotorPrtctn                    
+0     0000930e  _TINT0_ISR                                
+0     0000936f  _INT14_ISR                                
+0     000093bb  _XINT3_ISR                                
+0     000093c8  _TimeDelaySys                             
+0     000093e7  _HandlrBttn                               
+0     00009404  _LimitVar                                 
+0     00009423  _FltrMas6Var                              
+0     00009457  FS$$DIV                                   
+0     000094df  _InitCpuTimers                            
+0     00009520  _ConfigCpuTimer                           
+0     0000955a  _MainInit                                 
+0     000095c8  _main                                     
+0     000095d1  _Base_Cycle                               
+0     00009610  _c_int00                                  
+0     00009656  L$$DIV                                    
+0     00009665  L$$MOD                                    
+0     00009673  UL$$DIV                                   
+0     0000967a  UL$$MOD                                   
+0     00009680  _InitPieCtrl                              
+0     0000969f  _EnableInterrupts                         
+0     000096a8  _InitSPIA                                 
+0     000096d0  _InitPieVectTable                         
+0     000096f0  __args_main                               
+0     0000970b  C$$EXIT                                   
+0     0000970b  _abort                                    
+0     0000970d  _exit                                     
+0     00009724  __register_unlock                         
+0     00009728  __register_lock                           
+0     0000972c  __nop                                     
+0     0000972d  _CalcVarblsSttng                          
+0     00009731  _CalcFastVarblsSttng                      
+0     00009735  ___etext__                                
+0     00009735  etext                                     
+0     00009736  _SQRT350                                  
+0     00009736  _econst_runstart                          
+0     000099f6  _PieVectTableInit                         
+0     00009af6  _Tabl_sin_90                              
+0     00009bac  _TABL_UU1                                 
+0     00009bc4  _TABL_UU                                  
+0     00009bdc  _TABL_UV1                                 
+0     00009bf4  _TABL_UV                                  
+0     00009c0c  _TABL_UW1                                 
+0     00009c24  _TABL_UW                                  
+0     00009c3c  _TABL_CONDITION_FROM_SENSOR_HALL          
+0     00009c48  ___cinit__                                
+0     00009c48  _cinit_runstart                           
+0     00009c48  cinit                                     
 0     00338000  _text_loadstart                           
-0     003396e8  _econst_loadstart                         
-0     00339bfa  _cinit_loadstart                          
-0     00339c67  copy_sections                             
+0     00339736  _econst_loadstart                         
+0     00339c48  _cinit_loadstart                          
+0     00339cb5  copy_sections                             
 0     0033fff6  code_start                                
 0     00380080  _ADC_cal                                  
 1     00000000  __stack                                   
@@ -1118,7 +1120,7 @@ abs   00000001  __TI_args_main
 abs   0000006d  _cinit_size                               
 abs   00000380  __STACK_SIZE                              
 abs   00000512  _econst_size                              
-abs   000016e7  _text_size                                
+abs   00001735  _text_size                                
 abs   ffffffff  ___TI_pprof_out_hndl                      
 abs   ffffffff  ___TI_prof_data_size                      
 abs   ffffffff  ___TI_prof_data_start                     
@@ -1128,4 +1130,4 @@ abs   ffffffff  ___pinit__
 abs   ffffffff  binit                                     
 abs   ffffffff  pinit                                     
 
-[274 symbols]
+[275 symbols]

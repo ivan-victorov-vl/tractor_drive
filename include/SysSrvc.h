@@ -81,7 +81,7 @@
 //! Deadband for pwm
 #define DEAD_BAND 450
 //! Minimal value k_f_mul when motor is run
-#define MIN_VALUE_K_F_MUL_IS_RUN 0.001
+#define MIN_VALUE_K_F_MUL_IS_RUN 0.0001
 //! Minimal value k_f_mul when motor is stop
 #define MIN_VALUE_K_F_MUL_IS_STOP 0.12
 //! Get data hall sensor input value

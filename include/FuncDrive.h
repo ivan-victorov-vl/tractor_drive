@@ -76,8 +76,10 @@ extern float32 CalcLengthVect2In(float32 first_lb, float32 secnd_lb);
 extern float32 PiRegltr(float32 cur_var_lb, float32 k_prprnl_lb, float32 k_integral_lb, float32 *integral_lb);
 //! declaration of external access to a function PID_Regltr
 extern float32 PID_Regltr(PID_Rgltr_S *v_pid_r_lb);
-//! declaration of external access to a function CalculateConditionPMS
-extern void CalculateConditionPMS(Model_Data_PMSM_S *md_l);
+//! declaration of external access to a function CalculateConditionPMSForward
+extern void CalculateConditionPMSForward(Model_Data_PMSM_S *md_l);
+//! declaration of external access to a function CalculateConditionPMSBackward
+extern void CalculateConditionPMSBackward(Model_Data_PMSM_S *md_l);
 //! declaration of external access to a function (*CalcSinCos[4])
 extern void (*CalcSinCos[4])(float32 theta_lb, float32 *sin_lb, float32 *cos_lb);
 //! declaration of external access to a function CalculateScalarCurrentFrom6Phase
