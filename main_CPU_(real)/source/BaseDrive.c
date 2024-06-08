@@ -14,20 +14,30 @@
 //! Header file include"SysSrvc.h"
 #include "FuncDrive.h"
 
-void PMSMotorFuncInit(Model_Data_PMSM_S *md_l, Settng_Data_PMSM_S *sd_l, Flg_Cntrl_Drive_S *mf_l);
-void PMSMotorFuncReset(Model_Data_PMSM_S *md_l, Settng_Data_PMSM_S *sd_l, Flg_Cntrl_Drive_S *mf_l);
-void PMSMotorFuncScal(Model_Data_PMSM_S *md_la, Flg_Cntrl_Drive_S *mf_la, Brws_Param_Drive *bpd_la);
-void PMSMotorFuncTechSpec(Model_Data_PMSM_S *md_la, Flg_Cntrl_Drive_S *mf_la, Brws_Param_Drive *bpd_la);
-void PMSMotorFuncTechSpecWithoutIntenstCntrllr(Model_Data_PMSM_S *md_la, Flg_Cntrl_Drive_S *mf_la, Brws_Param_Drive *bpd_la);
-void PMSMotorFuncSensorless(Model_Data_PMSM_S *md_la, Flg_Cntrl_Drive_S *mf_la, Brws_Param_Drive *bpd_la);
-void CntrlDrive(Model_Data_PMSM_S *md_l, Settng_Data_PMSM_S *sd_l, Flg_Cntrl_Drive_S *mf_l, Brws_Param_Drive *bpd_l);
+void PMSMotorFuncInit(Model_Data_PMSM_S *md_l, Settng_Data_PMSM_S *sd_l,
+                      Flg_Cntrl_Drive_S *mf_l);
+void PMSMotorFuncReset(Model_Data_PMSM_S *md_l, Settng_Data_PMSM_S *sd_l,
+                       Flg_Cntrl_Drive_S *mf_l);
+void PMSMotorFuncScal(Model_Data_PMSM_S *md_la, Flg_Cntrl_Drive_S *mf_la,
+                      Brws_Param_Drive *bpd_la);
+void PMSMotorFuncTechSpec(Model_Data_PMSM_S *md_la, Flg_Cntrl_Drive_S *mf_la,
+                          Brws_Param_Drive *bpd_la);
+void PMSMotorFuncTechSpecWithoutIntenstCntrllr(Model_Data_PMSM_S *md_la,
+                                               Flg_Cntrl_Drive_S *mf_la,
+                                               Brws_Param_Drive *bpd_la);
+void PMSMotorFuncSensorless(Model_Data_PMSM_S *md_la, Flg_Cntrl_Drive_S *mf_la,
+                            Brws_Param_Drive *bpd_la);
+void CntrlDrive(Model_Data_PMSM_S *md_l, Settng_Data_PMSM_S *sd_l,
+                Flg_Cntrl_Drive_S *mf_l, Brws_Param_Drive *bpd_l);
 void HandlerExternalButtons(Flg_Cntrl_Drive_S *mf_l);
 void HandlerSwitchDO1(float32 udc);
 
 /*!
  * \brief Initialization PMSM motor control
  */
-void PMSMotorFuncInit(Model_Data_PMSM_S *md_l, Settng_Data_PMSM_S *sd_l, Flg_Cntrl_Drive_S *mf_l) {
+void PMSMotorFuncInit(Model_Data_PMSM_S *md_l, Settng_Data_PMSM_S *sd_l,
+                      Flg_Cntrl_Drive_S *mf_l)
+{
     //! Initialization setting the frequency inverter data
     md_l->k_f_mul_ref.fl = 0;
     md_l->k_f_mul.fl = 0;
@@ -43,10 +53,10 @@ void PMSMotorFuncInit(Model_Data_PMSM_S *md_l, Settng_Data_PMSM_S *sd_l, Flg_Cnt
     md_l->cur_pstn_rtr.fl = 0;
     md_l->udc.fl = 0;
     md_l->isnom.fl = 0;
-    mf_l->bits_reg2.bits.wrk_drv=FALSE_VAL;
-    mf_l->bits_reg2.bits.strt_drv=FALSE_VAL;
-    mf_l->bits_reg2.bits.stp_drv=FALSE_VAL;
-    mf_l->bits_reg2.bits.dir_drv=FALSE_VAL;
+    mf_l->bits_reg2.bits.wrk_drv = FALSE_VAL;
+    mf_l->bits_reg2.bits.strt_drv = FALSE_VAL;
+    mf_l->bits_reg2.bits.stp_drv = FALSE_VAL;
+    mf_l->bits_reg2.bits.dir_drv = FALSE_VAL;
     md_l->theta.fl = 0;
     md_l->integral_ref_current.fl = 0;
     //! Get voltage and current value
@@ -59,7 +69,9 @@ void PMSMotorFuncInit(Model_Data_PMSM_S *md_l, Settng_Data_PMSM_S *sd_l, Flg_Cnt
 /*!
  * \brief Reset PMSM motor control
  */
-void PMSMotorFuncReset(Model_Data_PMSM_S *md_l, Settng_Data_PMSM_S *sd_l, Flg_Cntrl_Drive_S *mf_l) {
+void PMSMotorFuncReset(Model_Data_PMSM_S *md_l, Settng_Data_PMSM_S *sd_l,
+                       Flg_Cntrl_Drive_S *mf_l)
+{
     //! Resetting the frequency inverter data
     md_l->k_f_mul_ref.fl = 0;
     md_l->k_f_mul.fl = 0;
@@ -72,20 +84,24 @@ void PMSMotorFuncReset(Model_Data_PMSM_S *md_l, Settng_Data_PMSM_S *sd_l, Flg_Cn
     md_l->uv1.fl = 0;
     md_l->uw1.fl = 0;
     LED_START_OFF;
-    mf_l->bits_reg2.bits.wrk_drv=FALSE_VAL;
-    mf_l->bits_reg2.bits.strt_drv=FALSE_VAL;
-    mf_l->bits_reg2.bits.stp_drv=FALSE_VAL;
+    mf_l->bits_reg2.bits.wrk_drv = FALSE_VAL;
+    mf_l->bits_reg2.bits.strt_drv = FALSE_VAL;
+    mf_l->bits_reg2.bits.stp_drv = FALSE_VAL;
     md_l->integral_ref_current.fl = 0;
     md_l->theta.fl = 0;
 }
 
-void PMSMotorFuncScal(Model_Data_PMSM_S *md_la, Flg_Cntrl_Drive_S *mf_la, Brws_Param_Drive *bpd_la) {
+void PMSMotorFuncScal(Model_Data_PMSM_S *md_la, Flg_Cntrl_Drive_S *mf_la,
+                      Brws_Param_Drive *bpd_la)
+{
 }
 
 /*!
  * \brief PMSM motor control function from technical specification
  */
-void PMSMotorFuncTechSpec(Model_Data_PMSM_S *md_la, Flg_Cntrl_Drive_S *mf_la, Brws_Param_Drive *bpd_la) {
+void PMSMotorFuncTechSpec(Model_Data_PMSM_S *md_la, Flg_Cntrl_Drive_S *mf_la,
+                          Brws_Param_Drive *bpd_la)
+{
     static float32 i_alpha_la, i_beta_la;
 
     //! Conversion of currents from three-phase to two-phase reference frame
@@ -95,12 +111,14 @@ void PMSMotorFuncTechSpec(Model_Data_PMSM_S *md_la, Flg_Cntrl_Drive_S *mf_la, Br
     //! Calculation degree
     md_la->theta.fl += md_la->k_f_mul.fl;
     //! When it reaches less than 0 degrees
-    if (md_la->theta.fl <= 0) {
+    if (md_la->theta.fl <= 0)
+    {
         //! Update the angle
         md_la->theta.fl += FULL_DSKRT;
     }
     //! If it more than 360 degrees
-    if (md_la->theta.fl >= FULL_DSKRT) {
+    if (md_la->theta.fl >= FULL_DSKRT)
+    {
         //! Reset the angle to zero
         md_la->theta.fl -= FULL_DSKRT;
     }
@@ -112,156 +130,195 @@ void PMSMotorFuncTechSpec(Model_Data_PMSM_S *md_la, Flg_Cntrl_Drive_S *mf_la, Br
 /*!
  * \brief PMSM motor control function from technical specification without intensity controller
  */
-void PMSMotorFuncTechSpecWithoutIntenstCntrllr(Model_Data_PMSM_S *md_la, Flg_Cntrl_Drive_S *mf_la, Brws_Param_Drive *bpd_la) {
+void PMSMotorFuncTechSpecWithoutIntenstCntrllr(Model_Data_PMSM_S *md_la,
+                                               Flg_Cntrl_Drive_S *mf_la,
+                                               Brws_Param_Drive *bpd_la)
+{
     //! Increment angle
     md_la->theta.fl += (MIN_CROSS_ANGLE);
 
     //! When it reaches less than 0 degrees
-    if (md_la->theta.fl < 0) {
+    if (md_la->theta.fl < 0)
+    {
         //! Update the angle
         md_la->theta.fl += FULL_DSKRT;
     }
     //! If it more than 360 degrees
-    if (md_la->theta.fl >= FULL_DSKRT) {
+    if (md_la->theta.fl >= FULL_DSKRT)
+    {
         //! Reset the angle to zero
         md_la->theta.fl -= FULL_DSKRT;
     }
 }
 
-void PMSMotorFuncSensorless(Model_Data_PMSM_S *md_la, Flg_Cntrl_Drive_S *mf_la, Brws_Param_Drive *bpd_la) {
+void PMSMotorFuncSensorless(Model_Data_PMSM_S *md_la, Flg_Cntrl_Drive_S *mf_la,
+                            Brws_Param_Drive *bpd_la)
+{
 }
 
 /*!
  * \brief PMSM motor control function
  */
-void CntrlDrive(Model_Data_PMSM_S *md_l, Settng_Data_PMSM_S *sd_l, Flg_Cntrl_Drive_S *mf_l, Brws_Param_Drive *bpd_l) {
+void CntrlDrive(Model_Data_PMSM_S *md_l, Settng_Data_PMSM_S *sd_l,
+                Flg_Cntrl_Drive_S *mf_l, Brws_Param_Drive *bpd_l)
+{
     static int32 delay_start_value = 0;
     static int16 filter_direction = FALSE_VAL;
 
-    int32 calc_theta = (int32)((int32)md_l->theta.fl/(int32)30);
+    int32 calc_theta = (int32) ((int32) md_l->theta.fl / (int32) 30);
 
-    if (GET_DIN_HALL_VALUE != TABL_CONDITION_FROM_SENSOR_HALL[calc_theta])  {
-            //! Set next value angle rotor
-            flags_drive.bits_reg1.bits.ext_angle = TRUE_VAL;
+    if (GET_DIN_HALL_VALUE != TABL_CONDITION_FROM_SENSOR_HALL[calc_theta])
+    {
+        //! Set next value angle rotor
+        flags_drive.bits_reg1.bits.ext_angle = TRUE_VAL;
     }
 
     //! handle switch do1
     HandlerSwitchDO1(md_l->udc.fl);
 
     //! work frequency control
-    if (mf_l->bits_reg2.bits.wrk_drv) {
+    if (mf_l->bits_reg2.bits.wrk_drv)
+    {
 
         //! Get current value
-        data_pmsm.md.k_f_mul.fl = PiRegltr(data_pmsm.md.k_f_mul_ref.fl - CalculateScalarCurrentFrom6Phase(&data_pmsm.md),
-                  K_PROP,
-                  K_INTEGR,
-                  &data_pmsm.md.integral_ref_current.fl);
+        data_pmsm.md.k_f_mul.fl = PiRegltr(
+                data_pmsm.md.k_f_mul_ref.fl
+                        - CalculateScalarCurrentFrom6Phase(&data_pmsm.md),
+                K_PROP,
+                K_INTEGR,
+                &data_pmsm.md.integral_ref_current.fl);
 
         //! Integral current limitation
-        if (data_pmsm.md.integral_ref_current.fl > K_LIMIT_INTEGR) {
+        if (data_pmsm.md.integral_ref_current.fl > K_LIMIT_INTEGR)
+        {
             data_pmsm.md.integral_ref_current.fl = K_LIMIT_INTEGR;
-        } else if (data_pmsm.md.integral_ref_current.fl < -K_LIMIT_INTEGR) {
+        }
+        else if (data_pmsm.md.integral_ref_current.fl < -K_LIMIT_INTEGR)
+        {
             data_pmsm.md.integral_ref_current.fl = -K_LIMIT_INTEGR;
         }
         //! Voltage limitation
-        if (data_pmsm.md.k_f_mul.fl > 1) {
+        if (data_pmsm.md.k_f_mul.fl > 1)
+        {
             data_pmsm.md.k_f_mul.fl = 1;
-        } else if (data_pmsm.md.k_f_mul.fl < 0) {
+        }
+        else if (data_pmsm.md.k_f_mul.fl < 0)
+        {
             data_pmsm.md.k_f_mul.fl = 0;
         }
 
         //! if a stop command has been received
-        if (mf_l->bits_reg2.bits.stp_drv) {
+        if (mf_l->bits_reg2.bits.stp_drv)
+        {
             //! TODO added for current regulator reduction (now for debug)
-            SpeedRef(0,  md_l->k_f_mul_plus.fl, md_l->k_f_mul_minus.fl, &md_l->k_f_mul_ref.fl);
+            SpeedRef(0, md_l->k_f_mul_plus.fl, md_l->k_f_mul_minus.fl,
+                     &md_l->k_f_mul_ref.fl);
             //! if the speed is stopped
-            if (md_l->k_f_mul_ref.fl < md_l->k_f_mul_minus.fl) {
-               //! reset the wrk_drv reset flag
+            if (md_l->k_f_mul_ref.fl < md_l->k_f_mul_minus.fl)
+            {
+                //! reset the wrk_drv reset flag
                 mf_l->bits_reg2.bits.wrk_drv = FALSE_VAL;
-               //! set zero value flag stop
+                //! set zero value flag stop
                 mf_l->bits_reg2.bits.stp_drv = FALSE_VAL;
             }
-        } else {
+        }
+        else
+        {
             //! Getting "stop" data button
             mf_l->bits_reg2.bits.stp_drv = GET_DIN_3_STOP_BUTTON;
             //! Set value speed motor with reference control
-            SpeedRef(sd_l->k_mul_ext_ref, md_l->k_f_mul_plus.fl, md_l->k_f_mul_minus.fl, &md_l->k_f_mul_ref.fl);
+            SpeedRef(sd_l->k_mul_ext_ref, md_l->k_f_mul_plus.fl,
+                     md_l->k_f_mul_minus.fl, &md_l->k_f_mul_ref.fl);
 
             //! If less minimal value k_f_mul then value = minimal value k_f_mul
-            if (md_l->k_f_mul_ref.fl < MIN_VALUE_K_F_MUL_IS_RUN) {
+            if (md_l->k_f_mul_ref.fl < MIN_VALUE_K_F_MUL_IS_RUN)
+            {
                 md_l->k_f_mul_ref.fl = MIN_VALUE_K_F_MUL_IS_RUN;
             }
         }
-    #if defined(MODEL_INTENSITY_SET) && MODEL_INTENSITY_SET == TRUE_VAL
-        //! processing intensity generator values
-        SpeedRef(md_l->k_f_mul_ref.fl, md_l->k_f_mul_plus.fl, md_l->k_f_mul_minus.fl, &md_l->k_f_mul.fl);
-        // Calculate U,V,W for PMSM control
-        PMSMotorFuncTechSpec(md_l, mf_l, bpd_l);
-    #else
-        if (delay_start_value > DELAY_START_VALUE) {
+        if (delay_start_value > DELAY_START_VALUE)
+        {
             //! Running the model without intensity setter
-            if (mf_l->bits_reg1.bits.ext_angle) {
+            if (mf_l->bits_reg1.bits.ext_angle)
+            {
                 PMSMotorFuncTechSpecWithoutIntenstCntrllr(md_l, mf_l, bpd_l);
                 mf_l->bits_reg1.bits.ext_angle = FALSE_VAL;
             }
-        } else {
+        }
+        else
+        {
             //! Increment delay
             delay_start_value++;
             //! Compilation when forward of rotation
-            #if FORWARD==TRUE_VAL
-            if (mf_l->bits_reg2.bits.dir_drv) {
+#if FORWARD==TRUE_VAL
+            if (mf_l->bits_reg2.bits.dir_drv)
+            {
                 //! Set start value angle for forward
                 md_l->theta.fl = GET_DIN_HALL_VALUE ? 0 : 330;
-            } else {
+            }
+            else
+            {
                 //! Set start value angle for backward
                 md_l->theta.fl = GET_DIN_HALL_VALUE ? 0 : 30;
             }
             //! Compilation when backward of rotation
-            #else
-            if (mf_l->bits_reg2.bits.dir_drv) {
+#else
+            if (mf_l->bits_reg2.bits.dir_drv)
+            {
                 //! Set start value angle for forward
                 md_l->theta.fl = GET_DIN_HALL_VALUE ? 0 : 30;
-            } else {
+            }
+            else
+            {
                 //! Set start value angle for backward
                 md_l->theta.fl = GET_DIN_HALL_VALUE ? 0 : 330;
             }
-            #endif
+#endif
             //! Set next value angle rotor
-            mf_l->bits_reg1.bits.ext_angle=TRUE_VAL;
+            mf_l->bits_reg1.bits.ext_angle = TRUE_VAL;
             //! If less minimal value k_f_mul then value = minimal value k_f_mul
-            if (md_l->k_f_mul_ref.fl < MIN_VALUE_K_F_MUL_IS_STOP) {
+            if (md_l->k_f_mul_ref.fl < MIN_VALUE_K_F_MUL_IS_STOP)
+            {
                 md_l->k_f_mul_ref.fl = MIN_VALUE_K_F_MUL_IS_STOP;
             }
         }
         //! Compilation when forward of rotation
-        #if FORWARD==TRUE_VAL
-           //! Check direction drive
-           if (mf_l->bits_reg2.bits.dir_drv) {
-               //! Calculate current phase
-               CalculateConditionPMSBackward(md_l);
-           } else {
-               //! Calculate current phase
-               CalculateConditionPMSForward(md_l);
-           }
+#if FORWARD==TRUE_VAL
+        //! Check direction drive
+        if (mf_l->bits_reg2.bits.dir_drv)
+        {
+            //! Calculate current phase
+            CalculateConditionPMSBackward(md_l);
+        }
+        else
+        {
+            //! Calculate current phase
+            CalculateConditionPMSForward(md_l);
+        }
         //! Compilation when backward of rotation
-        #else
-           //! Check direction drive
-           if (mf_l->bits_reg2.bits.dir_drv) {
-               //! Calculate current phase
-               CalculateConditionPMSForward(md_l);
-           } else {
-               //! Calculate current phase
-               CalculateConditionPMSBackward(md_l);
-           }
-    #endif
+#else
+        //! Check direction drive
+        if (mf_l->bits_reg2.bits.dir_drv)
+        {
+            //! Calculate current phase
+            CalculateConditionPMSForward(md_l);
+        }
+        else
+        {
+            //! Calculate current phase
+            CalculateConditionPMSBackward(md_l);
+        }
 #endif
-    } else {
+    }
+    else
+    {
         //! Reset variable PMSM-Motor
         PMSMotorFuncReset(md_l, sd_l, mf_l);
         //! Step with non-working condition of the frequency converter
         //! Start drive converter
         mf_l->bits_reg2.bits.strt_drv = GET_DIN_2_START_BUTTON;
-        if (mf_l->bits_reg2.bits.strt_drv) {
+        if (mf_l->bits_reg2.bits.strt_drv)
+        {
             //! Set "work" bit
             mf_l->bits_reg2.bits.wrk_drv = TRUE_VAL;
             //! Set "start" bit
@@ -272,15 +329,19 @@ void CntrlDrive(Model_Data_PMSM_S *md_l, Settng_Data_PMSM_S *sd_l, Flg_Cntrl_Dri
         //! Reset delay start value
         delay_start_value = 0;
         //! Check direction motor
-        if (!GpioDataRegs.GPCDAT.bit.GPIO75) {
+        if (!GpioDataRegs.GPCDAT.bit.GPIO75)
+        {
             // Check first switch
-            if (!filter_direction) {
+            if (!filter_direction)
+            {
                 //! Change direction to inverse
                 mf_l->bits_reg2.bits.dir_drv = !mf_l->bits_reg2.bits.dir_drv;
                 //! Block for second switch
                 filter_direction = TRUE_VAL;
             }
-        } else {
+        }
+        else
+        {
             // Reset filter switch
             filter_direction = FALSE_VAL;
         }
@@ -290,7 +351,8 @@ void CntrlDrive(Model_Data_PMSM_S *md_l, Settng_Data_PMSM_S *sd_l, Flg_Cntrl_Dri
 /*!
  * \brief processing of external buttons
  */
-void HandlerExternalButtons(Flg_Cntrl_Drive_S *mf_l) {
+void HandlerExternalButtons(Flg_Cntrl_Drive_S *mf_l)
+{
     //! getting "reset" data button
     mf_l->bits_reg2.bits.reset_drv = GET_DIN_4_RESET_BUTTON;
 }
@@ -298,7 +360,8 @@ void HandlerExternalButtons(Flg_Cntrl_Drive_S *mf_l) {
 /*!
  * \brief handler for freeze protection
  */
-void HandlerFreezeProtection() {
+void HandlerFreezeProtection()
+{
     static Uint16 freezeCondition = 0;
 
     //! switch pin GPIO58 for freeze
@@ -310,12 +373,16 @@ void HandlerFreezeProtection() {
 /*!
  * \brief handler for switch processing
  */
-Uint16 HandlerSwitchProcessing(Uint16 current_count, Uint16 maxCount) {
+Uint16 HandlerSwitchProcessing(Uint16 current_count, Uint16 maxCount)
+{
     //! get value current count
-    if (current_count < (maxCount>>1)) {
+    if (current_count < (maxCount >> 1))
+    {
         //! set true value
         return TRUE_VAL;
-    } else {
+    }
+    else
+    {
         //! set false value
         return FALSE_VAL;
     }
@@ -324,22 +391,29 @@ Uint16 HandlerSwitchProcessing(Uint16 current_count, Uint16 maxCount) {
 /*!
  * \brief handler for switch DO1 processing
  */
-void HandlerSwitchDO1(float32 udc) {
+void HandlerSwitchDO1(float32 udc)
+{
     static int32 enable_timer = 0;
 
     //! Delay for DO1
-    if (enable_timer > 3000) {
+    if (enable_timer > 3000)
+    {
         //! if UDC more value cutoffs
-        if (udc > DO1_ACTIVATION) {
+        if (udc > DO1_ACTIVATION)
+        {
             //! switch on DO1
             DISCRETE_OUT_CLEAR_1_OFF;
             DISCRETE_OUT_SET_1_ON;
-        } else {
+        }
+        else
+        {
             //! switch off DO1
             DISCRETE_OUT_SET_1_OFF;
             DISCRETE_OUT_CLEAR_1_ON;
         }
-    } else {
+    }
+    else
+    {
         enable_timer++;
     }
 }

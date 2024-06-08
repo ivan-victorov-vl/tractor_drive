@@ -14,7 +14,7 @@
 
 //! FUNCTION DECLARATION
 //! AdcInitDrive function declaration
-void AdcInitDrive (void);
+void AdcInitDrive(void);
 //! Function declaration HandlrAdc
 void HandlrdAdc(Model_Data_PMSM_S *md_motor_l, Settng_Data_PMSM_S *sd_motor_l);
 //! Function declaration HandlrVoltageAdc
@@ -27,7 +27,8 @@ void HandlrFastAdc(Model_Data_PMSM_S *md_motor_l);
 /*!
  *  \brief: Setting and initialization of the ADC of the frequency converter
  */
-void AdcInitDrive(void) {
+void AdcInitDrive(void)
+{
     //! Acquisition window size
     AdcRegs.ADCTRL1.bit.ACQ_PS = 0xf;
     //! Adc core clock divider
@@ -87,15 +88,16 @@ void AdcInitDrive(void) {
 /*!
  *  \brief ADC value processing
  */
-void HandlrAdc(Model_Data_PMSM_S *md_motor_l, Settng_Data_PMSM_S *sd_motor_l) {
+void HandlrAdc(Model_Data_PMSM_S *md_motor_l, Settng_Data_PMSM_S *sd_motor_l)
+{
     //! Read ADCINA6 value
-    md_motor_l->udc.fl = ((float32)(AdcRegs.ADCRESULT6 >> 4) * DIV_1_4096);
+    md_motor_l->udc.fl = ((float32) (AdcRegs.ADCRESULT6 >> 4) * DIV_1_4096);
     //! Read ADCINA7 value
-    md_motor_l->temp.fl = (float32)(AdcRegs.ADCRESULT7 >> 4);
+    md_motor_l->temp.fl = (float32) (AdcRegs.ADCRESULT7 >> 4);
     //! Read ADCINB0 value
-    md_motor_l->izad_20_ma.fl = (float32)(AdcRegs.ADCRESULT8 >> 4);
+    md_motor_l->izad_20_ma.fl = (float32) (AdcRegs.ADCRESULT8 >> 4);
     //! Read ADCINB1 value
-    md_motor_l->fzad_20_ma.fl = (float32)(AdcRegs.ADCRESULT9 >> 4);
+    md_motor_l->fzad_20_ma.fl = (float32) (AdcRegs.ADCRESULT9 >> 4);
 
     //! bringing the voltage set point to unity
     sd_motor_l->k_mul_ext_ref = DIV_1_4096 * md_motor_l->fzad_20_ma.fl;
@@ -106,7 +108,8 @@ void HandlrAdc(Model_Data_PMSM_S *md_motor_l, Settng_Data_PMSM_S *sd_motor_l) {
 /*!
  *  \brief Handler fast ADC value
  */
-void HandlrFastAdc(Model_Data_PMSM_S *md_motor_l) {
+void HandlrFastAdc(Model_Data_PMSM_S *md_motor_l)
+{
     //! Get voltage ADC value
     HandlrVoltageAdc(md_motor_l);
     //! Get current ADC value
@@ -118,61 +121,75 @@ void HandlrFastAdc(Model_Data_PMSM_S *md_motor_l) {
 /*!
  *  \brief ADC value voltage processing
  */
-void HandlrVoltageAdc(Model_Data_PMSM_S *md_motor_l) {
+void HandlrVoltageAdc(Model_Data_PMSM_S *md_motor_l)
+{
     //! Read ADCINA0 value
-    md_motor_l->uac_os_1_1.fl = (float32)(AdcRegs.ADCRESULT0 >> 4);
+    md_motor_l->uac_os_1_1.fl = (float32) (AdcRegs.ADCRESULT0 >> 4);
     //! Read ADCINA1 value
-    md_motor_l->uac_os_2_1.fl = (float32)(AdcRegs.ADCRESULT1 >> 4);
+    md_motor_l->uac_os_2_1.fl = (float32) (AdcRegs.ADCRESULT1 >> 4);
     //! Read ADCINA2 value
-    md_motor_l->uac_os_3_1.fl = (float32)(AdcRegs.ADCRESULT2 >> 4);
+    md_motor_l->uac_os_3_1.fl = (float32) (AdcRegs.ADCRESULT2 >> 4);
     //! Read ADCINA3 value
-    md_motor_l->uac_os_1_0.fl = (float32)(AdcRegs.ADCRESULT3 >> 4);
+    md_motor_l->uac_os_1_0.fl = (float32) (AdcRegs.ADCRESULT3 >> 4);
     //! Read ADCINA4 value
-    md_motor_l->uac_os_2_0.fl = (float32)(AdcRegs.ADCRESULT4 >> 4);
+    md_motor_l->uac_os_2_0.fl = (float32) (AdcRegs.ADCRESULT4 >> 4);
     //! Read ADCINA5 value
-    md_motor_l->uac_os_3_0.fl = (float32)(AdcRegs.ADCRESULT5 >> 4);
+    md_motor_l->uac_os_3_0.fl = (float32) (AdcRegs.ADCRESULT5 >> 4);
 
     //! Shift for sensor voltage phase u
-    md_motor_l->uu_os.fl = (md_motor_l->uac_os_1_0.fl - (float32)ZERO_VALUE_U_PHASE_U) * DIV_1_2048;
+    md_motor_l->uu_os.fl = (md_motor_l->uac_os_1_0.fl
+            - (float32) ZERO_VALUE_U_PHASE_U) * DIV_1_2048;
     //! Shift for sensor voltage phase v
-    md_motor_l->uv_os.fl = (md_motor_l->uac_os_2_0.fl - (float32)ZERO_VALUE_U_PHASE_V) * DIV_1_2048;
+    md_motor_l->uv_os.fl = (md_motor_l->uac_os_2_0.fl
+            - (float32) ZERO_VALUE_U_PHASE_V) * DIV_1_2048;
     //! Shift for sensor voltage phase w
-    md_motor_l->uw_os.fl = (md_motor_l->uac_os_3_0.fl - (float32)ZERO_VALUE_U_PHASE_W) * DIV_1_2048;
+    md_motor_l->uw_os.fl = (md_motor_l->uac_os_3_0.fl
+            - (float32) ZERO_VALUE_U_PHASE_W) * DIV_1_2048;
     //! Shift for sensor voltage phase u1
-    md_motor_l->uu1_os.fl = (md_motor_l->uac_os_1_1.fl - (float32)ZERO_VALUE_U_PHASE_U1) * DIV_1_2048;
+    md_motor_l->uu1_os.fl = (md_motor_l->uac_os_1_1.fl
+            - (float32) ZERO_VALUE_U_PHASE_U1) * DIV_1_2048;
     //! Shift for sensor voltage phase v1
-    md_motor_l->uv1_os.fl = (md_motor_l->uac_os_2_1.fl - (float32)ZERO_VALUE_U_PHASE_V1) * DIV_1_2048;
+    md_motor_l->uv1_os.fl = (md_motor_l->uac_os_2_1.fl
+            - (float32) ZERO_VALUE_U_PHASE_V1) * DIV_1_2048;
     //! Shift for sensor voltage phase w1
-    md_motor_l->uw1_os.fl = (md_motor_l->uac_os_3_1.fl - (float32)ZERO_VALUE_U_PHASE_W1) * DIV_1_2048;
+    md_motor_l->uw1_os.fl = (md_motor_l->uac_os_3_1.fl
+            - (float32) ZERO_VALUE_U_PHASE_W1) * DIV_1_2048;
 }
 
 /*!
  *  \brief ADC value current processing
  */
-void HandlrCurrentAdc(Model_Data_PMSM_S *md_motor_l) {
+void HandlrCurrentAdc(Model_Data_PMSM_S *md_motor_l)
+{
     //! Read ADCINB2 value
-    md_motor_l->i_os_1_0.fl = (float32)(AdcRegs.ADCRESULT10 >> 4);
+    md_motor_l->i_os_1_0.fl = (float32) (AdcRegs.ADCRESULT10 >> 4);
     //! Read ADCINB3 value
-    md_motor_l->i_os_2_0.fl = (float32)(AdcRegs.ADCRESULT11 >> 4);
+    md_motor_l->i_os_2_0.fl = (float32) (AdcRegs.ADCRESULT11 >> 4);
     //! Read ADCINB4 value
-    md_motor_l->i_os_3_0.fl = (float32)(AdcRegs.ADCRESULT12 >> 4);
+    md_motor_l->i_os_3_0.fl = (float32) (AdcRegs.ADCRESULT12 >> 4);
     //! Read ADCINB5 value
-    md_motor_l->i_os_1_1.fl = (float32)(AdcRegs.ADCRESULT13 >> 4);
+    md_motor_l->i_os_1_1.fl = (float32) (AdcRegs.ADCRESULT13 >> 4);
     //! Read ADCINB6 value
-    md_motor_l->i_os_2_1.fl = (float32)(AdcRegs.ADCRESULT14 >> 4);
+    md_motor_l->i_os_2_1.fl = (float32) (AdcRegs.ADCRESULT14 >> 4);
     //! Read ADCINB7 value
-    md_motor_l->i_os_3_1.fl = (float32)(AdcRegs.ADCRESULT15 >> 4);
+    md_motor_l->i_os_3_1.fl = (float32) (AdcRegs.ADCRESULT15 >> 4);
 
     //! Shift for current phase u
-    md_motor_l->iu.fl = (md_motor_l->i_os_1_0.fl - ZERO_VALUE_I_PHASE_U) * DIV_1_2048;
+    md_motor_l->iu.fl = (md_motor_l->i_os_1_0.fl - ZERO_VALUE_I_PHASE_U)
+            * DIV_1_2048;
     //! Shift for current phase v
-    md_motor_l->iv.fl = (md_motor_l->i_os_2_0.fl - ZERO_VALUE_I_PHASE_V) * DIV_1_2048;
+    md_motor_l->iv.fl = (md_motor_l->i_os_2_0.fl - ZERO_VALUE_I_PHASE_V)
+            * DIV_1_2048;
     //! Shift for current phase w
-    md_motor_l->iw.fl = (md_motor_l->i_os_3_0.fl - ZERO_VALUE_I_PHASE_W) * DIV_1_2048;
+    md_motor_l->iw.fl = (md_motor_l->i_os_3_0.fl - ZERO_VALUE_I_PHASE_W)
+            * DIV_1_2048;
     //! Shift for current phase u1
-    md_motor_l->iu1.fl = (md_motor_l->i_os_1_1.fl - ZERO_VALUE_I_PHASE_U1) * DIV_1_2048;
+    md_motor_l->iu1.fl = (md_motor_l->i_os_1_1.fl - ZERO_VALUE_I_PHASE_U1)
+            * DIV_1_2048;
     //! Shift for current phase v1
-    md_motor_l->iv1.fl = (md_motor_l->i_os_2_1.fl - ZERO_VALUE_I_PHASE_V1) * DIV_1_2048;
+    md_motor_l->iv1.fl = (md_motor_l->i_os_2_1.fl - ZERO_VALUE_I_PHASE_V1)
+            * DIV_1_2048;
     //! Shift for current phase w1
-    md_motor_l->iw1.fl = (md_motor_l->i_os_3_1.fl - ZERO_VALUE_I_PHASE_W1) * DIV_1_2048;
+    md_motor_l->iw1.fl = (md_motor_l->i_os_3_1.fl - ZERO_VALUE_I_PHASE_W1)
+            * DIV_1_2048;
 }
