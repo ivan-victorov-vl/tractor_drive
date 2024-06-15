@@ -6,14 +6,13 @@
 //
 //###########################################################################
 
-
 #ifndef MAINCPU_GPIO_DEFINES_H
 #define MAINCPU_GPIO_DEFINES_H
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
-
 
 #ifdef __cplusplus
 }

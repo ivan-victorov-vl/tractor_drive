@@ -20,10 +20,8 @@ C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/source/DSP2833x_SysCtrl.c \
 C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/source/FuncDrive.c \
 ../source/MainCpuAdc.c \
 ../source/MainCpuEpwm.c \
-../source/MainCpuSci.c \
 ../source/MainCpuSpi.c \
 ../source/MainInit.c \
-C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/source/MainModbus.c \
 ../source/MainPanel.c \
 ../source/MainSetting.c \
 C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/source/Main_CPU_CpuTimers.c \
@@ -43,10 +41,8 @@ C_DEPS += \
 ./source/FuncDrive.d \
 ./source/MainCpuAdc.d \
 ./source/MainCpuEpwm.d \
-./source/MainCpuSci.d \
 ./source/MainCpuSpi.d \
 ./source/MainInit.d \
-./source/MainModbus.d \
 ./source/MainPanel.d \
 ./source/MainSetting.d \
 ./source/Main_CPU_CpuTimers.d \
@@ -69,10 +65,8 @@ OBJS += \
 ./source/FuncDrive.obj \
 ./source/MainCpuAdc.obj \
 ./source/MainCpuEpwm.obj \
-./source/MainCpuSci.obj \
 ./source/MainCpuSpi.obj \
 ./source/MainInit.obj \
-./source/MainModbus.obj \
 ./source/MainPanel.obj \
 ./source/MainSetting.obj \
 ./source/Main_CPU_CpuTimers.obj \
@@ -100,10 +94,8 @@ OBJS__QUOTED += \
 "source\FuncDrive.obj" \
 "source\MainCpuAdc.obj" \
 "source\MainCpuEpwm.obj" \
-"source\MainCpuSci.obj" \
 "source\MainCpuSpi.obj" \
 "source\MainInit.obj" \
-"source\MainModbus.obj" \
 "source\MainPanel.obj" \
 "source\MainSetting.obj" \
 "source\Main_CPU_CpuTimers.obj" \
@@ -123,10 +115,8 @@ C_DEPS__QUOTED += \
 "source\FuncDrive.d" \
 "source\MainCpuAdc.d" \
 "source\MainCpuEpwm.d" \
-"source\MainCpuSci.d" \
 "source\MainCpuSpi.d" \
 "source\MainInit.d" \
-"source\MainModbus.d" \
 "source\MainPanel.d" \
 "source\MainSetting.d" \
 "source\Main_CPU_CpuTimers.d" \
@@ -151,10 +141,8 @@ C_SRCS__QUOTED += \
 "C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/source/FuncDrive.c" \
 "../source/MainCpuAdc.c" \
 "../source/MainCpuEpwm.c" \
-"../source/MainCpuSci.c" \
 "../source/MainCpuSpi.c" \
 "../source/MainInit.c" \
-"C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/source/MainModbus.c" \
 "../source/MainPanel.c" \
 "../source/MainSetting.c" \
 "C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/source/Main_CPU_CpuTimers.c" \

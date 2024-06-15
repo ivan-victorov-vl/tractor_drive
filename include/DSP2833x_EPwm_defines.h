@@ -14,9 +14,9 @@
 #ifndef DSP2833x_EPWM_DEFINES_H
 #define DSP2833x_EPWM_DEFINES_H
 
-
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
 // TBCTL (Time-Base Control)
@@ -136,7 +136,6 @@ extern "C" {
 #define	ET_2ND			0x2
 #define	ET_3RD			0x3
 
-
 //--------------------------------
 // HRPWM (High Resolution PWM)
 //================================
@@ -151,8 +150,6 @@ extern "C" {
 
 #define	HR_CTR_ZERO		0x0
 #define	HR_CTR_PRD		0x1
-
-
 
 #ifdef __cplusplus
 }

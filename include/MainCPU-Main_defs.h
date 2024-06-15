@@ -9,7 +9,6 @@
 #ifndef MAINCPU_MAIN_DEFS_H
 #define MAINCPU_MAIN_DEFS_H
 
-
 ////////////////////// HEADER FILE CONNECTION //////////////////////
 // include header file "BaseDriveUsr.h"
 #include "BaseDrive.h"
@@ -55,8 +54,6 @@ extern Flg_Cntrl_Drive_S flags_drive;
 extern Rpd_Ctrl_Regs_S rpd_ctrl_regs;
 //! frequency inverter parameter memory (model memory)
 extern Data_PMSM_S data_pmsm;
-//! memory of modbus service parameters
-extern MB_Servc mb_servc;
 //! pointer to modbus memory
 extern Uint16 *pMBmemory;
 //! parameter lookup declaration

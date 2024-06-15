@@ -11,13 +11,11 @@
 #ifndef FUNCDRIVE_H_
 #define FUNCDRIVE_H_
 
-
 ////////////////////// HEADER FILE CONNECTION //////////////////////
 // connection of the header file "BaseDriveUsr.h"
 #include "BaseDrive.h"
 // connection of the header file "Flg_Cntrl_Drive_S.h"
 #include "FlagParamDrive.h"
-
 
 ////////////////////// DECLARATION OF NAMED CONSTANTS //////////////////////
 //! number of samples per complete revolution
@@ -59,25 +57,35 @@
 
 //////////////// DECLARATION OF EXTERNAL ACCESS TO FUNCTIONS /////////////////////
 //! declaration of external access to a function Stop
-extern void Stop(Model_Data_PMSM_S *md_la, Settng_Data_PMSM_S *sd_la, Flg_Cntrl_Drive_S *mf_la );
+extern void Stop(Model_Data_PMSM_S *md_la, Settng_Data_PMSM_S *sd_la,
+                 Flg_Cntrl_Drive_S *mf_la);
 //! declaration of external access to a function ApprdFltr
-extern float32 ApprdFltr(float32 first_var_lb, float32 Ti_apprd_lb, float32 *integr_lb);
+extern float32 ApprdFltr(float32 first_var_lb, float32 Ti_apprd_lb,
+                         float32 *integr_lb);
 //! declaration of external access to a function Calc2To3Cos
-extern void Calc2To3Cos(float32 first_var_lb, float32 sec_var_lb, float32 *first_res_lb, float32 *sec_res_lb, float32 *third_res_lb);
+extern void Calc2To3Cos(float32 first_var_lb, float32 sec_var_lb,
+                        float32 *first_res_lb, float32 *sec_res_lb,
+                        float32 *third_res_lb);
 //! declaration of external access to a function Calc3To2
-extern void Calc3To2(float32 first_var_lb, float32 sec_var_lb, float32 third_var_lb, float32 *first_res_lb, float32 *sec_res_lb);
+extern void Calc3To2(float32 first_var_lb, float32 sec_var_lb,
+                     float32 third_var_lb, float32 *first_res_lb,
+                     float32 *sec_res_lb);
 //! declaration of external access to a function SpeedRef
-extern void SpeedRef(float32 k_f_mul_ref_lb, float32 k_f_mul_plus_lb, float32 k_f_mul_minus_lb, float32 *k_f_mul_lb);
+extern void SpeedRef(float32 k_f_mul_ref_lb, float32 k_f_mul_plus_lb,
+                     float32 k_f_mul_minus_lb, float32 *k_f_mul_lb);
 //! declaration of external access to a function CalcLengthVect2In
 extern float32 CalcLengthVect2In(float32 first_lb, float32 secnd_lb);
 //! declaration of external access to a function PiRegltr
-extern float32 PiRegltr(float32 cur_var_lb, float32 k_prprnl_lb, float32 k_integral_lb, float32 *integral_lb);
+extern float32 PiRegltr(float32 cur_var_lb, float32 k_prprnl_lb,
+                        float32 k_integral_lb, float32 *integral_lb);
 //! declaration of external access to a function PID_Regltr
 extern float32 PID_Regltr(PID_Rgltr_S *v_pid_r_lb);
 //! declaration of external access to a function CalculateConditionPMSForward
-extern void CalculateConditionPMSForward(Model_Data_PMSM_S *md_l);
+extern void CalculateConditionPMSForward(Model_Data_PMSM_S *md_l,
+                                         int32 calc_theta);
 //! declaration of external access to a function CalculateConditionPMSBackward
-extern void CalculateConditionPMSBackward(Model_Data_PMSM_S *md_l);
+extern void CalculateConditionPMSBackward(Model_Data_PMSM_S *md_l,
+                                          int32 calc_theta);
 //! declaration of external access to a function CalculateScalarCurrentFrom6Phase
 extern float32 CalculateScalarCurrentFrom6Phase(Model_Data_PMSM_S *md_l);
 #endif

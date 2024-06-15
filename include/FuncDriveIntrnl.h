@@ -8,6 +8,4 @@
 #ifndef FUNCDRIVEINTRNL_H_
 #define FUNCDRIVEINTRNL_H_
 
-
-
 #endif /* FUNCDRIVEINTRNL_H_ */

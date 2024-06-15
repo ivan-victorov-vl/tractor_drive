@@ -116,11 +116,6 @@
 			<locationURI>SRC_ROOT/source/FuncDrive.c</locationURI>
 		</link>
 		<link>
-			<name>source/MainModbus.c</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/source/MainModbus.c</locationURI>
-		</link>
-		<link>
 			<name>source/Main_CPU_CpuTimers.c</name>
 			<type>1</type>
 			<locationURI>SRC_ROOT/source/Main_CPU_CpuTimers.c</locationURI>

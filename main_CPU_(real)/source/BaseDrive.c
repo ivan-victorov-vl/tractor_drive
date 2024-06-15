@@ -124,7 +124,7 @@ void PMSMotorFuncTechSpec(Model_Data_PMSM_S *md_la, Flg_Cntrl_Drive_S *mf_la,
     }
 
     //! Calculate current phase
-    CalculateConditionPMSForward(md_la);
+    CalculateConditionPMSForward(md_la, ((int32) md_la->theta.fl) / (int32) 30);
 }
 
 /*!
@@ -165,9 +165,9 @@ void CntrlDrive(Model_Data_PMSM_S *md_l, Settng_Data_PMSM_S *sd_l,
     static int32 delay_start_value = 0;
     static int16 filter_direction = FALSE_VAL;
 
-    int32 calc_theta = (int32) ((int32) md_l->theta.fl / (int32) 30);
-
-    if (GET_DIN_HALL_VALUE != TABL_CONDITION_FROM_SENSOR_HALL[calc_theta])
+    if (GET_DIN_HALL_VALUE
+            != TABL_CONDITION_FROM_SENSOR_HALL[(int32) ((int32) md_l->theta.fl
+                    / (int32) 30)])
     {
         //! Set next value angle rotor
         flags_drive.bits_reg1.bits.ext_angle = TRUE_VAL;
@@ -282,18 +282,20 @@ void CntrlDrive(Model_Data_PMSM_S *md_l, Settng_Data_PMSM_S *sd_l,
                 md_l->k_f_mul_ref.fl = MIN_VALUE_K_F_MUL_IS_STOP;
             }
         }
+
+        int32 calc_theta = ((int32) md_l->theta.fl) / (int32) 30;
         //! Compilation when forward of rotation
 #if FORWARD==TRUE_VAL
         //! Check direction drive
         if (mf_l->bits_reg2.bits.dir_drv)
         {
             //! Calculate current phase
-            CalculateConditionPMSBackward(md_l);
+            CalculateConditionPMSBackward(md_l, calc_theta);
         }
         else
         {
             //! Calculate current phase
-            CalculateConditionPMSForward(md_l);
+            CalculateConditionPMSForward(md_l, calc_theta);
         }
         //! Compilation when backward of rotation
 #else
@@ -301,12 +303,12 @@ void CntrlDrive(Model_Data_PMSM_S *md_l, Settng_Data_PMSM_S *sd_l,
         if (mf_l->bits_reg2.bits.dir_drv)
         {
             //! Calculate current phase
-            CalculateConditionPMSForward(md_l);
+            CalculateConditionPMSForward(md_l, calc_theta );
         }
         else
         {
             //! Calculate current phase
-            CalculateConditionPMSBackward(md_l);
+            CalculateConditionPMSBackward(md_l, calc_theta );
         }
 #endif
     }

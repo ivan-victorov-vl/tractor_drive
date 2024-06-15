@@ -137,12 +137,3 @@ interrupt void INT14_ISR(void) {
     //! unchanging forbidden registers
     EDIS;
 }
-
-/*!
-    \brief: Interrupt from the GPIO62
- */
-interrupt void XINT3_ISR(void) {
-    //! Acknowledge this interrupt to get more from group 12
-    // TODO For test
-    //    PieCtrlRegs.PIEACK.bit.ACK12 = PIEACK_GROUP12;
-}

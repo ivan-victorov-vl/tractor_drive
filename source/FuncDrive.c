@@ -35,9 +35,9 @@ float32 PiRegltr(float32 cur_var_lb, float32 k_prprnl_lb, float32 k_integral_lb,
 // Function declaration PID_Regltr
 float32 PID_Regltr(PID_Rgltr_S *v_pid_r_lb);
 // Function declaration CalculateConditionPMSForward
-void CalculateConditionPMSForward(Model_Data_PMSM_S *md_l);
+void CalculateConditionPMSForward(Model_Data_PMSM_S *md_l, int32 calc_theta);
 // Function declaration CalculateConditionPMSBackward
-void CalculateConditionPMSBackward(Model_Data_PMSM_S *md_l);
+void CalculateConditionPMSBackward(Model_Data_PMSM_S *md_l, int32 calc_theta);
 // Function declaration CalculateScalarCurrentFrom6Phase
 float32 CalculateScalarCurrentFrom6Phase(Model_Data_PMSM_S *md_l);
 
@@ -195,11 +195,8 @@ float32 CalculateScalarCurrentFrom6Phase(Model_Data_PMSM_S *md_l)
 /*!
  \brief Calculate condition of PMSM for forward
  */
-void CalculateConditionPMSForward(Model_Data_PMSM_S *md_l)
+void CalculateConditionPMSForward(Model_Data_PMSM_S *md_l, int32 calc_theta)
 {
-    //! Calculation
-    int32 calc_theta = ((int32) md_l->theta.fl) / (int32) 30;
-
     //! Set forward direction for drive
     md_l->uu.fl = TABL_UU[calc_theta];
     md_l->uv.fl = TABL_UW[calc_theta];
@@ -212,11 +209,8 @@ void CalculateConditionPMSForward(Model_Data_PMSM_S *md_l)
 /*!
  \brief Calculate condition of PMSM for backward
  */
-void CalculateConditionPMSBackward(Model_Data_PMSM_S *md_l)
+void CalculateConditionPMSBackward(Model_Data_PMSM_S *md_l, int32 calc_theta)
 {
-    //! Calculation
-    int32 calc_theta = ((int32) md_l->theta.fl) / (int32) 30;
-
     //! Decrement angle
     //! Set backward direction for drive
     md_l->uu.fl = TABL_UU[calc_theta];

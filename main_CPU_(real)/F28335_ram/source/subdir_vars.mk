@@ -19,10 +19,8 @@ C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/source/DSP2833x_SysCtrl.c \
 C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/source/FuncDrive.c \
 ../source/MainCpuAdc.c \
 ../source/MainCpuEpwm.c \
-../source/MainCpuSci.c \
 ../source/MainCpuSpi.c \
 ../source/MainInit.c \
-C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/source/MainModbus.c \
 ../source/MainPanel.c \
 ../source/MainSetting.c \
 C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/source/Main_CPU_CpuTimers.c \
@@ -42,10 +40,8 @@ C_DEPS += \
 ./source/FuncDrive.d \
 ./source/MainCpuAdc.d \
 ./source/MainCpuEpwm.d \
-./source/MainCpuSci.d \
 ./source/MainCpuSpi.d \
 ./source/MainInit.d \
-./source/MainModbus.d \
 ./source/MainPanel.d \
 ./source/MainSetting.d \
 ./source/Main_CPU_CpuTimers.d \
@@ -67,10 +63,8 @@ C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/RAM/DSP2833x_SysCtrl.obj \
 C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/RAM/FuncDrive.obj \
 C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/RAM/MainCpuAdc.obj \
 C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/RAM/MainCpuEpwm.obj \
-C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/RAM/MainCpuSci.obj \
 C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/RAM/MainCpuSpi.obj \
 C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/RAM/MainInit.obj \
-C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/RAM/MainModbus.obj \
 C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/RAM/MainPanel.obj \
 C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/RAM/MainSetting.obj \
 C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/RAM/Main_CPU_CpuTimers.obj \
@@ -96,10 +90,8 @@ OBJS__QUOTED += \
 "C:\Users\Lenovo\programs\TMS320F28335\tractor_drive\RAM\FuncDrive.obj" \
 "C:\Users\Lenovo\programs\TMS320F28335\tractor_drive\RAM\MainCpuAdc.obj" \
 "C:\Users\Lenovo\programs\TMS320F28335\tractor_drive\RAM\MainCpuEpwm.obj" \
-"C:\Users\Lenovo\programs\TMS320F28335\tractor_drive\RAM\MainCpuSci.obj" \
 "C:\Users\Lenovo\programs\TMS320F28335\tractor_drive\RAM\MainCpuSpi.obj" \
 "C:\Users\Lenovo\programs\TMS320F28335\tractor_drive\RAM\MainInit.obj" \
-"C:\Users\Lenovo\programs\TMS320F28335\tractor_drive\RAM\MainModbus.obj" \
 "C:\Users\Lenovo\programs\TMS320F28335\tractor_drive\RAM\MainPanel.obj" \
 "C:\Users\Lenovo\programs\TMS320F28335\tractor_drive\RAM\MainSetting.obj" \
 "C:\Users\Lenovo\programs\TMS320F28335\tractor_drive\RAM\Main_CPU_CpuTimers.obj" \
@@ -119,10 +111,8 @@ C_DEPS__QUOTED += \
 "source\FuncDrive.d" \
 "source\MainCpuAdc.d" \
 "source\MainCpuEpwm.d" \
-"source\MainCpuSci.d" \
 "source\MainCpuSpi.d" \
 "source\MainInit.d" \
-"source\MainModbus.d" \
 "source\MainPanel.d" \
 "source\MainSetting.d" \
 "source\Main_CPU_CpuTimers.d" \
@@ -146,10 +136,8 @@ C_SRCS__QUOTED += \
 "C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/source/FuncDrive.c" \
 "../source/MainCpuAdc.c" \
 "../source/MainCpuEpwm.c" \
-"../source/MainCpuSci.c" \
 "../source/MainCpuSpi.c" \
 "../source/MainInit.c" \
-"C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/source/MainModbus.c" \
 "../source/MainPanel.c" \
 "../source/MainSetting.c" \
 "C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/source/Main_CPU_CpuTimers.c" \

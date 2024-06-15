@@ -9,7 +9,6 @@
 #ifndef DEBUG_H_
 #define DEBUG_H_
 
-
 //! Направление вращения (Направление врашения двигателя TRUE_VAL - вперёд, иначе FALSE_VAL)
 #define FORWARD TRUE_VAL
 

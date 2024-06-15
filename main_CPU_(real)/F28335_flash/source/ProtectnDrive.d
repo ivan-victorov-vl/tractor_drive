@@ -31,8 +31,6 @@ source/ProtectnDrive.obj: C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/in
 source/ProtectnDrive.obj: C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/include/FlagParamDrive.h
 source/ProtectnDrive.obj: C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/include/RegParamDrive.h
 source/ProtectnDrive.obj: C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/include/MainCpuSpi.h
-source/ProtectnDrive.obj: C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/include/MainCpuSci.h
-source/ProtectnDrive.obj: C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/include/MainModbus.h
 source/ProtectnDrive.obj: C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/include/MainCpuEpwm.h
 source/ProtectnDrive.obj: C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/include/MainCPU-Main_defs.h
 source/ProtectnDrive.obj: C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/include/FuncDrive.h
@@ -74,8 +72,6 @@ C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/include/Debug.h:
 C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/include/FlagParamDrive.h: 
 C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/include/RegParamDrive.h: 
 C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/include/MainCpuSpi.h: 
-C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/include/MainCpuSci.h: 
-C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/include/MainModbus.h: 
 C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/include/MainCpuEpwm.h: 
 C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/include/MainCPU-Main_defs.h: 
 C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/include/FuncDrive.h: 

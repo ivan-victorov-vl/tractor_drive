@@ -1060,19 +1060,19 @@ interrupt void ECAN1INTB_ISR(void)  // eCAN-B
 // -----------------------------------------------------------
 
 // INT12.1
-//interrupt void XINT3_ISR(void)  // External Interrupt
-//{
-//  // Insert ISR Code here
-//
-//  // To receive more interrupts from this PIE group, acknowledge this interrupt
-//  // PieCtrlRegs.PIEACK.all = PIEACK_GROUP12;
-//
-//  // Next two lines for debug only to halt the processor here
-//  // Remove after inserting ISR Code
-//  asm ("      ESTOP0");
-//  for(;;);
-//
-//}
+interrupt void XINT3_ISR(void)  // External Interrupt
+{
+  // Insert ISR Code here
+
+  // To receive more interrupts from this PIE group, acknowledge this interrupt
+  // PieCtrlRegs.PIEACK.all = PIEACK_GROUP12;
+
+  // Next two lines for debug only to halt the processor here
+  // Remove after inserting ISR Code
+  asm ("      ESTOP0");
+  for(;;);
+
+}
 
 // INT12.2
 interrupt void XINT4_ISR(void)  // External Interrupt
