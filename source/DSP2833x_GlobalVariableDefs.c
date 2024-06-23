@@ -6,7 +6,6 @@
 //
 //###########################################################################
 
-
 #include "PeripheralHeaderIncludes.h"
 
 //---------------------------------------------------------------------------
@@ -364,7 +363,6 @@ volatile struct SCI_REGS ScibRegs;
 #endif
 volatile struct SCI_REGS ScicRegs;
 
-
 //----------------------------------------
 #ifdef __cplusplus
 #pragma DATA_SECTION("SpiaRegsFile")
@@ -406,24 +404,16 @@ volatile struct XINTRUPT_REGS XIntruptRegs;
 volatile struct XINTF_REGS XintfRegs;
 
 /*
-//----------------------------------------
-#ifdef __cplusplus
-#pragma DATA_SECTION("ErrRegsFile")
-#else
-#pragma DATA_SECTION(ErrRegs,"ErrRegsFile");
-#endif
-volatile struct ERRS_REGS ErrRegs;
-*/
+ //----------------------------------------
+ #ifdef __cplusplus
+ #pragma DATA_SECTION("ErrRegsFile")
+ #else
+ #pragma DATA_SECTION(ErrRegs,"ErrRegsFile");
+ #endif
+ volatile struct ERRS_REGS ErrRegs;
+ */
 
 //===========================================================================
 // End of file.
 //===========================================================================
-
-
-
-
-
-
-
-
 

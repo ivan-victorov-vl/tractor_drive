@@ -103,8 +103,9 @@ extern interrupt void cpu_timer0_isr(void);
 
 /////////////////////// DECLARATION OF DATA STRUCTURES //////////////////////////
 //! Data structure of a 32-bit number
-typedef union {
- float32 fl;
- Uint32 uint;
+typedef union
+{
+    float32 fl;
+    Uint32 uint;
 } B32_Numb_S;
 #endif

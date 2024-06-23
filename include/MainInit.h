@@ -13,5 +13,4 @@
 // declaration of external access to the MainInit function
 extern void MainInit(void);
 
-
 #endif

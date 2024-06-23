@@ -22,103 +22,122 @@
 void Base_Cycle(void);
 
 /*!
-    \brief: Main
+ \brief: Main
  */
-void main(void) {
+void main(void)
+{
     //! Program initialization before entering the execution loop
     MainInit();
     //! Light up the LED with the value "net"
     LED_NET_ON;
-	//! Entering the main program cycle
-	for(;;) {
-		//! Entering the cycle of operations execution in the external background
-		Base_Cycle();
-	}
+    //! Entering the main program cycle
+    for (;;)
+    {
+        //! Entering the cycle of operations execution in the external background
+        Base_Cycle();
+    }
 }
 
 /*!
-    \brief: Main program cycle
-  */
-void Base_Cycle(void) {
-    //! Configuration variable calculation
-	CalcVarblsSttng(&data_pmsm);
-    //! Receiving data from external control signals
-	HandlerExternalButtons(&flags_drive);
-	//! Reset error drive
-	if (flags_drive.bits_reg2.bits.err_drv) {
-	    //! Turn on led
-	    LED_ERROR_ON;
-	    //! Reset value of drive
-	    PMSMotorFuncReset(&data_pmsm.md, &data_pmsm.sd, &flags_drive);
-	    //! If reset
-	    if (flags_drive.bits_reg2.bits.reset_drv) {
-	        //! Reset err_drv
-	        flags_drive.bits_reg2.bits.err_drv = FALSE_VAL;
-	        //! Turn off led
-	        LED_ERROR_OFF;
-	    }
-	} else {
-#if defined(DEBUG)
-	    flags_drive.bits_reg2.bits.err_drv = !(GpioDataRegs.GPADAT.bit.GPIO12 && GpioDataRegs.GPADAT.bit.GPIO13 &&
-	                                         GpioDataRegs.GPADAT.bit.GPIO14 && GpioDataRegs.GPADAT.bit.GPIO15 &&
-	                                         GpioDataRegs.GPADAT.bit.GPIO16 && GpioDataRegs.GPADAT.bit.GPIO17);
-#else
-        flags_drive.bits_reg2.bits.err_drv = (GpioDataRegs.GPADAT.bit.GPIO12 || GpioDataRegs.GPADAT.bit.GPIO13 ||
-                                              GpioDataRegs.GPADAT.bit.GPIO14 || GpioDataRegs.GPADAT.bit.GPIO15 ||
-                                              GpioDataRegs.GPADAT.bit.GPIO16 || GpioDataRegs.GPADAT.bit.GPIO17);
-#endif
-	}
-}
-
-/*!
-    \brief: Interrupt from the CPU0 timer (enters the cycle when an interrupt is triggered)
+ \brief: Main program cycle
  */
-interrupt void TINT0_ISR(void) {
+void Base_Cycle(void)
+{
+    //! Configuration variable calculation
+    CalcVarblsSttng(&data_pmsm);
+    //! Receiving data from external control signals
+    HandlerExternalButtons(&flags_drive);
+    //! Reset error drive
+    if (flags_drive.bits_reg2.bits.err_drv)
+    {
+        //! Turn on led
+        LED_ERROR_ON;
+        //! Reset value of drive
+        PMSMotorFuncReset(&data_pmsm.md, &data_pmsm.sd, &flags_drive);
+        //! If reset
+        if (flags_drive.bits_reg2.bits.reset_drv)
+        {
+            //! Reset err_drv
+            flags_drive.bits_reg2.bits.err_drv = FALSE_VAL;
+            //! Turn off led
+            LED_ERROR_OFF;
+        }
+    }
+    else
+    {
+#if defined(DEBUG)
+        flags_drive.bits_reg2.bits.err_drv = !(GpioDataRegs.GPADAT.bit.GPIO12 && GpioDataRegs.GPADAT.bit.GPIO13 &&
+                GpioDataRegs.GPADAT.bit.GPIO14 && GpioDataRegs.GPADAT.bit.GPIO15 &&
+                GpioDataRegs.GPADAT.bit.GPIO16 && GpioDataRegs.GPADAT.bit.GPIO17);
+#else
+        flags_drive.bits_reg2.bits.err_drv = (GpioDataRegs.GPADAT.bit.GPIO12
+                || GpioDataRegs.GPADAT.bit.GPIO13
+                || GpioDataRegs.GPADAT.bit.GPIO14
+                || GpioDataRegs.GPADAT.bit.GPIO15
+                || GpioDataRegs.GPADAT.bit.GPIO16
+                || GpioDataRegs.GPADAT.bit.GPIO17);
+#endif
+    }
+}
+
+/*!
+ \brief: Interrupt from the CPU0 timer (enters the cycle when an interrupt is triggered)
+ */
+interrupt void TINT0_ISR(void)
+{
     static Uint16 current_count = 0;
 
     //! Increment for current count
     current_count++;
     //! Get condition for switch
-    if (HandlerSwitchProcessing(current_count, VAL_MAX_LED_NET))  {
+    if (HandlerSwitchProcessing(current_count, VAL_MAX_LED_NET))
+    {
         //! On led net
         LED_NET_ON;
-    } else {
+    }
+    else
+    {
         //! Off led net
         LED_NET_OFF;
         //! If bigger max value then reset current_count
-        if (current_count > VAL_MAX_LED_NET) {
+        if (current_count > VAL_MAX_LED_NET)
+        {
             //! Reset current_count
             current_count = 0;
         }
     }
 
-   //! Check direction motor
-   if (flags_drive.bits_reg2.bits.dir_drv) {
-       //! If inverse set led direction on
-       LED_DIR_ON;
-    } else {
-       //! If not inverse set led direction off
-       LED_DIR_OFF;
+    //! Check direction motor
+    if (flags_drive.bits_reg2.bits.dir_drv)
+    {
+        //! If inverse set led direction on
+        LED_DIR_ON;
+    }
+    else
+    {
+        //! If not inverse set led direction off
+        LED_DIR_OFF;
     }
 
     //! First step
     //! Extraction of ADC currents and external speed reference values
-	HandlrAdc(&data_pmsm.md, &data_pmsm.sd);
+    HandlrAdc(&data_pmsm.md, &data_pmsm.sd);
 
-	//! Second step
-	//! Computing fast variables
-	CalcFastVarblsSttng(&data_pmsm);
+    //! Second step
+    //! Computing fast variables
+    CalcFastVarblsSttng(&data_pmsm);
 
-	//! Handler freeze protection
-	HandlerFreezeProtection();
+    //! Handler freeze protection
+    HandlerFreezeProtection();
     //! Acknowledge this interrupt to get more from group 7
     PieCtrlRegs.PIEACK.bit.ACK7 = PIEACK_GROUP7;
 }
 
 /*!
-    \brief: Interrupt from the CPU2 timer (enters the cycle when an interrupt is triggered)
+ \brief: Interrupt from the CPU2 timer (enters the cycle when an interrupt is triggered)
  */
-interrupt void INT14_ISR(void) {
+interrupt void INT14_ISR(void)
+{
     //! configuring interrupt handling functions:
     //! allow changes to forbidden registers
     EALLOW;
@@ -127,7 +146,8 @@ interrupt void INT14_ISR(void) {
     HandlrFastAdc(&data_pmsm.md);
 
     //! If there is an error, the operation stops.
-    if (!flags_drive.bits_reg2.bits.err_drv) {
+    if (!flags_drive.bits_reg2.bits.err_drv)
+    {
         //! Frequency converter control
         CntrlDrive(&data_pmsm.md, &data_pmsm.sd, &flags_drive, &brwsr);
     }

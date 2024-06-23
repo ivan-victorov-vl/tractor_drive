@@ -13,7 +13,8 @@
 #define PERIPHERALHEADERINCLUDES_H
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
 //---------------------------------------------------------------------------
@@ -100,18 +101,17 @@ extern cregister volatile unsigned int IER;
 //-----------------------------------
 #ifndef DSP28_DATA_TYPES
 #define DSP28_DATA_TYPES
-typedef int             int16;
-typedef long            int32;
-typedef unsigned int    Uint16;
-typedef unsigned long   Uint32;
-typedef float           float32;
-typedef long double     float64;
+typedef int int16;
+typedef long int32;
+typedef unsigned int Uint16;
+typedef unsigned long Uint32;
+typedef float float32;
+typedef long double float64;
 
-typedef unsigned char 	Uchar;
-typedef unsigned short 	Ushort;
+typedef unsigned char Uchar;
+typedef unsigned short Ushort;
 
 #endif
-
 
 //---------------------------------------------------------------------------
 // Include All Peripheral Header Files:
