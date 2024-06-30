@@ -1,7 +1,7 @@
 ******************************************************************************
              TMS320C2000 Linker PC v18.1.2                     
 ******************************************************************************
->> Linked Sun Jun 23 22:23:44 2024
+>> Linked Sun Jun 30 14:38:40 2024
 
 OUTPUT FILE NAME:   <C:/Users/Lenovo/programs/TMS320F28335/tractor_drive/main_CPU_(real)/../FLASH/MainCPU.out>
 ENTRY POINT SYMBOL: "_c_int00"  address: 00009493
@@ -538,7 +538,6 @@ address     data page           name
 0000c002     300 (0000c000)     _pMBmemory
 0000c004     300 (0000c000)     _flags_drive
 0000c008     300 (0000c000)     _brwsr
-0000c00e     300 (0000c000)     _rpd_ctrl_regs
 
 0000c040     301 (0000c040)     _data_pmsm
 
@@ -816,7 +815,6 @@ abs   0000045c  _econst_size
 0     00008000  _pinit_loadstart                          
 0     00008000  _pinit_runstart                           
 abs   00000000  _pinit_size                               
-1     0000c00e  _rpd_ctrl_regs                            
 0     000089dd  _rsvd_ISR                                 
 0     00008000  _switch_loadstart                         
 0     00008000  _switch_runstart                          
@@ -1070,7 +1068,6 @@ page  address   name
 1     0000c002  _pMBmemory                                
 1     0000c004  _flags_drive                              
 1     0000c008  _brwsr                                    
-1     0000c00e  _rpd_ctrl_regs                            
 1     0000c040  _data_pmsm                                
 1     0000c0cc  _CpuTimer1                                
 1     0000c0d4  _CpuTimer2                                
@@ -1103,4 +1100,4 @@ abs   ffffffff  ___pinit__
 abs   ffffffff  binit                                     
 abs   ffffffff  pinit                                     
 
-[266 symbols]
+[265 symbols]

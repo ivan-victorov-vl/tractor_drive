@@ -14,8 +14,6 @@
 #include "PeripheralHeaderIncludes.h"
 
 /////////////////////////// VARIABLE DECLARATION ///////////////////////////
-//! frequency converter parameter memory (shared memory)
-Rpd_Ctrl_Regs_S rpd_ctrl_regs;
 // frequency converter parameter memory (model memory)
 Data_PMSM_S data_pmsm;
 // common flag memory of the frequency converter

@@ -14,8 +14,6 @@
 #include "SysSrvc.h"
 //! include header file "Flg_Cntrl_Drive_S.h"
 #include "FlagParamDrive.h"
-//! include header file "RegParamDrive.h"
-#include "RegParamDrive.h"
 
 ////////////////////// DECLARATION OF NAMED CONSTANTS //////////////////////
 //! format: DIV_separate_divider; named constant equal to 4096/360

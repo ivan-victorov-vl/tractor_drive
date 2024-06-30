@@ -13,8 +13,6 @@
 // include header file "BaseDriveUsr.h"
 #include "BaseDrive.h"
 //! include header file "RegParamDrive.h"
-#include "RegParamDrive.h"
-//! include header file "RegParamDrive.h"
 #include "FlagParamDrive.h"
 
 ////////////////////// DECLARATION OF NAMED CONSTANTS //////////////////////
@@ -50,8 +48,6 @@
 //////////////// DECLARATION OF EXTERNAL ACCESS TO VARIABLES //////////////////
 //! frequency converter flags memory
 extern Flg_Cntrl_Drive_S flags_drive;
-//! frequency converter flags memory (shared memory)
-extern Rpd_Ctrl_Regs_S rpd_ctrl_regs;
 //! frequency inverter parameter memory (model memory)
 extern Data_PMSM_S data_pmsm;
 //! pointer to modbus memory

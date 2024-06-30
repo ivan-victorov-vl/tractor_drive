@@ -1,24 +1,24 @@
 //###########################################################################
 //
-// Файл:    	MainSetting.h
+// File: MainSetting.h
 //
-// Описание:   	Заголовочный файл MainSetting.c
+// Description: MainSetting.c header file
 //
 //###########################################################################
 
 #ifndef MAINSETTING_H_
 #define MAINSETTING_H_
 
-////////////////////// ОБЪЯВЛЕНИЕ ИМЕНОВАННЫХ КОНСТАНТ //////////////////////
-// константа коэфициент преобразования значения из 12 битного значения
-#define K_REAL_CUR_PSTN 		0.087890625
-// временной цикл процессора
-#define TIME_CYCLE_CPU 		0.00011
+////////////////////// DECLARATION OF NAMED CONSTANTS //////////////////////
+// constant value conversion coefficient from 12 bit value
+#define K_REAL_CUR_PSTN 0.087890625
+// processor time cycle
+#define TIME_CYCLE_CPU 0.00011
 
-//////////////// ОБЪЯВЛЕНИЕ ВНЕШНЕГО ДОСТУПА К ФУНКЦИЯМ /////////////////////
-// объявление внешнего доступа к функции CalcVarblsSttng
+//////////////// DECLARATION OF EXTERNAL ACCESS TO FUNCTIONS /////////////////////
+// declaration of external access to function CalcVarblsSttng
 extern void CalcVarblsSttng(Data_PMSM_S *md_motor_l);
-//  объявление функции CalcFastVarblsSttng
+// declaration of the CalcFastVarblsSttng function
 extern void CalcFastVarblsSttng(Data_PMSM_S *md_motor_l);
 
 #endif
